@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "MathGeoLib/Geometry/Frustum.h"
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -8,6 +9,11 @@ struct SDL_Rect;
 
 class ModuleEditorCamera : public Module
 {
+private:
+	Frustum frustum;
+	float deltaTime = 0.0f;	// Time between current frame and last frame
+	float lastFrame = 0.0f; // Time of last frame
+
 public:
 	ModuleEditorCamera();
 	~ModuleEditorCamera();
@@ -19,5 +25,6 @@ public:
 	bool CleanUp();
 	void WindowResized(unsigned width, unsigned height);
 
+	void InputMnager();
 };
 
