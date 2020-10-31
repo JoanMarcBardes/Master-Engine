@@ -4,9 +4,6 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ModuleInput.cpp" />
-    <ClCompile Include="ModuleRender.cpp" />
-    <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="MathGeoLib\Algorithm\Random\LCG.cpp">
       <Filter>MathGeoLib\Algorithm\Random</Filter>
     </ClCompile>
@@ -133,14 +130,23 @@
     <ClCompile Include="MathGeoLib\Math\TransformOps.cpp">
       <Filter>MathGeoLib\Math</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleInput.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleRender.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleWindow.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEditorCamera.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Module.h" />
-    <ClInclude Include="ModuleInput.h" />
-    <ClInclude Include="ModuleRender.h" />
-    <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="MathGeoLib\Algorithm\Random\LCG.h">
       <Filter>MathGeoLib\Algorithm\Random</Filter>
     </ClInclude>
@@ -369,6 +375,18 @@
     <ClInclude Include="MathGeoLib\emscripten\library_system.h">
       <Filter>MathGeoLib\emscripten</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleInput.h">
+      <Filter>Module</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleRender.h">
+      <Filter>Module</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleWindow.h">
+      <Filter>Module</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEditorCamera.h">
+      <Filter>Module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
@@ -391,6 +409,9 @@
     </Filter>
     <Filter Include="MathGeoLib\emscripten">
       <UniqueIdentifier>{f91025f9-e473-4394-8484-3d6232aa86b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Module">
+      <UniqueIdentifier>{cfb89837-841f-4999-aca9-e3f1ae1b2b72}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
