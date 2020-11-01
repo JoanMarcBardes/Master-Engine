@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "MathGeoLib/Geometry/Frustum.h"
+#include "MathGeoLib/Math/float3x3.h"
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -13,7 +14,8 @@ private:
 	Frustum frustum;
 	float deltaTime = 0.0f;	// Time between current frame and last frame
 	float lastFrame = 0.0f; // Time of last frame
-
+	float yaw = 90;
+	float pitch = 0;
 public:
 	ModuleEditorCamera();
 	~ModuleEditorCamera();
@@ -26,5 +28,8 @@ public:
 	void WindowResized(unsigned width, unsigned height);
 
 	void InputMnager();
+	void Direction();
+	void ConstrainPitch();
+
 };
 

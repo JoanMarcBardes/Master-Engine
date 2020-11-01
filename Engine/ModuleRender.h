@@ -20,6 +20,7 @@ public:
 	void WindowResized(unsigned width, unsigned height);
 
 	void DrawXYZ();
+	void DrawCube();
 
 private:
 	void* context;

@@ -7,6 +7,7 @@
 #include "GL/glew.h"
 #include "MathGeoLib/Geometry/Frustum.h"
 #include "MathGeoLib/Time/Clock.h"
+#include "MathGeoLib/Math/float3x3.h"
 
 ModuleEditorCamera::ModuleEditorCamera()
 {
@@ -80,10 +81,12 @@ void ModuleEditorCamera::InputMnager()
 	if (keys[SDL_SCANCODE_Q])
 	{
 		LOG("Key press Q");
+		frustum.SetPos(frustum.Pos() + frustum.Up() * cameraSpeed);
 	}
 	if (keys[SDL_SCANCODE_E])
 	{
 		LOG("Key press E");
+		frustum.SetPos(frustum.Pos() - frustum.Up() * cameraSpeed);
 	}
 	if (keys[SDL_SCANCODE_W])
 	{
@@ -105,4 +108,48 @@ void ModuleEditorCamera::InputMnager()
 		LOG("Key press D");
 		frustum.SetPos(frustum.Pos() + Cross(frustum.Front(), frustum.Up()).Normalized() * cameraSpeed);
 	}
+
+	if (keys[SDL_SCANCODE_UP])
+	{
+		LOG("Key press UP");
+		++pitch;
+		Direction();
+	}
+	if (keys[SDL_SCANCODE_DOWN])
+	{
+		LOG("Key press DOWN");
+		--pitch;
+		Direction();
+	}
+	if (keys[SDL_SCANCODE_RIGHT])
+	{
+		LOG("Key press RIGHT");
+		++yaw;
+		Direction();
+	}
+	if (keys[SDL_SCANCODE_LEFT])
+	{
+		LOG("Key press LEFT");
+		--yaw;
+		Direction();
+	}
+}
+
+void ModuleEditorCamera::Direction()
+{
+	ConstrainPitch();
+
+	vec direction;
+	direction.x = cos(DEGTORAD * yaw) * cos(DEGTORAD * pitch);
+	direction.y = sin(DEGTORAD * pitch);
+	direction.z = sin(DEGTORAD * yaw) * cos(DEGTORAD * pitch);
+	frustum.SetFront(direction.Normalized());
+}
+
+void ModuleEditorCamera::ConstrainPitch()
+{
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
 }

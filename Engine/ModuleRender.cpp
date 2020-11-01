@@ -78,6 +78,7 @@ update_status ModuleRender::Update()
 	glEnd();
 
 	DrawXYZ();
+	DrawCube();
 
 	return UPDATE_CONTINUE;
 }
@@ -126,4 +127,52 @@ void ModuleRender::DrawXYZ()
 	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
 	glEnd();
 	glLineWidth(1.0f);
+}
+
+void ModuleRender::DrawCube()
+{
+	glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
+								  // Top face (y = 0.5f)
+								  // Define vertices in counter-clockwise (CCW) order with normal pointing out
+	glColor3f(1.0f, 0.5f, 0.0f);     // Orange
+	glVertex3f(0.5f, 0.5f, -0.5f);
+	glVertex3f(-0.5f, 0.5f, -0.5f);
+	glVertex3f(-0.5f, 0.5f, 0.5f);
+	glVertex3f(0.5f, 0.5f, 0.5f);
+
+	// Bottom face (y = -0.5f)
+	glColor3f(0.0f, 1.0f, 0.0f);     // Green
+	glVertex3f(0.5f, -0.5f, 0.5f);
+	glVertex3f(-0.5f, -0.5f, 0.5f);
+	glVertex3f(-0.5f, -0.5f, -0.5f);
+	glVertex3f(0.5f, -0.5f, -0.5f);
+
+	// Front face  (z = 0.5f)
+	glColor3f(1.0f, 1.0f, 0.0f);     // Yellow
+	glVertex3f(0.5f, 0.5f, 0.5f);
+	glVertex3f(-0.5f, 0.5f, 0.5f);
+	glVertex3f(-0.5f, -0.5f, 0.5f);
+	glVertex3f(0.5f, -0.5f, 0.5f);
+
+	// Back face (z = -0.5f)
+	glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+	glVertex3f(0.5f, -0.5f, -0.5f);
+	glVertex3f(-0.5f, -0.5f, -0.5f);
+	glVertex3f(-0.5f, 0.5f, -0.5f);
+	glVertex3f(0.5f, 0.5f, -0.5f);
+
+	// Left face (x = -0.5f)
+	glColor3f(1.0f, 0.0f, 0.0f);     // Red	
+	glVertex3f(-0.5f, 0.5f, 0.5f);
+	glVertex3f(-0.5f, 0.5f, -0.5f);
+	glVertex3f(-0.5f, -0.5f, -0.5f);
+	glVertex3f(-0.5f, -0.5f, 0.5f);
+
+	// Right face (x = 0.5f)
+	glColor3f(1.0f, 0.0f, 1.0f);     // Magenta
+	glVertex3f(0.5f, 0.5f, -0.5f);
+	glVertex3f(0.5f, 0.5f, 0.5f);
+	glVertex3f(0.5f, -0.5f, 0.5f);
+	glVertex3f(0.5f, -0.5f, -0.5f);
+	glEnd();
 }
