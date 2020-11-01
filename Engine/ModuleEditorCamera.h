@@ -16,6 +16,8 @@ private:
 	float lastFrame = 0.0f; // Time of last frame
 	float yaw = 90;
 	float pitch = 0;
+	float fov = 90;
+	float aspectRatio = 1;
 public:
 	ModuleEditorCamera();
 	~ModuleEditorCamera();
@@ -30,6 +32,7 @@ public:
 	void InputMnager();
 	void Direction();
 	void ConstrainPitch();
+	void ConstrainFOV();
 
 };
 

@@ -399,6 +399,9 @@
     <ClInclude Include="Globals.h">
       <Filter>Main</Filter>
     </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
