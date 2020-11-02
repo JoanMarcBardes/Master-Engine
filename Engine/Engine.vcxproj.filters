@@ -148,6 +148,12 @@
     <ClCompile Include="log.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleProgram.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleRenderExercise.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MathGeoLib\Algorithm\Random\LCG.h">
@@ -402,6 +408,12 @@
     <ClInclude Include="Point.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleProgram.h">
+      <Filter>Module</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleRenderExercise.h">
+      <Filter>Module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
@@ -434,6 +446,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{01d6c87b-3a7e-43c0-aca6-b50e45b30231}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{e6a3428d-4ad4-4d1c-b48e-a0b27d7b16d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Geometry\KDTree.inl">
@@ -456,6 +471,12 @@
     </None>
     <None Include="MathGeoLib\Math\Matrix.inl">
       <Filter>MathGeoLib\Math</Filter>
+    </None>
+    <None Include="Game\default_fragment.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Game\default_vertex.glsl">
+      <Filter>Shader</Filter>
     </None>
   </ItemGroup>
 </Project>
