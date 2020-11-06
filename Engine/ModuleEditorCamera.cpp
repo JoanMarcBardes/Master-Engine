@@ -9,11 +9,16 @@
 #include "GL/glew.h"
 #include "MathGeoLib/Geometry/Frustum.h"
 #include "MathGeoLib/Time/Clock.h"
-#include "MathGeoLib/Math/float3x3.h"
 
 ModuleEditorCamera::ModuleEditorCamera()
 {
 	aspectRatio = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
+	position = float3(0, 0, -3);
+	front = float3::unitZ;
+	up = float3::unitY;
+	direction = (position - float3::zero).Normalized();
+	right = Cross(up, direction).Normalized();
+	worldUp = Cross(direction, right).Normalized();
 }
 
 ModuleEditorCamera::~ModuleEditorCamera()
@@ -23,16 +28,11 @@ ModuleEditorCamera::~ModuleEditorCamera()
 bool ModuleEditorCamera::Init()
 {
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
-	frustum.SetViewPlaneDistances(0.1f, 200.0f);
+	frustum.SetViewPlaneDistances(nearPlane, farPlane);
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
-	frustum.SetPos(float3(0, 1, -3));
-	frustum.SetFront(float3::unitZ);
-	frustum.SetUp(float3::unitY);
-
-	LOG("FOV H: %f V: %f", frustum.HorizontalFov(), frustum.VerticalFov());
-	LOG("FOV H: %f V: %f", frustum.HorizontalFov() * RADTODEG, frustum.VerticalFov() * RADTODEG);
-	LOG("AspectRatio 1: %f", frustum.AspectRatio());
-	LOG("AspectRatio 2: %f", aspectRatio);
+	frustum.SetPos(position);
+	frustum.SetFront(front);
+	frustum.SetUp(up);
 
 	return true;
 }
@@ -49,7 +49,9 @@ update_status ModuleEditorCamera::Update()
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
 	
-	InputMnager();
+	InputManager();
+	
+	UpadateCamera();
 
 	return UPDATE_CONTINUE;
 }
@@ -78,100 +80,88 @@ bool ModuleEditorCamera::CleanUp()
 
 void ModuleEditorCamera::WindowResized(unsigned width, unsigned height)
 {
+	LOG("WindowResized EditorCamera");
+	aspectRatio = (float)width / (float)height;
+	fov = (height - App->window->height) != 0 ? fov * aspectRatio : fov;
+
+	ConstrainFOV();
+
+	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
+
+	App->window->width = width;
+	App->window->height = height;
 }
 
-void ModuleEditorCamera::InputMnager()
+void ModuleEditorCamera::InputManager()
 {
-	const float cameraSpeed = 0.01f * deltaTime;
-
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
+	float speed = 1;
+	bool ctrl = false;
 	bool alt = false;
 
-	if (keys[SDL_SCANCODE_Q])
-		frustum.SetPos(frustum.Pos() + frustum.Up() * cameraSpeed);
-	if (keys[SDL_SCANCODE_E])
-		frustum.SetPos(frustum.Pos() - frustum.Up() * cameraSpeed);
-	if (keys[SDL_SCANCODE_W])
-		frustum.SetPos(frustum.Pos() + frustum.Front() * cameraSpeed);
-	if (keys[SDL_SCANCODE_S])
-		frustum.SetPos(frustum.Pos() - frustum.Front() * cameraSpeed);
-	if (keys[SDL_SCANCODE_A])
-		frustum.SetPos(frustum.Pos() - Cross(frustum.Front(), frustum.Up()).Normalized() * cameraSpeed);
-	if (keys[SDL_SCANCODE_D])
-		frustum.SetPos(frustum.Pos() + Cross(frustum.Front(), frustum.Up()).Normalized() * cameraSpeed);
-
-	if (keys[SDL_SCANCODE_UP])
-	{
-		LOG("Key press UP");
-		++pitch;
-		Direction();
-	}
-	if (keys[SDL_SCANCODE_DOWN])
-	{
-		LOG("Key press DOWN");
-		--pitch;
-		Direction();
-	}
-	if (keys[SDL_SCANCODE_RIGHT])
-	{
-		LOG("Key press RIGHT");
-		++yaw;
-		Direction();
-	}
-	if (keys[SDL_SCANCODE_LEFT])
-	{
-		LOG("Key press LEFT");
-		--yaw;
-		Direction();
-	}
+	if (keys[SDL_SCANCODE_LCTRL])
+		ctrl = true;
 
 	if (keys[SDL_SCANCODE_LALT])
 		alt = true;
 
+	if (keys[SDL_SCANCODE_LSHIFT])
+		speed = 2;
+
+	movementSpeed = 0.01f * deltaTime * speed;
+	rotationSpeed = 0.1f * deltaTime * speed;
+
+	if (keys[SDL_SCANCODE_Q])
+		position += up * movementSpeed;
+
+	if (keys[SDL_SCANCODE_E])
+		position -= up * movementSpeed;
+
+	if (keys[SDL_SCANCODE_W])
+		position += front * movementSpeed;
+
+	if (keys[SDL_SCANCODE_S])
+		position -= front * movementSpeed;
+
+	if (keys[SDL_SCANCODE_A])
+		position -= Cross(front, up).Normalized() * movementSpeed;
+
+	if (keys[SDL_SCANCODE_D])
+		position += Cross(front, up).Normalized() * movementSpeed;
+
+	if (keys[SDL_SCANCODE_UP])
+		UpdateAplayYawPitch(0, 1);
+
+	if (keys[SDL_SCANCODE_DOWN])
+		UpdateAplayYawPitch(0, -1);
+
+	if (keys[SDL_SCANCODE_RIGHT])
+		UpdateAplayYawPitch(1, 0);
+
+	if (keys[SDL_SCANCODE_LEFT])
+		UpdateAplayYawPitch(-1, 0);
+		
 	iPoint mouse_motion = App->input->GetMouseMotion();
 	//Drag camera
-	if (App->input->LeftMouseOn() && !alt) {
+	if (App->input->LeftMouseOn() && ctrl) {
 		if (mouse_motion.x != 0)
-			frustum.SetPos(frustum.Pos() - mouse_motion.x * Cross(frustum.Front(), frustum.Up()).Normalized() * cameraSpeed);
+			position -= mouse_motion.x * Cross(front, up).Normalized() * movementSpeed;
 		if (mouse_motion.y != 0)
-			frustum.SetPos(frustum.Pos() - mouse_motion.y * frustum.Front() * cameraSpeed);
+			position -= mouse_motion.y *front * movementSpeed;
 	}
 	//Orbit
 	else if (App->input->LeftMouseOn() && alt) {
-		if (mouse_motion.x != 0)
-		{
-			yaw += mouse_motion.x;
-			Direction();
-		}
-		if (mouse_motion.y != 0)
-		{
-			pitch += mouse_motion.y;
-			Direction();
-		}
+		UpdateAplayYawPitch(mouse_motion.x, -mouse_motion.y);
 	}
 	//Zoom
 	else if (App->input->RightMouseOn() && alt) {
 		if (mouse_motion.x != 0)
-			fov += mouse_motion.x;
+			fov += mouse_motion.x * movementSpeed * 5;
 		if (mouse_motion.y != 0)
-			fov += mouse_motion.y;
+			fov += mouse_motion.y * movementSpeed * 5;
 		ConstrainFOV();
-		frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
-		LOG("FOV %f", fov); 
 	}
 
-	
-}
-
-void ModuleEditorCamera::Direction()
-{
-	ConstrainPitch();
-
-	vec direction;
-	direction.x = cos(DEGTORAD * yaw) * cos(DEGTORAD * pitch);
-	direction.y = sin(DEGTORAD * pitch);
-	direction.z = sin(DEGTORAD * yaw) * cos(DEGTORAD * pitch);
-	frustum.SetFront(direction.Normalized());
 }
 
 void ModuleEditorCamera::ConstrainPitch()
@@ -188,4 +178,29 @@ void ModuleEditorCamera::ConstrainFOV()
 		fov = 180.0f;
 	if (fov < 0.0f)
 		fov = 09.0f;
+}
+
+void ModuleEditorCamera::UpdateAplayYawPitch(float xOffset, float yOffset)
+{
+	yaw += xOffset * rotationSpeed;
+	pitch += yOffset * rotationSpeed;
+	ConstrainPitch();
+
+	vec auxFront;
+	auxFront.x = cos(DEGTORAD * yaw) * cos(DEGTORAD * pitch);
+	auxFront.y = sin(DEGTORAD * pitch);
+	auxFront.z = sin(DEGTORAD * yaw) * cos(DEGTORAD * pitch);
+
+	front = auxFront.Normalized();
+	right = Cross(front, worldUp).Normalized();
+	up = Cross(right, front).Normalized();
+}
+
+void ModuleEditorCamera::UpadateCamera()
+{
+	frustum.SetViewPlaneDistances(nearPlane, farPlane);
+	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
+	frustum.SetPos(position);
+	frustum.SetFront(front);
+	frustum.SetUp(up);
 }

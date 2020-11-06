@@ -22,6 +22,8 @@ public:
 	void DrawXYZ();
 	void DrawCube();
 
+	void* GetContext() const  {return context; }
+
 private:
 	void* context;
 };
