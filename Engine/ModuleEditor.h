@@ -1,10 +1,13 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "ImGui/imgui.h"
 
 class ModuleEditor : public Module
 {
 public:
+	ImVector<char*> Items;
+
 	ModuleEditor();
 	~ModuleEditor();
 
@@ -13,5 +16,14 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
-private:
+
+	void WindowHello();
+
+	void WindowConsole();
+	void ClearLog();
+	void AddLog(const char* fmt, ...);
+	static char* Strdup(const char* s) { size_t len = strlen(s) + 1; void* buf = malloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)s, len); }
+	void WindowConfiguration();
+
 };
+
