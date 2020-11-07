@@ -3,10 +3,11 @@
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "SDL/include/SDL.h"
+#include "ImGui/imgui_impl_sdl.h"
 
 #define MAX_KEYS 300
 
-ModuleInput::ModuleInput() : Module(), mouse({ 0, 0 }), mouse_motion({ 0,0 })
+ModuleInput::ModuleInput() : Module(), mouse({ 0, 0 }), mouse_motion({ 0,0 }), mouse_wheel({ 0,0 })
 {
 	keyboard = new KeyState[MAX_KEYS];
 	memset(keyboard, KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
@@ -41,6 +42,7 @@ update_status ModuleInput::Update()
     SDL_Event sdlEvent;
 
     mouse_motion = { 0, 0 };
+	mouse_wheel = { 0, 0 };
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
@@ -102,8 +104,17 @@ update_status ModuleInput::Update()
 				mouse_motion.y = sdlEvent.motion.yrel / SCREEN_SIZE;
 				mouse.x = sdlEvent.motion.x / SCREEN_SIZE;
 				mouse.y = sdlEvent.motion.y / SCREEN_SIZE;
+				break;
+
+			case SDL_MOUSEWHEEL:
+				mouse_wheel.x = sdlEvent.wheel.x;
+				mouse_wheel.y = sdlEvent.wheel.y;
+				break;
         }
+
+		//ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
     }
+
 
     if (GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
     {

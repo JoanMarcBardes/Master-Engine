@@ -41,6 +41,7 @@ public:
 	// Get mouse / axis position
 	const iPoint& GetMouseMotion() const { return mouse_motion;}
 	const iPoint& GetMousePosition() const { return mouse; }
+	const iPoint& GetMouseWhell() const { return mouse_wheel; }
 	const bool RightMouseOn() const { return right_mouse; }
 	const bool LeftMouseOn() const { return left_mouse; }
 
@@ -49,6 +50,7 @@ private:
 	KeyState  mouse_buttons[NUM_MOUSE_BUTTONS];
 	iPoint mouse_motion;
 	iPoint mouse;
+	iPoint mouse_wheel;
 	bool right_mouse = false;
 	bool left_mouse = false;
 };

@@ -162,6 +162,11 @@ void ModuleEditorCamera::InputManager()
 		ConstrainFOV();
 	}
 
+	iPoint mouse_wheel = App->input->GetMouseWhell();
+	if (mouse_wheel.y != 0) {
+		position -= mouse_wheel.y * front * movementSpeed * 5;
+	}
+
 }
 
 void ModuleEditorCamera::ConstrainPitch()
