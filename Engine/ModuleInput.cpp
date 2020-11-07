@@ -112,7 +112,7 @@ update_status ModuleInput::Update()
 				break;
         }
 
-		//ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
     }
 
 

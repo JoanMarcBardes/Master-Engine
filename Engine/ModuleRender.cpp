@@ -71,7 +71,7 @@ update_status ModuleRender::Update()
 	glEnd();
 
 	DrawXYZ();
-	DrawCube();
+	//DrawCube();
 
 	return UPDATE_CONTINUE;
 }

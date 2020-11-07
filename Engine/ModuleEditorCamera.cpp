@@ -82,10 +82,6 @@ void ModuleEditorCamera::WindowResized(unsigned width, unsigned height)
 {
 	LOG("WindowResized EditorCamera");
 	aspectRatio = (float)width / (float)height;
-	fov = (height - App->window->height) != 0 ? fov * aspectRatio : fov;
-
-	ConstrainFOV();
-
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
 
 	App->window->width = width;
