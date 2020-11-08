@@ -29,7 +29,8 @@ private:
 	float deltaTime = 0.0f;	// Time between current frame and last frame
 	float lastFrame = 0.0f; // Time of last frame
 	float movementSpeed = 0.0f;
-	float rotationSpeed = 0.0f;	
+	float rotationSpeed = 0.0f;
+	float zoomSpeed = 0.0f;
 public:
 	ModuleEditorCamera();
 	~ModuleEditorCamera();
@@ -62,6 +63,10 @@ public:
 	const float GetFarPlane()	{ return farPlane; }
 	const float GetFOV()		{ return fov; }
 	const float GetAspectRatio(){ return aspectRatio; }
+
+	const float GetMovementSpeed() { return movementSpeed; }
+	const float GetRotationSpeed() { return rotationSpeed; }
+	const float GetZoomSpeed()	   { return zoomSpeed; }
 
 	//set
 	void SetFrustum(Frustum _frustum)	{ frustum = std::move(_frustum); }

@@ -84,8 +84,7 @@ void ModuleEditorCamera::WindowResized(unsigned width, unsigned height)
 	aspectRatio = (float)width / (float)height;
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
 
-	App->window->width = width;
-	App->window->height = height;
+	//App->window->SetWidthHeight(width, height);
 }
 
 void ModuleEditorCamera::InputManager()
@@ -106,6 +105,7 @@ void ModuleEditorCamera::InputManager()
 
 	movementSpeed = 0.01f * deltaTime * speed;
 	rotationSpeed = 0.1f * deltaTime * speed;
+	zoomSpeed = 0.05f * deltaTime * speed;
 
 	if (keys[SDL_SCANCODE_Q])
 		position += up * movementSpeed;
@@ -152,15 +152,15 @@ void ModuleEditorCamera::InputManager()
 	//Zoom
 	else if (App->input->RightMouseOn() && alt) {
 		if (mouse_motion.x != 0)
-			fov += mouse_motion.x * movementSpeed * 5;
+			fov += mouse_motion.x * zoomSpeed;
 		if (mouse_motion.y != 0)
-			fov += mouse_motion.y * movementSpeed * 5;
+			fov += mouse_motion.y * zoomSpeed;
 		ConstrainFOV();
 	}
 
 	iPoint mouse_wheel = App->input->GetMouseWhell();
 	if (mouse_wheel.y != 0) {
-		position -= mouse_wheel.y * front * movementSpeed * 5;
+		position -= mouse_wheel.y * front * zoomSpeed;
 	}
 
 }

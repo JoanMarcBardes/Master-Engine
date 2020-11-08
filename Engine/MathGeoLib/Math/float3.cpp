@@ -868,6 +868,12 @@ float4 float3::ToDir4() const
 	return float4(*this, 0.f);
 }
 
+float float3::ToFloatArray() const
+{
+	float vec3[3] = { x, y, z };
+	return *vec3;
+}
+
 float3 MUST_USE_RESULT float3::RandomDir(LCG &lcg, float length)
 {
 	return POINT_TO_FLOAT3(Sphere(POINT_VEC_SCALAR(0.f), length).RandomPointOnSurface(lcg));

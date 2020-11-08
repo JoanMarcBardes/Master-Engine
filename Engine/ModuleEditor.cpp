@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
+#include "ModuleEditorCamera.h"
 #include "SDL.h"
 #include "GL/glew.h"
 #include "ImGui/imgui.h"
@@ -155,6 +156,7 @@ void ModuleEditor::AddLog(const char* fmt, ...)// IM_FMTARGS(2)
 void ModuleEditor::WindowConfiguration()
 {
 	ImGui::Begin("Configuration");
+	ImGui::Text("Options");
 
 	if (ImGui::CollapsingHeader("Help"))
 	{
@@ -190,14 +192,149 @@ void ModuleEditor::WindowConfiguration()
 		ImGui::SliderInt("Max FPS", &fps, 0, 120);
 		ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
 
-		ImGui::Text("Limit Framerate: %i",fps);
+		ImGui::Text("Limit Framerate: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", fps);
 
 		/*char title[25];
 		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
 		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
 		sprintf_s(title, 25, "Milliseconds %.1f", ms_log[ms_log.size() - 1]);
 		ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));*/
+	}
 
+	if (ImGui::CollapsingHeader("Window"))
+	{ 
+		static bool active = false;
+		ImGui::Checkbox("Active", &active);
+
+		static float brightness = App->window->GetBrightness();
+		ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f, "%0.1f");
+		App->window->SetBrightness(brightness);
+
+		static int width = App->window->GetWidth();
+		ImGui::SliderInt("Width", &width, 0, 1920);
+		static int height = App->window->GetHeight();
+		ImGui::SliderInt("Height", &height, 0, 1080);
+		App->window->SetWidthHeight(width,height);
+
+
+		int refressRate = 59;
+		ImGui::Text("Refresh rate: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", refressRate);
+
+		static bool fullScreen = App->window->GetWindowFull();
+		static bool resizable = App->window->GetResizable();
+		static bool borderless = App->window->GetBorderless();
+		static bool fullDesktop = App->window->GetWindowFull();
+		if (ImGui::Checkbox("FullScreen", &fullScreen)) {
+			App->window->SetFullScreen(fullScreen);
+			fullDesktop = false;
+		}
+
+		ImGui::SameLine(); 
+		if(ImGui::Checkbox("Resizable", &resizable))
+			App->window->SetResizable(resizable);
+
+
+		if(ImGui::Checkbox("Borderless", &borderless))
+			App->window->SetBorderless(borderless);
+
+		ImGui::SameLine(); 
+		if (ImGui::Checkbox("Full Desktop", &fullDesktop)) {
+			App->window->SetFullDesktop(fullDesktop);
+			fullScreen = false;
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Hardware"))
+	{
+		static bool active = false;
+		ImGui::Checkbox("Active", &active);
+
+		ImGui::Text("SDL Version: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+
+		ImGui::SameLine();
+		ImGui::Text("CPUs: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+
+		ImGui::Text("System RAM: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+
+		ImGui::Text("Caps: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+
+		ImGui::SameLine();
+		ImGui::Text("GPU: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+
+		ImGui::Text("Brand: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+
+		ImGui::Text("VRAM Budget: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+
+		ImGui::Text("VRAM Usage: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+
+		ImGui::Text("VRAM Available: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+
+		ImGui::Text("VRAM REserved: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+	}
+
+	if (ImGui::CollapsingHeader("Camera"))
+	{
+		static bool active = false;
+		ImGui::Checkbox("Active", &active);
+
+		static float front[3] = { App->editorCamera->GetFront().ToFloatArray() };
+		ImGui::InputFloat3("Front", front);
+
+		static float up[3] = { App->editorCamera->GetUp().ToFloatArray() };
+		ImGui::InputFloat3("Up", up);
+
+		static float position[3] = { App->editorCamera->GetPosition().ToFloatArray() };
+		ImGui::InputFloat3("Position", position);
+
+		static float movementSpeed = App->editorCamera->GetMovementSpeed();
+		ImGui::DragFloat("Mov Speed", &movementSpeed, 0.01f);
+
+		static float rotationSpeed = App->editorCamera->GetRotationSpeed();
+		ImGui::DragFloat("Rot Speed", &rotationSpeed, 0.005f);
+
+		static float zoomSpeed = App->editorCamera->GetZoomSpeed();
+		ImGui::DragFloat("Zoom Speed", &zoomSpeed, 0.005f);
+
+		static bool frustum = false;
+		ImGui::Checkbox("Frustum Culling", &frustum);
+
+		static float nearPlane = App->editorCamera->GetNearPlane();
+		ImGui::DragFloat("Near Plane", &nearPlane, 0.1f);
+
+		static float farPlane = App->editorCamera->GetFarPlane();
+		ImGui::DragFloat("Far Plane", &farPlane, 1.0f);
+
+		static float fov = App->editorCamera->GetFOV();
+		ImGui::DragFloat("Field of View", &fov, 1.0f);
+
+		static float ascpectRatio = App->editorCamera->GetAspectRatio();
+		ImGui::DragFloat("Aspect Ratio", &ascpectRatio, 0.01f);
+
+		static float col1[3] = { 1.0f, 0.0f, 0.2f };
+		ImGui::ColorEdit3("Background", col1);
+		ImGui::SameLine(); HelpMarker(
+			"Click on the color square to open a color picker.\n"
+			"Click and hold to use drag and drop.\n"
+			"Right-click on the color square to show options.\n"
+			"CTRL+click on individual component to input value.\n");
+
+		ImGui::Text("Current: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+
+		static bool activeCamera = false;
+		ImGui::Checkbox("Is Active Camera", &activeCamera);
 	}
 
 	ImGui::End();

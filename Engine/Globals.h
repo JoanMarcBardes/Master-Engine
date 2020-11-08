@@ -39,6 +39,6 @@ enum update_status
 #define SCREEN_SIZE 2
 #define FULLSCREEN false
 #define VSYNC true
-#define TITLE "Super Awesome Engine"
+#define TITLE "Joan Marc Engine"
 #define DEGTORAD 0.0174532925f // (Pi/180)
 #define RADTODEG 57.2957795f

@@ -313,6 +313,8 @@ public:
 	/** @see x, y, z, class float4, ToPos4(). */
 	float4 ToDir4() const;
 
+	float ToFloatArray() const;
+
 	/// Converts this euclidean (x,y,z) float3 to spherical coordinates representation in the form (azimuth, inclination, radius).
 	/** @note This corresponds to the matrix operation R_y * R_x * (0,0,radius), where R_y is a rotation about the y-axis by azimuth,
 			and R_x is a rotation about the x-axis by inclination.
