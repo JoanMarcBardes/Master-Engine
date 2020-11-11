@@ -1,4 +1,4 @@
-#include "ModuleRenderExercise.h"
+﻿#include "ModuleRenderExercise.h"
 #include "ModuleEditorCamera.h"
 #include "Globals.h"
 #include "Application.h"
@@ -13,6 +13,7 @@
 #include "debugdraw.h"
 #include "debug_draw.hpp"
 #include "ModuleDebugDraw.h"
+#include "ModuleTexture.h"
 
 void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
@@ -132,11 +133,19 @@ bool ModuleRenderExercise::CleanUp()
 // This function must be called one time at creation of vertex buffer
 unsigned ModuleRenderExercise::CreateTriangleVBO()
 {
-	float vtx_data[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f };
+	float buffer_data[] = {
+							-1.0f, -1.0f, 0.0f, // ← v0 pos
+							1.0f, -1.0f, 0.0f, // ← v1 pos
+							0.0f, 1.0f, 0.0f, // ← v2 pos
+
+							0.0f, 0.0f, // ← v0 texcoord
+							1.0f, 0.0f, // ← v1 texcoord
+							0.5f, 1.0f // ← v2 texcoord
+						};
 	unsigned vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vtx_data), vtx_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data, GL_STATIC_DRAW);
 
 	return vbo;
 }
@@ -149,6 +158,11 @@ void ModuleRenderExercise::DestroyVBO(unsigned vbo)
 // This function must be called each frame for drawing the triangle
 void ModuleRenderExercise::RenderVBO(unsigned vbo, unsigned program)
 {
+	float4x4 model = float4x4::FromTRS(
+		float3(2.0f, 0.0f, 0.0f),
+		float4x4::RotateZ(pi / 4.0f),
+		float3(2.0f, 1.0f, 0.0f)
+	);
 	float4x4 view = App->editorCamera->GetViewMatrix();
 	float4x4 proj = App->editorCamera->GetProjection();
 	int height = App->window->GetHeight();
@@ -164,15 +178,17 @@ void ModuleRenderExercise::RenderVBO(unsigned vbo, unsigned program)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glUseProgram(program);
 
-	float4x4 model = float4x4::FromTRS(	float3(2.0f, 0.0f, 0.0f),
-								float4x4::RotateZ(pi / 4.0f),
-								float3(2.0f, 1.0f, 0.0f));
-
-	// TODO: retrieve model view and projection
 	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &view[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &proj[0][0]);
 	// TODO: bind buffer and vertex attributes
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * 3));
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, App->texture->GetImage());
+	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
 
 
 	// 1 triangle to draw = 3 vertices

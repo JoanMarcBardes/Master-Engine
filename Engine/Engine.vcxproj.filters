@@ -175,6 +175,12 @@
     <ClCompile Include="ModuleEditor.cpp">
       <Filter>Module</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleTexture.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleDebugDraw.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MathGeoLib\Algorithm\Random\LCG.h">
@@ -462,6 +468,36 @@
     <ClInclude Include="ModuleEditor.h">
       <Filter>Module</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleTexture.h">
+      <Filter>Module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Desktop\Master\c++\DevIL Windows SDK\include\IL\devil_cpp_wrapper.hpp">
+      <Filter>DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Desktop\Master\c++\DevIL Windows SDK\include\IL\devil_internal_exports.h">
+      <Filter>DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Desktop\Master\c++\DevIL Windows SDK\include\IL\il.h">
+      <Filter>DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Desktop\Master\c++\DevIL Windows SDK\include\IL\ilu.h">
+      <Filter>DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Desktop\Master\c++\DevIL Windows SDK\include\IL\ilut.h">
+      <Filter>DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Desktop\Master\c++\DevIL Windows SDK\include\IL\ilut_config.h">
+      <Filter>DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Desktop\Master\c++\DevIL Windows SDK\include\IL\ilu_region.h">
+      <Filter>DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Desktop\Master\c++\DevIL Windows SDK\include\IL\il_wrap.h">
+      <Filter>DevIL</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleDebugDraw.h">
+      <Filter>Module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MathGeoLib">
@@ -499,6 +535,9 @@
     </Filter>
     <Filter Include="ImGui">
       <UniqueIdentifier>{e4506364-f794-4c30-8d07-417ef8e3d93c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DevIL">
+      <UniqueIdentifier>{98119892-af85-492b-9330-1c7177ed1c46}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
