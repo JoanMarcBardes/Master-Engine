@@ -9,6 +9,10 @@
 #include "SDL.h"
 #include "GL/glew.h"
 #include "ModuleProgram.h"
+#include "MathGeoLib/Math/float4x4.h"
+#include "debugdraw.h"
+#include "debug_draw.hpp"
+#include "ModuleDebugDraw.h"
 
 void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
@@ -38,7 +42,7 @@ void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLe
 	case GL_DEBUG_SEVERITY_LOW: tmp_severity = "low"; break;
 	case GL_DEBUG_SEVERITY_NOTIFICATION: tmp_severity = "notification"; break;
 	};
-	LOG("<Source:%s> <Type:%s> <Severity:%s> <ID:%d> <Message:%s>\n", tmp_source, tmp_type, tmp_severity, id, message);
+	//LOG("<Source:%s> <Type:%s> <Severity:%s> <ID:%d> <Message:%s>\n", tmp_source, tmp_type, tmp_severity, id, message);
 }
 
 ModuleRenderExercise::ModuleRenderExercise()
@@ -55,8 +59,10 @@ bool ModuleRenderExercise::Init()
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4); // desired version
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // we want a double buffer
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24); // we want to have a depth buffer with 24 bits
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); // we want to have a stencil buffer with 8 bits
 
 	// Create an OpenGL context associated with the window.
 	_context = SDL_GL_CreateContext(App->window->window);
@@ -71,13 +77,15 @@ bool ModuleRenderExercise::Init()
 
 	_vbo = CreateTriangleVBO();
 
-	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-
-	unsigned idVertex = App->program->CompileShader(VertexShaderID, App->program->LoadShaderSource("default_vertex.glsl"));
-	unsigned idFragment = App->program->CompileShader(FragmentShaderID, App->program->LoadShaderSource("default_fragment.glsl"));
+	unsigned idVertex = App->program->CompileShader (GL_VERTEX_SHADER, App->program->LoadShaderSource("default_vertex.glsl"));
+	unsigned idFragment = App->program->CompileShader(GL_FRAGMENT_SHADER, App->program->LoadShaderSource("default_fragment.glsl"));
 
 	_program = App->program->CreateProgram(idVertex, idFragment);
+
+	glEnable(GL_DEPTH_TEST); // Enable depth test
+	glEnable(GL_CULL_FACE); // Enable cull backward faces
+	glFrontFace(GL_CCW); // Front faces will be counter clockwise
+
 
 	return true;
 }
@@ -97,8 +105,9 @@ update_status ModuleRenderExercise::PreUpdate()
 // Called every draw update
 update_status ModuleRenderExercise::Update()
 {
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	RenderVBO(_vbo, _program);
+	//glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+	RenderVBO(_vbo, _program);	
+
 	return UPDATE_CONTINUE;
 }
 
@@ -140,14 +149,32 @@ void ModuleRenderExercise::DestroyVBO(unsigned vbo)
 // This function must be called each frame for drawing the triangle
 void ModuleRenderExercise::RenderVBO(unsigned vbo, unsigned program)
 {
+	float4x4 view = App->editorCamera->GetViewMatrix();
+	float4x4 proj = App->editorCamera->GetProjection();
+	int height = App->window->GetHeight();
+	int width = App->window->GetWidth();
+
+	App->debugDraw->Draw(view, proj, width, height);
+
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glEnableVertexAttribArray(0);
 
 	// size = 3 float per vertex
 	// stride = 0 is equivalent to stride = sizeof(float)*3
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
 	glUseProgram(program);
+
+	float4x4 model = float4x4::FromTRS(	float3(2.0f, 0.0f, 0.0f),
+								float4x4::RotateZ(pi / 4.0f),
+								float3(2.0f, 1.0f, 0.0f));
+
+	// TODO: retrieve model view and projection
+	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &proj[0][0]);
+	// TODO: bind buffer and vertex attributes
+
+
 	// 1 triangle to draw = 3 vertices
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }

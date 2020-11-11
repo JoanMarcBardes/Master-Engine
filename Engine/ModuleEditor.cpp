@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRender.h"
+#include "ModuleRenderExercise.h"
 #include "ModuleWindow.h"
 #include "ModuleEditorCamera.h"
 #include "SDL.h"
@@ -46,7 +47,9 @@ bool ModuleEditor::Init()
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 
-	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer->GetContext());
+	//void* context = App->renderer->GetContext();
+	void* context = App->renderExercise->GetContext();
+	ImGui_ImplSDL2_InitForOpenGL(App->window->window, context);
 	ImGui_ImplOpenGL3_Init();
 	return true;
 }
@@ -65,9 +68,9 @@ update_status ModuleEditor::Update()
 {
 	//ImGui::ShowDemoWindow();
     bool show = true;
-	WindowHello();
-	WindowConsole();
-	WindowConfiguration();
+	//WindowHello();
+	//WindowConsole();
+	//WindowConfiguration();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

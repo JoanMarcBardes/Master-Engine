@@ -19,6 +19,8 @@ public:
 	void DestroyVBO(unsigned vbo);
 	void RenderVBO(unsigned vbo, unsigned program);
 
+	void* GetContext() const { return _context; }
+
 private:
 	unsigned _vbo;
 	void* _context;

@@ -12,10 +12,6 @@
 
 ModuleEditorCamera::ModuleEditorCamera()
 {
-	aspectRatio = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
-	position = float3(0, 0, -3);
-	front = float3::unitZ;
-	up = float3::unitY;
 	direction = (position - float3::zero).Normalized();
 	right = Cross(up, direction).Normalized();
 	worldUp = Cross(direction, right).Normalized();
@@ -30,6 +26,7 @@ bool ModuleEditorCamera::Init()
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	frustum.SetViewPlaneDistances(nearPlane, farPlane);
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
+	position = float3(0, 1, 3);
 	frustum.SetPos(position);
 	frustum.SetFront(front);
 	frustum.SetUp(up);
@@ -58,15 +55,6 @@ update_status ModuleEditorCamera::Update()
 
 update_status ModuleEditorCamera::PostUpdate()
 {
-	float4x4 projectionGL = frustum.ProjectionMatrix().Transposed(); //<-- Important to transpose!
-	float4x4 viewMatrix = frustum.ViewMatrix();
-	float4x4 viewProjGL = viewMatrix.Transposed(); //<-- Important to transpose!
-
-	//Send the frustum projection matrix to OpenGL
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(*projectionGL.v);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(*viewProjGL.v);
 	return UPDATE_CONTINUE;
 }
 
@@ -103,8 +91,8 @@ void ModuleEditorCamera::InputManager()
 	if (keys[SDL_SCANCODE_LSHIFT])
 		speed = 2;
 
-	movementSpeed = 0.01f * deltaTime * speed;
-	rotationSpeed = 0.1f * deltaTime * speed;
+	movementSpeed = 0.005f * deltaTime * speed;
+	rotationSpeed = 0.05f * deltaTime * speed;
 	zoomSpeed = 0.05f * deltaTime * speed;
 
 	if (keys[SDL_SCANCODE_Q])

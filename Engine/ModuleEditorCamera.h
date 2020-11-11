@@ -12,19 +12,19 @@ class ModuleEditorCamera : public Module
 {
 private:
 	Frustum frustum;
-	float3 position;
-	float3 front;
-	float3 right;
-	float3 up;
-	float3 worldUp;
+	float3 position = float3::zero;
+	float3 front = -float3::unitZ;
+	float3 up = float3::unitY;
 	float3 direction;
+	float3 right;
+	float3 worldUp;
 		
-	float yaw = 90;
+	float yaw = -90;
 	float pitch = 0;	
 	float nearPlane = 0.1f;
 	float farPlane = 200.0f;
 	float fov = 90;
-	float aspectRatio = 1;
+	float aspectRatio = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
 
 	float deltaTime = 0.0f;	// Time between current frame and last frame
 	float lastFrame = 0.0f; // Time of last frame
@@ -67,6 +67,9 @@ public:
 	const float GetMovementSpeed() { return movementSpeed; }
 	const float GetRotationSpeed() { return rotationSpeed; }
 	const float GetZoomSpeed()	   { return zoomSpeed; }
+
+	const float4x4 GetProjection() { return frustum.ProjectionMatrix(); }
+	const float4x4 GetViewMatrix() { return frustum.ViewMatrix(); }
 
 	//set
 	void SetFrustum(Frustum _frustum)	{ frustum = std::move(_frustum); }
