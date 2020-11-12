@@ -134,14 +134,22 @@ bool ModuleRenderExercise::CleanUp()
 unsigned ModuleRenderExercise::CreateTriangleVBO()
 {
 	float buffer_data[] = {
-							-1.0f, -1.0f, 0.0f, // ← v0 pos
-							1.0f, -1.0f, 0.0f, // ← v1 pos
-							0.0f, 1.0f, 0.0f, // ← v2 pos
+		-1.0f, -1.0f, 0.0f, // ← v0 pos
+		1.0f, -1.0f, 0.0f, // ← v1 pos
+		-1.0f, 1.0f, 0.0f, // ← v2 pos
 
-							0.0f, 0.0f, // ← v0 texcoord
-							1.0f, 0.0f, // ← v1 texcoord
-							0.5f, 1.0f // ← v2 texcoord
-						};
+		-1.0f, 1.0f, 0.0f, // ← v2 pos
+		1.0f, -1.0f, 0.0f, // ← v1 pos
+		1.0f, 1.0f, 0.0f, // ← v3 pos
+
+		0.0f, 0.0f, // ← v0 texcoord
+		1.0f, 0.0f, // ← v1 texcoord
+		0.0f, 1.0f, // ← v2 texcoord
+
+		0.0f, 1.0f, // ← v2 texcoord
+		1.0f, 0.0f, // ← v1 texcoord
+		1.0f, 1.0f // ← v3 texcoord
+	};
 	unsigned vbo;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active
@@ -158,11 +166,11 @@ void ModuleRenderExercise::DestroyVBO(unsigned vbo)
 // This function must be called each frame for drawing the triangle
 void ModuleRenderExercise::RenderVBO(unsigned vbo, unsigned program)
 {
-	float4x4 model = float4x4::FromTRS(
-		float3(2.0f, 0.0f, 0.0f),
-		float4x4::RotateZ(pi / 4.0f),
+	float4x4 model = float4x4::identity;/*float4x4::FromTRS(
+		float3(0.0f, 0.0f, 0.0f),
+		float4x4::RotateZ(0),// pi / 4.0f),
 		float3(2.0f, 1.0f, 0.0f)
-	);
+	);*/
 	float4x4 view = App->editorCamera->GetViewMatrix();
 	float4x4 proj = App->editorCamera->GetProjection();
 	int height = App->window->GetHeight();
@@ -184,15 +192,17 @@ void ModuleRenderExercise::RenderVBO(unsigned vbo, unsigned program)
 	// TODO: bind buffer and vertex attributes
 
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * 3));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 6 * 3));
 	
 	glActiveTexture(GL_TEXTURE0);
+
+	//stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
 	glBindTexture(GL_TEXTURE_2D, App->texture->GetImage());
 	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
 
 
 	// 1 triangle to draw = 3 vertices
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 

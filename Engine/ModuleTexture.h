@@ -17,6 +17,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	void Load(const char* path);
 	const ILuint GetTexId() { return texid; }
 	const GLuint GetImage() { return image; }
 
