@@ -26,7 +26,7 @@ bool ModuleEditorCamera::Init()
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	frustum.SetViewPlaneDistances(nearPlane, farPlane);
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
-	position = float3(0, 1, 3);
+	position = float3(0, 1, 4);
 	frustum.SetPos(position);
 	frustum.SetFront(front);
 	frustum.SetUp(up);

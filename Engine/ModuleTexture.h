@@ -18,11 +18,10 @@ public:
 	bool CleanUp();
 
 	void Load(const char* path);
-	const ILuint GetTexId() { return texid; }
-	const GLuint GetImage() { return image; }
 
-private:
-	ILuint texid;
-	GLuint image;
+	const GLuint GetTexture() { return texture; }
+
+private:	
+	GLuint texture;
 };
 

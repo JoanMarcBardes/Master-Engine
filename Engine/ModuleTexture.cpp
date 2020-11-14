@@ -1,6 +1,6 @@
 #include "ModuleTexture.h"
 #include "ModuleRenderExercise.h"
-//#include "DevIL-SDK/include/IL/ilu.h"
+#include "DevIL-SDK/include/IL/ilu.h"
 
 ModuleTexture::ModuleTexture()
 {
@@ -22,8 +22,9 @@ bool ModuleTexture::Init()
 
 void ModuleTexture::Load(const char* path) 
 {
-	ilGenImages(1, &texid); //Generation of one image name
-	ilBindImage(texid);		//Binding of image name
+	ILuint imageId;
+	ilGenImages(1, &imageId); //Generation of one image name
+	ilBindImage(imageId);		//Binding of image name
 
 	ILboolean ok = ilLoadImage(path);
 	if (ok)
@@ -33,12 +34,15 @@ void ModuleTexture::Load(const char* path)
 		{
 			LOG("ERROR ilConvertImage");
 		}
-		glGenTextures(1, &image);				//Texture name generation
-		glBindTexture(GL_TEXTURE_2D, image);	//Binding of texture name
+		glGenTextures(1, &texture);				//Texture name generation
+		glBindTexture(GL_TEXTURE_2D, texture);	//Binding of texture name
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	//We will use linear interpolation for magnification filter
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	//We will use linear interpolation for minifying filter
 
-		//iluFlipImage();
+		ILinfo info;
+		iluGetImageInfo(&info);
+		if(info.Origin == IL_ORIGIN_UPPER_LEFT)
+			iluFlipImage(); //this must be called before glTexImage2D
 
 		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH),
 			ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE,
@@ -48,7 +52,7 @@ void ModuleTexture::Load(const char* path)
 	{
 		LOG("ERROR ilLoadImage");
 	}
-	ilDeleteImages(1, &texid); //Because we have already copied image data into texture data we can release memory used by image.
+	ilDeleteImages(1, &imageId); //Because we have already copied image data into texture data we can release memory used by image.
 }
 
 update_status ModuleTexture::PreUpdate()
@@ -71,6 +75,7 @@ update_status ModuleTexture::PostUpdate()
 bool ModuleTexture::CleanUp()
 {
 	LOG("Destroying ModuleTexture");
+	ilDeleteImage(texture);
 
 	return true;
 }

@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GL/glew.h"
+#include "MathGeoLib/Math/float4x4.h"
 
 class ModuleRenderExercise : public Module
 {
@@ -15,15 +16,22 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	unsigned CreateTriangleVBO();
+	void CreateTriangleVBO();
+	void CreateQuadVBO();
 	void DestroyVBO(unsigned vbo);
-	void RenderVBO(unsigned vbo, unsigned program);
+	//void RenderVBO(unsigned vbo, unsigned program);
+	void Draw();
+	void DrawTriangle(const float4x4& proj, const float4x4& view);
+	void DrawQuad(const float4x4& proj, const float4x4& view);
+
 
 	void* GetContext() const { return _context; }
 
 private:
-	unsigned _vbo;
-	void* _context;
-	unsigned _program;
+	unsigned _vboQuad = 0;
+	unsigned _vboTriangle = 0;
+
+	void* _context = nullptr;
+	unsigned _program = 0;
 };
 

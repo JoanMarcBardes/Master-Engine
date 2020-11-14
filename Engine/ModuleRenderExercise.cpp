@@ -76,7 +76,8 @@ bool ModuleRenderExercise::Init()
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
 #endif
 
-	_vbo = CreateTriangleVBO();
+	CreateTriangleVBO();
+	CreateQuadVBO();
 
 	unsigned idVertex = App->program->CompileShader (GL_VERTEX_SHADER, App->program->LoadShaderSource("default_vertex.glsl"));
 	unsigned idFragment = App->program->CompileShader(GL_FRAGMENT_SHADER, App->program->LoadShaderSource("default_fragment.glsl"));
@@ -106,8 +107,7 @@ update_status ModuleRenderExercise::PreUpdate()
 // Called every draw update
 update_status ModuleRenderExercise::Update()
 {
-	//glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	RenderVBO(_vbo, _program);	
+	Draw();
 
 	return UPDATE_CONTINUE;
 }
@@ -123,7 +123,8 @@ bool ModuleRenderExercise::CleanUp()
 {
 	LOG("Destroying ModuleRenderExercise");
 
-	DestroyVBO(_vbo);
+	DestroyVBO(_vboTriangle);
+	DestroyVBO(_vboQuad);
 	SDL_GL_DeleteContext(_context);
 
 	return true;
@@ -131,7 +132,20 @@ bool ModuleRenderExercise::CleanUp()
 
 
 // This function must be called one time at creation of vertex buffer
-unsigned ModuleRenderExercise::CreateTriangleVBO()
+void ModuleRenderExercise::CreateTriangleVBO()
+{
+	float buffer_data[] = {
+		2.0f, 0.0f, 0.0f, // ← v0 pos
+		4.0f, 0.0f, 0.0f, // ← v1 pos
+		3.0f, 2.0f, 0.0f, // ← v2 pos
+	};
+
+	glGenBuffers(1, &_vboTriangle);
+	glBindBuffer(GL_ARRAY_BUFFER, _vboTriangle); // set vbo active
+	glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data, GL_STATIC_DRAW);
+}
+
+void ModuleRenderExercise::CreateQuadVBO()
 {
 	float buffer_data[] = {
 		-1.0f, -1.0f, 0.0f, // ← v0 pos
@@ -150,27 +164,22 @@ unsigned ModuleRenderExercise::CreateTriangleVBO()
 		1.0f, 0.0f, // ← v1 texcoord
 		1.0f, 1.0f // ← v3 texcoord
 	};
-	unsigned vbo;
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo); // set vbo active
-	glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data, GL_STATIC_DRAW);
 
-	return vbo;
+	glGenBuffers(1, &_vboQuad);
+	glBindBuffer(GL_ARRAY_BUFFER, _vboQuad); // set vbo active
+	glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data, GL_STATIC_DRAW);
 }
+
 // This function must be called one time at destruction of vertex buffer
 void ModuleRenderExercise::DestroyVBO(unsigned vbo)
 {
 	glDeleteBuffers(1, &vbo);
 }
 
-// This function must be called each frame for drawing the triangle
-void ModuleRenderExercise::RenderVBO(unsigned vbo, unsigned program)
+
+void ModuleRenderExercise::Draw()
 {
-	float4x4 model = float4x4::identity;/*float4x4::FromTRS(
-		float3(0.0f, 0.0f, 0.0f),
-		float4x4::RotateZ(0),// pi / 4.0f),
-		float3(2.0f, 1.0f, 0.0f)
-	);*/
+	float4x4 model = float4x4::identity;
 	float4x4 view = App->editorCamera->GetViewMatrix();
 	float4x4 proj = App->editorCamera->GetProjection();
 	int height = App->window->GetHeight();
@@ -178,30 +187,57 @@ void ModuleRenderExercise::RenderVBO(unsigned vbo, unsigned program)
 
 	App->debugDraw->Draw(view, proj, width, height);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glUseProgram(_program);
+	DrawQuad(proj, view);
+	DrawTriangle(proj, view);
+}
+
+// This function must be called each frame for drawing the triangle
+void ModuleRenderExercise::DrawTriangle(const float4x4& proj, const float4x4& view)
+{
+	float4x4 model = float4x4::identity;
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vboTriangle);
 	glEnableVertexAttribArray(0);
 
 	// size = 3 float per vertex
 	// stride = 0 is equivalent to stride = sizeof(float)*3
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glUseProgram(program);
 
-	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, &view[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, &proj[0][0]);
-	// TODO: bind buffer and vertex attributes
+	glUniformMatrix4fv(glGetUniformLocation(_program, "model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(_program, "view"), 1, GL_TRUE, (const float*)&view);
+	glUniformMatrix4fv(glGetUniformLocation(_program, "proj"), 1, GL_TRUE, (const float*)&proj);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * 3));
+
+	glActiveTexture(GL_TEXTURE0);
+
+	// 1 triangle to draw = 3 vertices
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
+void ModuleRenderExercise::DrawQuad(const float4x4& proj, const float4x4& view)
+{
+	float4x4 model = float4x4::identity;
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vboQuad);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	glUniformMatrix4fv(glGetUniformLocation(_program, "model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(_program, "view"), 1, GL_TRUE, (const float*) &view);
+	glUniformMatrix4fv(glGetUniformLocation(_program, "proj"), 1, GL_TRUE, (const float*) &proj);
 
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 6 * 3));
 	
 	glActiveTexture(GL_TEXTURE0);
 
-	//stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-	glBindTexture(GL_TEXTURE_2D, App->texture->GetImage());
-	glUniform1i(glGetUniformLocation(program, "mytexture"), 0);
+	glBindTexture(GL_TEXTURE_2D, App->texture->GetTexture());
+	glUniform1i(glGetUniformLocation(_program, "mytexture"), 0);
 
-
-	// 1 triangle to draw = 3 vertices
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
