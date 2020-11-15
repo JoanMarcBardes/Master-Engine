@@ -14,6 +14,7 @@
 #include "debug_draw.hpp"
 #include "ModuleDebugDraw.h"
 #include "ModuleTexture.h"
+#include "ModuleModel.h"
 
 void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
@@ -78,6 +79,7 @@ bool ModuleRenderExercise::Init()
 
 	CreateTriangleVBO();
 	CreateQuadVBO();
+	LoadMeshes();
 
 	unsigned idVertex = App->program->CompileShader (GL_VERTEX_SHADER, App->program->LoadShaderSource("default_vertex.glsl"));
 	unsigned idFragment = App->program->CompileShader(GL_FRAGMENT_SHADER, App->program->LoadShaderSource("default_fragment.glsl"));
@@ -170,6 +172,12 @@ void ModuleRenderExercise::CreateQuadVBO()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data, GL_STATIC_DRAW);
 }
 
+void ModuleRenderExercise::LoadMeshes()
+{
+	App->model->Load("BakerHouse.fbx");
+}
+
+
 // This function must be called one time at destruction of vertex buffer
 void ModuleRenderExercise::DestroyVBO(unsigned vbo)
 {
@@ -188,8 +196,9 @@ void ModuleRenderExercise::Draw()
 	App->debugDraw->Draw(view, proj, width, height);
 
 	glUseProgram(_program);
-	DrawQuad(proj, view);
-	DrawTriangle(proj, view);
+	//DrawQuad(proj, view);
+	//DrawTriangle(proj, view);
+	DrawMesh(proj, view);
 }
 
 // This function must be called each frame for drawing the triangle
@@ -239,6 +248,11 @@ void ModuleRenderExercise::DrawQuad(const float4x4& proj, const float4x4& view)
 	glUniform1i(glGetUniformLocation(_program, "mytexture"), 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void ModuleRenderExercise::DrawMesh(const float4x4& proj, const float4x4& view)
+{
+	App->model->DrawMeshes(_program, proj, view);
 }
 
 

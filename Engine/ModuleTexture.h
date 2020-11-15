@@ -17,7 +17,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	void Load(const char* path);
+	GLuint Load(const char* path);
 
 	const GLuint GetTexture() { return texture; }
 

@@ -20,7 +20,7 @@ bool ModuleTexture::Init()
 	return true;
 }
 
-void ModuleTexture::Load(const char* path) 
+GLuint ModuleTexture::Load(const char* path)
 {
 	ILuint imageId;
 	ilGenImages(1, &imageId); //Generation of one image name
@@ -53,6 +53,8 @@ void ModuleTexture::Load(const char* path)
 		LOG("ERROR ilLoadImage");
 	}
 	ilDeleteImages(1, &imageId); //Because we have already copied image data into texture data we can release memory used by image.
+
+	return texture;
 }
 
 update_status ModuleTexture::PreUpdate()
