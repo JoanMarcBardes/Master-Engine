@@ -23,6 +23,13 @@ Mesh::~Mesh()
     glDeleteBuffers(1, &vao);
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ebo);
+
+    Vertices.clear();
+    Vertices.shrink_to_fit();
+    Indices.clear();
+    Indices.shrink_to_fit();
+    TexturesIds.clear();
+    TexturesIds.shrink_to_fit();
 }
 
 void Mesh::setupMesh()
@@ -33,7 +40,6 @@ void Mesh::setupMesh()
 
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
     glBufferData(GL_ARRAY_BUFFER, numVertices * sizeof(Vertex), &Vertices[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -49,7 +55,7 @@ void Mesh::setupMesh()
     glBindVertexArray(0);
 }
 
-void Mesh::Draw(unsigned program, const float4x4& proj, const float4x4& view)
+void Mesh::Draw(const unsigned program, const float4x4& proj, const float4x4& view)
 {
     float4x4 model = float4x4::identity;
     glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);

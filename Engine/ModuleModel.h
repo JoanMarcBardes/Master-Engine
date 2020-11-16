@@ -16,9 +16,9 @@ public:
 	void Load(const char* file_name);
 	void LoadMeshes(const aiScene* scene);
 
-	Mesh createMesh(aiMesh* mesh, const aiScene* scene);
+	Mesh createMesh(const aiMesh* mesh, const aiScene* scene);
 	std::vector<unsigned int> loadMaterials(const aiScene* scene);
-	void DrawMeshes(unsigned program, const float4x4& proj, const float4x4& view);
+	void DrawMeshes(const unsigned program, const float4x4& proj, const float4x4& view);
 
 private:
 	std::vector<unsigned int> texturesList;

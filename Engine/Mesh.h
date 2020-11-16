@@ -13,7 +13,7 @@ class Mesh
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<unsigned int> textureId);
     ~Mesh();
-    void Draw(unsigned program, const float4x4& proj, const float4x4& view);
+    void Draw(const unsigned program, const float4x4& proj, const float4x4& view);
 
 private:
     std::vector<Vertex>       Vertices;

@@ -12,7 +12,13 @@ using namespace std;
 
 ModuleModel::ModuleModel() { }
 
-ModuleModel::~ModuleModel() { }
+ModuleModel::~ModuleModel() 
+{
+    texturesList.clear();
+    texturesList.shrink_to_fit();
+    meshesList.clear();
+    meshesList.shrink_to_fit();
+}
 
 void ModuleModel::Load(const char* file_name)
 {
@@ -38,7 +44,7 @@ void ModuleModel::LoadMeshes(const aiScene* scene)
     }
 }
 
-Mesh ModuleModel::createMesh(aiMesh* mesh, const aiScene* scene)
+Mesh ModuleModel::createMesh(const aiMesh* mesh, const aiScene* scene)
 {
     //Vertices
     vector<Vertex> vertices;
@@ -95,7 +101,7 @@ vector<unsigned int> ModuleModel::loadMaterials(const aiScene* scene)
     return texturesIds;
 }
 
-void ModuleModel::DrawMeshes(unsigned program, const float4x4& proj, const float4x4& view)
+void ModuleModel::DrawMeshes(const unsigned program, const float4x4& proj, const float4x4& view)
 {
     for (unsigned int i = 0; i < meshesList.size(); i++)
     {
