@@ -7,6 +7,7 @@
 #include "Assimp/include/assimp/postprocess.h"
 #include "Mesh.h"
 #include <vector>
+#include "DebugLeaks.h"
 
 using namespace std;
 

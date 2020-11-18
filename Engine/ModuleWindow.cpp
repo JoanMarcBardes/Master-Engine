@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "DebugLeaks.h"
 
 ModuleWindow::ModuleWindow()
 {

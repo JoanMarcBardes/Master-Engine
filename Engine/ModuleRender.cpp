@@ -6,6 +6,7 @@
 #include "SDL.h"
 #include "GL/glew.h"
 #include "MathGeoLib/Geometry/Frustum.h"
+#include "DebugLeaks.h"
 
 ModuleRender::ModuleRender()
 {

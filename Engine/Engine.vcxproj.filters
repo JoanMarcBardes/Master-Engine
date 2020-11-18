@@ -184,6 +184,7 @@
     <ClCompile Include="ModuleModel.cpp">
       <Filter>Module</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MathGeoLib\Algorithm\Random\LCG.h">
@@ -731,6 +732,10 @@
     </ClInclude>
     <ClInclude Include="Assimp\include\assimp\Compiler\pushpack1.h">
       <Filter>Assimp\include\assimp\Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="DebugLeaks.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

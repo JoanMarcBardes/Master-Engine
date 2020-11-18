@@ -1,7 +1,6 @@
 #pragma once
 #include "MathGeoLib/Geometry/Frustum.h"
 #include <vector>
-#include <string>
 
 struct Vertex {
     float3 Position;

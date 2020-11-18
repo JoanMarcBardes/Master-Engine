@@ -3,6 +3,7 @@
 #include "GL/glew.h"
 #include <vector>
 #include <string>
+#include "DebugLeaks.h"
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<unsigned int> texturesIds)
 {

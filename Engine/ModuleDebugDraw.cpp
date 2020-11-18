@@ -5,6 +5,7 @@
 #include "DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
 
 #include "GL/glew.h"
+#include "DebugLeaks.h"
 
 class DDRenderInterfaceCoreGL final
     : public dd::RenderInterface

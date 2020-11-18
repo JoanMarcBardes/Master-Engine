@@ -1,6 +1,7 @@
 #include "ModuleTexture.h"
 #include "ModuleRenderExercise.h"
 #include "DevIL-SDK/include/IL/ilu.h"
+#include "DebugLeaks.h"
 
 ModuleTexture::ModuleTexture()
 {
@@ -8,6 +9,7 @@ ModuleTexture::ModuleTexture()
 
 ModuleTexture::~ModuleTexture()
 {
+	CleanUp();
 }
 
 bool ModuleTexture::Init()

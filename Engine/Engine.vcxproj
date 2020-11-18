@@ -224,6 +224,7 @@
     <ClInclude Include="Assimp\include\assimp\XMLTools.h" />
     <ClInclude Include="Assimp\include\assimp\ZipArchiveIOSystem.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="DebugLeaks.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_opengl3.h" />

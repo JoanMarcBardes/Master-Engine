@@ -11,6 +11,8 @@
 #include "ModuleTexture.h"
 #include "ModuleModel.h"
 
+#include "DebugLeaks.h"
+
 using namespace std;
 
 Application::Application()

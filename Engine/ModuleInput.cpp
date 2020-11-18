@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "SDL/include/SDL.h"
 #include "ImGui/imgui_impl_sdl.h"
+#include "DebugLeaks.h"
 
 #define MAX_KEYS 300
 
@@ -17,7 +18,7 @@ ModuleInput::ModuleInput() : Module(), mouse({ 0, 0 }), mouse_motion({ 0,0 }), m
 // Destructor
 ModuleInput::~ModuleInput()
 {
-	RELEASE_ARRAY(keyboard);
+	CleanUp();
 }
 
 // Called before render is available
@@ -129,5 +130,6 @@ bool ModuleInput::CleanUp()
 {
 	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
+	RELEASE_ARRAY(keyboard);
 	return true;
 }

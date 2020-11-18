@@ -9,6 +9,7 @@
 #include "GL/glew.h"
 #include "MathGeoLib/Geometry/Frustum.h"
 #include "MathGeoLib/Time/Clock.h"
+#include "DebugLeaks.h"
 
 ModuleEditorCamera::ModuleEditorCamera()
 {

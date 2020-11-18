@@ -10,6 +10,7 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl3.h"
+#include "DebugLeaks.h"
 
 
 static void HelpMarker(const char* desc)

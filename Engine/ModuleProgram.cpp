@@ -2,6 +2,7 @@
 #include "ModuleProgram.h"
 #include "SDL.h"
 #include "GL/glew.h"
+#include "DebugLeaks.h"
 
 
 ModuleProgram::ModuleProgram()
