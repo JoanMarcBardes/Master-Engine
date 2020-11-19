@@ -18,6 +18,7 @@ private:
 	float3 direction;
 	float3 right;
 	float3 worldUp;
+	float3 target = float3::zero;
 		
 	float yaw = -90;
 	float pitch = 0;	
@@ -47,6 +48,9 @@ public:
 	void InputManager();
 	void UpdateAplayYawPitch(float xOffset, float yOffset);
 	void UpadateCamera();
+	void Rotate(const float3x3& rotationMatrix);
+	void LookAt(const float3& target);
+	void Print();
 
 	//get
 	const Frustum GetFrustum()	{ return frustum; }
@@ -80,11 +84,15 @@ public:
 	void SetWolrdUp(float3 _worldUp)	{ worldUp = std::move(_worldUp); }
 	void SetDiection(float3 _direction)	{ direction = std::move(_direction); }
 
-	void SetYaw(float _yaw)				{ yaw = std::move(_yaw); }
-	void SetPitch(float _pitch)			{ pitch = std::move(_pitch); }	
-	void SetNearPlane(float _nearPlane)	{ nearPlane = std::move(_nearPlane); }
-	void SetFarPlane(float _farPlane)	{ farPlane = std::move(_farPlane); }
-	void SetFOV(float _fov)				{ fov = std::move(_fov); }
-	void SetAspectRatio(float _aspectRatio) { aspectRatio = std::move(_aspectRatio); }
+	void SetYaw(float _yaw)				{ yaw = _yaw; }
+	void SetPitch(float _pitch)			{ pitch = _pitch; }	
+	void SetNearPlane(float _nearPlane)	{ nearPlane = _nearPlane; }
+	void SetFarPlane(float _farPlane)	{ farPlane = _farPlane; }
+	void SetFOV(float _fov)				{ fov = _fov; }
+	void SetAspectRatio(float _aspectRatio) { aspectRatio = _aspectRatio; }
+
+	void SetMovementSpeed(float _movementSpeed) { movementSpeed = _movementSpeed; }
+	void SetRotationSpeed(float _rotationSpeed) { rotationSpeed = _rotationSpeed; }
+	void SetZoomSpeed(float _zoomSpeed) { zoomSpeed = _zoomSpeed; }
 };
 

@@ -71,7 +71,7 @@ update_status ModuleEditor::Update()
     bool show = true;
 	//WindowHello();
 	//WindowConsole();
-	//WindowConfiguration();
+	WindowConfiguration();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -293,38 +293,48 @@ void ModuleEditor::WindowConfiguration()
 		static bool active = false;
 		ImGui::Checkbox("Active", &active);
 
-		static float front[3] = { App->editorCamera->GetFront().ToFloatArray() };
-		ImGui::InputFloat3("Front", front);
+		float3 front = App->editorCamera->GetFront();
+		ImGui::DragFloat3("Front", front.ptr());
+		App->editorCamera->SetFront(front);
 
-		static float up[3] = { App->editorCamera->GetUp().ToFloatArray() };
-		ImGui::InputFloat3("Up", up);
+		float3 up = App->editorCamera->GetUp();
+		ImGui::DragFloat3("Up", up.ptr());
+		App->editorCamera->SetUp(up);
 
-		static float position[3] = { App->editorCamera->GetPosition().ToFloatArray() };
-		ImGui::InputFloat3("Position", position);
+		float3 pos = App->editorCamera->GetPosition();
+		ImGui::DragFloat3("Position", pos.ptr());
+		App->editorCamera->SetPosition(pos);
 
-		static float movementSpeed = App->editorCamera->GetMovementSpeed();
+		float movementSpeed = App->editorCamera->GetMovementSpeed();
 		ImGui::DragFloat("Mov Speed", &movementSpeed, 0.01f);
+		App->editorCamera->SetMovementSpeed(movementSpeed);
 
-		static float rotationSpeed = App->editorCamera->GetRotationSpeed();
+		float rotationSpeed = App->editorCamera->GetRotationSpeed();
 		ImGui::DragFloat("Rot Speed", &rotationSpeed, 0.005f);
+		App->editorCamera->SetRotationSpeed(rotationSpeed);
 
-		static float zoomSpeed = App->editorCamera->GetZoomSpeed();
+		float zoomSpeed = App->editorCamera->GetZoomSpeed();
 		ImGui::DragFloat("Zoom Speed", &zoomSpeed, 0.005f);
+		App->editorCamera->SetZoomSpeed(zoomSpeed);
 
 		static bool frustum = false;
 		ImGui::Checkbox("Frustum Culling", &frustum);
 
-		static float nearPlane = App->editorCamera->GetNearPlane();
+		float nearPlane = App->editorCamera->GetNearPlane();
 		ImGui::DragFloat("Near Plane", &nearPlane, 0.1f);
+		App->editorCamera->SetNearPlane(nearPlane);
 
-		static float farPlane = App->editorCamera->GetFarPlane();
+		float farPlane = App->editorCamera->GetFarPlane();
 		ImGui::DragFloat("Far Plane", &farPlane, 1.0f);
+		App->editorCamera->SetFarPlane(farPlane);
 
-		static float fov = App->editorCamera->GetFOV();
+		float fov = App->editorCamera->GetFOV();
 		ImGui::DragFloat("Field of View", &fov, 1.0f);
+		App->editorCamera->SetFOV(fov);
 
-		static float ascpectRatio = App->editorCamera->GetAspectRatio();
+		float ascpectRatio = App->editorCamera->GetAspectRatio();
 		ImGui::DragFloat("Aspect Ratio", &ascpectRatio, 0.01f);
+		App->editorCamera->SetAspectRatio(ascpectRatio);
 
 		static float col1[3] = { 1.0f, 0.0f, 0.2f };
 		ImGui::ColorEdit3("Background", col1);

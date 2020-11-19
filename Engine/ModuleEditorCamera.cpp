@@ -9,6 +9,7 @@
 #include "GL/glew.h"
 #include "MathGeoLib/Geometry/Frustum.h"
 #include "MathGeoLib/Time/Clock.h"
+#include "ImGui/imgui_impl_sdl.h"
 #include "DebugLeaks.h"
 
 ModuleEditorCamera::ModuleEditorCamera()
@@ -78,13 +79,13 @@ void ModuleEditorCamera::WindowResized(unsigned width, unsigned height)
 
 void ModuleEditorCamera::InputManager()
 {
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.WantCaptureKeyboard || io.WantCaptureMouse)
+		return;
+
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 	float speed = 1;
-	bool ctrl = false;
 	bool alt = false;
-
-	if (keys[SDL_SCANCODE_LCTRL])
-		ctrl = true;
 
 	if (keys[SDL_SCANCODE_LALT])
 		alt = true;
@@ -128,7 +129,7 @@ void ModuleEditorCamera::InputManager()
 		
 	iPoint mouse_motion = App->input->GetMouseMotion();
 	//Drag camera
-	if (App->input->LeftMouseOn() && ctrl) {
+	if (App->input->LeftMouseOn() && !alt) {
 		if (mouse_motion.x != 0)
 			position -= mouse_motion.x * Cross(front, up).Normalized() * movementSpeed;
 		if (mouse_motion.y != 0)
@@ -152,6 +153,15 @@ void ModuleEditorCamera::InputManager()
 		position -= mouse_wheel.y * front * zoomSpeed;
 	}
 
+
+	if (keys[SDL_SCANCODE_F]) {
+		LookAt(float3::zero);
+	}
+
+	if (keys[SDL_SCANCODE_P]) {
+		LOG("PRESED P");
+		Print();
+	}
 }
 
 void ModuleEditorCamera::ConstrainPitch()
@@ -193,4 +203,44 @@ void ModuleEditorCamera::UpadateCamera()
 	frustum.SetPos(position);
 	frustum.SetFront(front);
 	frustum.SetUp(up);
+}
+
+void ModuleEditorCamera::Rotate(const float3x3& rotationMatrix)
+{
+	vec oldFront = front.Normalized();
+	vec oldUp = up.Normalized();
+	front = rotationMatrix * oldFront;
+	up = rotationMatrix * oldUp;	
+}
+
+void ModuleEditorCamera::LookAt(const float3& target)
+{
+	vec direction = target - position;
+	direction.Normalize();
+
+	/*pitch = asin(direction.y / direction.Length());
+	yaw = asin(direction.x / (cos(pitch) * direction.Length()));
+	//pitch = asin(-direction.y);
+	//yaw = atan2(direction.x, direction.z);
+	vec auxFront;
+	auxFront.x = cos(DEGTORAD * yaw) * cos(DEGTORAD * pitch);
+	auxFront.y = sin(DEGTORAD * pitch);
+	auxFront.z = sin(DEGTORAD * yaw) * cos(DEGTORAD * pitch);
+
+	front = auxFront.Normalized();
+	right = Cross(front, worldUp).Normalized();
+	up = Cross(right, front).Normalized();*/
+
+	Rotate(float3x3::LookAt(front.Normalized(), direction, up.Normalized(), float3::unitY));
+}
+
+void ModuleEditorCamera::Print()
+{
+	LOG("Psition: %f, %f, %f", position.x, position.y, position.z);
+	LOG("front: %f, %f, %f", front.x, front.y, front.z);
+	LOG("up: %f, %f, %f", up.x, up.y, up.z);
+	LOG("FOV: %f", fov);
+	LOG("aspectRatio: %f", aspectRatio);
+	LOG("nearPlane: %f", nearPlane);
+	LOG("farPlane: %f", farPlane);
 }

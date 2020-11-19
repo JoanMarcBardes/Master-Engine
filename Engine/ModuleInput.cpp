@@ -76,6 +76,11 @@ update_status ModuleInput::Update()
 	
     while (SDL_PollEvent(&sdlEvent) != 0)
     {
+		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.WantCaptureKeyboard || io.WantCaptureMouse)
+			return UPDATE_CONTINUE;
+
         switch (sdlEvent.type)
         {
             case SDL_QUIT:
@@ -113,7 +118,6 @@ update_status ModuleInput::Update()
 				break;
         }
 
-		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
     }
 
 
