@@ -31,7 +31,7 @@ public:
 	void SetBrightness(const float brightness) { SDL_SetWindowBrightness(window, brightness); }
 	void SetWidth(const int w) { width = w; SDL_SetWindowSize(window, width, height); }
 	void SetHeight(const int h) { height = h; SDL_SetWindowSize(window, width, height); }
-	void SetWidthHeight(const int w, const int h) { width = w; height = h; SDL_SetWindowSize(window, width, height); }
+	void SetWidthHeight(const int w, const int h);
 
 	void SetFullScreen(const bool active) { windowsFull = active ? SDL_WINDOW_FULLSCREEN : 0; SDL_SetWindowFullscreen(window, windowsFull); }
 	void SetResizable(const bool active) { resizable = active; SDL_SetWindowResizable(window, active ? SDL_TRUE : SDL_FALSE); }

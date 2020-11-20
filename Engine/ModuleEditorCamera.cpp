@@ -28,7 +28,7 @@ bool ModuleEditorCamera::Init()
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	frustum.SetViewPlaneDistances(nearPlane, farPlane);
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
-	position = float3(0, 1, 4);
+	position = float3(0, 2, 6);
 	frustum.SetPos(position);
 	frustum.SetFront(front);
 	frustum.SetUp(up);
@@ -85,7 +85,7 @@ void ModuleEditorCamera::InputManager()
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 	float speed = 1;
-	bool alt = false;
+	bool alt = false;	
 
 	if (keys[SDL_SCANCODE_LALT])
 		alt = true;
@@ -93,27 +93,42 @@ void ModuleEditorCamera::InputManager()
 	if (keys[SDL_SCANCODE_LSHIFT])
 		speed = 2;
 
+	if (keys[SDL_SCANCODE_O])
+		orbit = !orbit;
+
 	movementSpeed = 0.005f * deltaTime * speed;
 	rotationSpeed = 0.05f * deltaTime * speed;
 	zoomSpeed = 0.05f * deltaTime * speed;
 
-	if (keys[SDL_SCANCODE_Q])
+	if (keys[SDL_SCANCODE_Q]) {
 		position += up * movementSpeed;
+		if(orbit) LookAt(float3::zero);
+	}
 
-	if (keys[SDL_SCANCODE_E])
+	if (keys[SDL_SCANCODE_E]){
 		position -= up * movementSpeed;
+		if (orbit) LookAt(float3::zero);
+	}
 
-	if (keys[SDL_SCANCODE_W])
+	if (keys[SDL_SCANCODE_W]){
 		position += front * movementSpeed;
+		if (orbit) LookAt(float3::zero);
+	}
 
-	if (keys[SDL_SCANCODE_S])
+	if (keys[SDL_SCANCODE_S]){
 		position -= front * movementSpeed;
+		if (orbit) LookAt(float3::zero);
+	}
 
-	if (keys[SDL_SCANCODE_A])
+	if (keys[SDL_SCANCODE_A]){
 		position -= Cross(front, up).Normalized() * movementSpeed;
+		if (orbit) LookAt(float3::zero);
+	}
 
-	if (keys[SDL_SCANCODE_D])
+	if (keys[SDL_SCANCODE_D]){
 		position += Cross(front, up).Normalized() * movementSpeed;
+		if (orbit) LookAt(float3::zero);
+	}
 
 	if (keys[SDL_SCANCODE_UP])
 		UpdateAplayYawPitch(0, 1);
@@ -134,8 +149,9 @@ void ModuleEditorCamera::InputManager()
 			position -= mouse_motion.x * Cross(front, up).Normalized() * movementSpeed;
 		if (mouse_motion.y != 0)
 			position -= mouse_motion.y *front * movementSpeed;
+		if (orbit) LookAt(float3::zero);
 	}
-	//Orbit
+	//Rotate
 	else if (App->input->LeftMouseOn() && alt) {
 		UpdateAplayYawPitch(mouse_motion.x, -mouse_motion.y);
 	}
@@ -213,24 +229,16 @@ void ModuleEditorCamera::Rotate(const float3x3& rotationMatrix)
 	up = rotationMatrix * oldUp;	
 }
 
-void ModuleEditorCamera::LookAt(const float3& target)
+void ModuleEditorCamera::LookAt(const float3& newTarget)
 {
-	vec direction = target - position;
+	direction = newTarget - position;
 	direction.Normalize();
+	target = newTarget;
+	//float oldYaw = yaw;
+	//pitch = asin(direction.y / direction.Length()) * RADTODEG;
+	//yaw = asin(direction.x / (cos(pitch) * direction.Length())) * RADTODEG - 90;
 
-	/*pitch = asin(direction.y / direction.Length());
-	yaw = asin(direction.x / (cos(pitch) * direction.Length()));
-	//pitch = asin(-direction.y);
-	//yaw = atan2(direction.x, direction.z);
-	vec auxFront;
-	auxFront.x = cos(DEGTORAD * yaw) * cos(DEGTORAD * pitch);
-	auxFront.y = sin(DEGTORAD * pitch);
-	auxFront.z = sin(DEGTORAD * yaw) * cos(DEGTORAD * pitch);
-
-	front = auxFront.Normalized();
-	right = Cross(front, worldUp).Normalized();
-	up = Cross(right, front).Normalized();*/
-
+	ConstrainPitch();
 	Rotate(float3x3::LookAt(front.Normalized(), direction, up.Normalized(), float3::unitY));
 }
 

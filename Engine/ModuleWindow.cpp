@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleEditorCamera.h"
 #include "DebugLeaks.h"
 
 ModuleWindow::ModuleWindow()
@@ -69,3 +70,10 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
+void ModuleWindow::SetWidthHeight(const int w, const int h)
+{ 
+	width = w;
+	height = h; 
+	App->editorCamera->WindowResized(width, height);
+	SDL_SetWindowSize(window, width, height); 
+}

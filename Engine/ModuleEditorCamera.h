@@ -32,6 +32,8 @@ private:
 	float movementSpeed = 0.0f;
 	float rotationSpeed = 0.0f;
 	float zoomSpeed = 0.0f;
+
+	bool orbit = false;
 public:
 	ModuleEditorCamera();
 	~ModuleEditorCamera();
@@ -71,6 +73,7 @@ public:
 	const float GetMovementSpeed() { return movementSpeed; }
 	const float GetRotationSpeed() { return rotationSpeed; }
 	const float GetZoomSpeed()	   { return zoomSpeed; }
+	const bool GetOrbit() { return orbit; }
 
 	const float4x4 GetProjection() { return frustum.ProjectionMatrix(); }
 	const float4x4 GetViewMatrix() { return frustum.ViewMatrix(); }
@@ -94,5 +97,7 @@ public:
 	void SetMovementSpeed(float _movementSpeed) { movementSpeed = _movementSpeed; }
 	void SetRotationSpeed(float _rotationSpeed) { rotationSpeed = _rotationSpeed; }
 	void SetZoomSpeed(float _zoomSpeed) { zoomSpeed = _zoomSpeed; }
+	void SetOrbit(bool _orbit) { orbit = _orbit; }
+
 };
 

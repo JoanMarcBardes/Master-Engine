@@ -215,9 +215,14 @@ void ModuleEditor::WindowConfiguration()
 		ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f, "%0.1f");
 		App->window->SetBrightness(brightness);
 
-		static int width = App->window->GetWidth();
+		//glutGet(GLUT_WINDOW_WIDTH)
+		//glutGet(GLUT_WINDOW_HEIGHT)
+		int width, height;
+		SDL_GetWindowSize(App->window->window, &width, &height);
+
+		//static int width = App->window->GetWidth(); 
 		ImGui::SliderInt("Width", &width, 0, 1920);
-		static int height = App->window->GetHeight();
+		//static int height = App->window->GetHeight();
 		ImGui::SliderInt("Height", &height, 0, 1080);
 		App->window->SetWidthHeight(width,height);
 
@@ -290,6 +295,10 @@ void ModuleEditor::WindowConfiguration()
 
 	if (ImGui::CollapsingHeader("Camera"))
 	{
+		bool orbit = App->editorCamera->GetOrbit();
+		ImGui::Checkbox("Orbit", &orbit);
+		App->editorCamera->SetOrbit(orbit);
+
 		static bool active = false;
 		ImGui::Checkbox("Active", &active);
 
@@ -304,6 +313,18 @@ void ModuleEditor::WindowConfiguration()
 		float3 pos = App->editorCamera->GetPosition();
 		ImGui::DragFloat3("Position", pos.ptr());
 		App->editorCamera->SetPosition(pos);
+
+		float3 direction = App->editorCamera->GetDiection();
+		ImGui::DragFloat3("Direction", direction.ptr());
+		App->editorCamera->SetDiection(direction);
+
+		float yaw = App->editorCamera->GetYaw();
+		ImGui::DragFloat("Yaw", &yaw, 0.01f);
+		App->editorCamera->SetYaw(yaw);
+
+		float pitch = App->editorCamera->GetPitch();
+		ImGui::DragFloat("Pitch", &pitch, 0.01f);
+		App->editorCamera->SetPitch(pitch);
 
 		float movementSpeed = App->editorCamera->GetMovementSpeed();
 		ImGui::DragFloat("Mov Speed", &movementSpeed, 0.01f);
