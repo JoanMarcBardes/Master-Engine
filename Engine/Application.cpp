@@ -10,6 +10,7 @@
 #include "ModuleDebugDraw.h"
 #include "ModuleTexture.h"
 #include "ModuleModel.h"
+#include "MathGeoLib/Time/Clock.h"
 
 #include "DebugLeaks.h"
 
@@ -42,6 +43,8 @@ bool Application::Init()
 {
 	bool ret = true;
 
+	fpsInital = Clock::Tick();
+
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 		ret = (*it)->Init();
 
@@ -51,6 +54,7 @@ bool Application::Init()
 update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
+	CalculateFPS();
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PreUpdate();
@@ -59,7 +63,7 @@ update_status Application::Update()
 		ret = (*it)->Update();
 
 	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
-		ret = (*it)->PostUpdate();
+		ret = (*it)->PostUpdate();		
 
 	return ret;
 }
@@ -72,4 +76,15 @@ bool Application::CleanUp()
 		ret = (*it)->CleanUp();
 
 	return ret;
+}
+
+void Application::CalculateFPS() {
+	fpsCount++;
+	unsigned int fpsInterval = Clock::Tick() - fpsInital;
+	if (fpsInterval > Clock::TicksPerSec())
+	{
+		fps = fpsCount;
+		fpsCount = 0;
+		fpsInital = Clock::Tick();
+	}
 }

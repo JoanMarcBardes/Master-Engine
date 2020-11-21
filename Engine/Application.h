@@ -1,6 +1,7 @@
 #pragma once
 
 #include<list>
+#include<vector>
 #include "Globals.h"
 #include "Module.h"
 
@@ -27,6 +28,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	unsigned int GetFPS() { return fps; }
+
 public:
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
@@ -40,8 +43,14 @@ public:
 	ModuleModel* model = nullptr;
 
 private:
-
 	std::list<Module*> modules;
+
+	unsigned int fps = 0;
+	unsigned int fpsCount = 0;
+	unsigned int fpsInital = 0;
+
+private: 
+	void CalculateFPS();
 
 };
 

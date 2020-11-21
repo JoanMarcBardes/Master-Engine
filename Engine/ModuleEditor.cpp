@@ -28,6 +28,7 @@ static void HelpMarker(const char* desc)
 
 ModuleEditor::ModuleEditor()
 {
+	fpsLog.resize(fpsLogSize);
 }
 
 // Destructor
@@ -71,6 +72,7 @@ update_status ModuleEditor::Update()
     bool show = true;
 	//WindowHello();
 	//WindowConsole();
+	MainMenuBar();
 	WindowConfiguration();
 
 	ImGui::Render();
@@ -164,24 +166,9 @@ void ModuleEditor::WindowConfiguration()
 
 	if (ImGui::CollapsingHeader("Help"))
 	{
-		ImGui::Text("ABOUT THIS DEMO:");
-		ImGui::BulletText("Sections below are demonstrating many aspects of the library.");
-		ImGui::BulletText("The \"Examples\" menu above leads to more demo contents.");
-		ImGui::BulletText("The \"Tools\" menu above gives access to: About Box, Style Editor,\n"
-			"and Metrics (general purpose Dear ImGui debugging tool).");
+		if (ImGui::Button("Button"))
+			RequestBrowser("http://www.google.com");
 		ImGui::Separator();
-
-		ImGui::Text("PROGRAMMER GUIDE:");
-		ImGui::BulletText("See the ShowDemoWindow() code in imgui_demo.cpp. <- you are here!");
-		ImGui::BulletText("See comments in imgui.cpp.");
-		ImGui::BulletText("See example applications in the examples/ folder.");
-		ImGui::BulletText("Read the FAQ at http://www.dearimgui.org/faq/");
-		ImGui::BulletText("Set 'io.ConfigFlags |= NavEnableKeyboard' for keyboard controls.");
-		ImGui::BulletText("Set 'io.ConfigFlags |= NavEnableGamepad' for gamepad controls.");
-		ImGui::Separator();
-
-		ImGui::Text("USER GUIDE:");
-		ImGui::ShowUserGuide();
 	}
 
 	if (ImGui::CollapsingHeader("Application"))
@@ -192,17 +179,20 @@ void ModuleEditor::WindowConfiguration()
 		static char organization[128] = "UPC talent";
 		ImGui::InputText("Organization", organization, IM_ARRAYSIZE(organization));
 
-		static int fps = 0;
-		ImGui::SliderInt("Max FPS", &fps, 0, 120);
-		ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
-
-		ImGui::Text("Limit Framerate: "); ImGui::SameLine();
+		unsigned int fps = App->GetFPS();
+		ImGui::Text("FPS: "); ImGui::SameLine();
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", fps);
 
-		/*char title[25];
-		sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
-		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-		sprintf_s(title, 25, "Milliseconds %.1f", ms_log[ms_log.size() - 1]);
+		fpsLog.erase(fpsLog.begin());
+		fpsLog.push_back(fps);
+		fpsLog.size();
+
+		char title[25];
+		sprintf_s(title, 25, "Framerate %i", fps);
+		float arr[100];
+		std::copy(fpsLog.begin(), fpsLog.end(), arr);
+		ImGui::PlotHistogram("##framerate", arr, IM_ARRAYSIZE(arr), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+		/*sprintf_s(title, 25, "Milliseconds %.1f", ms_log[ms_log.size() - 1]);
 		ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));*/
 	}
 
@@ -225,11 +215,6 @@ void ModuleEditor::WindowConfiguration()
 		//static int height = App->window->GetHeight();
 		ImGui::SliderInt("Height", &height, 0, 1080);
 		App->window->SetWidthHeight(width,height);
-
-
-		int refressRate = 59;
-		ImGui::Text("Refresh rate: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", refressRate);
 
 		static bool fullScreen = App->window->GetWindowFull();
 		static bool resizable = App->window->GetResizable();
@@ -257,40 +242,24 @@ void ModuleEditor::WindowConfiguration()
 
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
-		static bool active = false;
-		ImGui::Checkbox("Active", &active);
-
+		SDL_version linked;
+		SDL_GetVersion(&linked);		
 		ImGui::Text("SDL Version: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i.%i.%i", linked.major, linked.minor, linked.patch);
 
-		ImGui::SameLine();
+		ImGui::Separator();
 		ImGui::Text("CPUs: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i (cache: %ikb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
 
 		ImGui::Text("System RAM: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", SDL_GetSystemRAM());
 
-		ImGui::Text("Caps: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
-
-		ImGui::SameLine();
+		ImGui::Separator();
 		ImGui::Text("GPU: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", glGetString(GL_VENDOR));
 
 		ImGui::Text("Brand: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
-
-		ImGui::Text("VRAM Budget: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
-
-		ImGui::Text("VRAM Usage: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
-
-		ImGui::Text("VRAM Available: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
-
-		ImGui::Text("VRAM REserved: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %s", glGetString(GL_RENDERER));
 	}
 
 	if (ImGui::CollapsingHeader("Camera"))
@@ -372,5 +341,23 @@ void ModuleEditor::WindowConfiguration()
 		ImGui::Checkbox("Is Active Camera", &activeCamera);
 	}
 
-	ImGui::End();
+	ImGui::End();	
+}
+
+void ModuleEditor::MainMenuBar()
+{
+	ImGui::BeginMainMenuBar();
+	if (ImGui::BeginMenu("Help"))
+	{
+		if (ImGui::MenuItem("Documentation"))
+		{
+			RequestBrowser("http://www.google.com");
+		}
+	}
+	ImGui::EndMainMenuBar();
+}
+
+void ModuleEditor::RequestBrowser(const char* url)
+{
+	ShellExecute(NULL, "open", url, NULL, NULL, SW_SHOWDEFAULT);
 }
