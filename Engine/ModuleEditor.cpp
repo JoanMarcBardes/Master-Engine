@@ -5,12 +5,16 @@
 #include "ModuleRenderExercise.h"
 #include "ModuleWindow.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleModel.h"
+#include "Mesh.h"
 #include "SDL.h"
 #include "GL/glew.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_impl_opengl3.h"
 #include "DebugLeaks.h"
+#include <vector>
+#include <string>
 
 
 static void HelpMarker(const char* desc)
@@ -339,6 +343,42 @@ void ModuleEditor::WindowConfiguration()
 
 		static bool activeCamera = false;
 		ImGui::Checkbox("Is Active Camera", &activeCamera);
+	}
+
+	if (ImGui::CollapsingHeader("Models info"))
+	{
+		std::vector<Mesh> meshes = App->model->GetMeshes();
+		
+		for( int i = 0; i<meshes.size(); ++i)
+		{
+			if (ImGui::TreeNode((void*)(intptr_t)i, "Mesh %i", i))
+			{
+				ImGui::Text("Name: %s", meshes[i].GetName());
+				ImGui::Text("Num vertices: "); ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", meshes[i].GetNumVertices());
+
+				ImGui::Text("Num indices: "); ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", meshes[i].GetNumIndices());
+				ImGui::Separator();
+
+				ImGui::Text("Texture");
+				std::vector<unsigned int> texturesIds = meshes[0].GetTexturesIds();
+				float my_tex_w = 150;
+				float my_tex_h = 150;
+				for (int j = 0; j < texturesIds.size(); ++j)
+				{
+					if (j != 0) ImGui::SameLine();
+					ImVec2 pos = ImGui::GetCursorScreenPos();
+					ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
+					ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
+					ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
+					ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
+					ImGui::Image((ImTextureID)texturesIds[j], ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
+				}
+
+				ImGui::TreePop();
+			}
+		}
 	}
 
 	ImGui::End();	

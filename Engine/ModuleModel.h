@@ -20,6 +20,8 @@ public:
 	std::vector<unsigned int> loadMaterials(const aiScene* scene);
 	void DrawMeshes(const unsigned program, const float4x4& proj, const float4x4& view);
 
+	std::vector<Mesh> GetMeshes() { return meshesList; }
+
 private:
 	std::vector<unsigned int> texturesList;
 	std::vector<Mesh> meshesList;

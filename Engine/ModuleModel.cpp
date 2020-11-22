@@ -6,8 +6,9 @@
 #include "Assimp/include/assimp/cimport.h"
 #include "Assimp/include/assimp/postprocess.h"
 #include "Mesh.h"
-#include <vector>
 #include "DebugLeaks.h"
+#include <vector>
+#include <string>
 
 using namespace std;
 
@@ -28,7 +29,7 @@ void ModuleModel::Load(const char* file_name)
 	{
 		// TODO: LoadTextures(scene->mMaterials, scene->mNumMaterials);
 		// TODO: LoadMeshes(scene->mMeshes, scene->mNumMeshes);
-        LoadMeshes(scene);
+       LoadMeshes(scene);
 	}
 	else
 	{
@@ -82,7 +83,7 @@ Mesh ModuleModel::createMesh(const aiMesh* mesh, const aiScene* scene)
     vector<unsigned int> texturesIds = loadMaterials(scene);
 
     //Mesh created from the extracted mesh data
-    return Mesh(vertices, indices, texturesIds);
+    return Mesh(vertices, indices, texturesIds, mesh->mName.C_Str());
 }
 
 vector<unsigned int> ModuleModel::loadMaterials(const aiScene* scene)

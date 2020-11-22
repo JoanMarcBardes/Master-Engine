@@ -1,11 +1,11 @@
 #include "Mesh.h"
 #include "SDL.h"
 #include "GL/glew.h"
+#include "DebugLeaks.h"
 #include <vector>
 #include <string>
-#include "DebugLeaks.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<unsigned int> texturesIds)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<unsigned int> texturesIds, /*std::string*/ const char* _name)
 {
     Vertices = vertices;
     Indices = indices;
@@ -15,6 +15,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 
     numVertices = vertices.size();
     numIndices = indices.size();
+    name = _name;
 
     setupMesh();
 }
@@ -64,8 +65,10 @@ void Mesh::Draw(const unsigned program, const float4x4& proj, const float4x4& vi
     glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, (const float*)&proj);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, TexturesIds[0]);
-    glUniform1i(glGetUniformLocation(program, "difuse"), 0);
+    if (TexturesIds.size() > 0) {
+        glBindTexture(GL_TEXTURE_2D, TexturesIds[0]);
+        glUniform1i(glGetUniformLocation(program, "difuse"), 0);
+    }    
 
     // draw mesh
     glBindVertexArray(vao);
