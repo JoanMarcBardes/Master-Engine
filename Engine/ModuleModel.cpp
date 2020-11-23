@@ -29,7 +29,10 @@ void ModuleModel::Load(const char* file_name)
 	{
 		// TODO: LoadTextures(scene->mMaterials, scene->mNumMaterials);
 		// TODO: LoadMeshes(scene->mMeshes, scene->mNumMeshes);
-       LoadMeshes(scene);
+        string path = string(file_name);
+        directory = path.substr(0, path.find_last_of('/'));
+        directory += "/";
+        LoadMeshes(scene);
 	}
 	else
 	{
@@ -80,7 +83,8 @@ Mesh ModuleModel::createMesh(const aiMesh* mesh, const aiScene* scene)
     }
 
     //Textures 
-    vector<unsigned int> texturesIds = loadMaterials(scene);
+    //vector<unsigned int> texturesIds = loadMaterials(scene);
+    vector<unsigned int> texturesIds = loadMaterials2(mesh,scene);
 
     //Mesh created from the extracted mesh data
     return Mesh(vertices, indices, texturesIds, mesh->mName.C_Str());
@@ -98,6 +102,44 @@ vector<unsigned int> ModuleModel::loadMaterials(const aiScene* scene)
             texturesIds.push_back(App->texture->Load(file.data));
             texturesList.push_back(App->texture->Load(file.data));
         }
+    }
+
+    return texturesIds;
+}
+
+vector<unsigned int> ModuleModel::loadMaterials2(const aiMesh* mesh, const aiScene* scene)
+{
+    aiString file;
+    vector<unsigned int> texturesIds;
+    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+
+    unsigned int nDIFFUSE = material->GetTextureCount(aiTextureType_DIFFUSE);
+    unsigned int nSPECULAR = material->GetTextureCount(aiTextureType_SPECULAR);
+    unsigned int nHEIGHT = material->GetTextureCount(aiTextureType_HEIGHT);
+    unsigned int nAMBIENT = material->GetTextureCount(aiTextureType_AMBIENT);
+
+    for (unsigned int i = 0; i < material->GetTextureCount(aiTextureType_DIFFUSE); i++)
+    {
+        material->GetTexture(aiTextureType_DIFFUSE, i, &file);
+        string path = (directory + file.data).c_str();
+
+        bool skip = false;
+        for (unsigned int j = 0; j < pathList.size(); j++)
+        {
+            if (pathList[j] == path)
+            {
+                texturesIds.push_back(texturesList[j]);
+                skip = true;
+                break;
+            }
+        }
+        if (!skip)
+        {   // if texture hasn't been loaded already, load it
+            texturesIds.push_back(App->texture->Load(path.c_str()));
+            texturesList.push_back(App->texture->Load(path.c_str()));
+            pathList.push_back(path);
+        }
+        path.clear();
     }
 
     return texturesIds;

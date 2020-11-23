@@ -175,7 +175,17 @@ void ModuleRenderExercise::CreateQuadVBO()
 
 void ModuleRenderExercise::LoadMeshes()
 {
-	App->model->Load("BakerHouse.fbx");
+	//App->model->Load("BakerHouse.fbx");
+	App->model->Load("Models/BakerHouse/BakerHouse.fbx");
+	//App->model->Load("Models/backpack/backpack.obj");
+
+	//App->model->Load("Models/AmongUs/AmongUs.fbx");
+	//App->model->Load("Models/aug/aug.fbx");
+	//App->model->Load("Models/BurntCroissant/BurntCroissant.fbx");
+	//App->model->Load("Models/crow/crow.fbx");
+	//App->model->Load("Models/fox/fox.fbx");
+	//App->model->Load("Models/herschel_bag/herschel_bag.fbx");
+	//App->model->Load("Models/WoodGirl/WoodGirl.fbx");
 }
 
 
