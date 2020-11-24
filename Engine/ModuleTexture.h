@@ -20,6 +20,7 @@ public:
 	GLuint Load(const char* path);
 
 	const GLuint GetTexture() { return texture; }
+	void DeleteTexture(unsigned int textureId);
 
 private:	
 	GLuint texture;

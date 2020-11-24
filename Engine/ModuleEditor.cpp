@@ -358,12 +358,13 @@ void ModuleEditor::WindowConfiguration()
 
 				ImGui::Text("Transformation");
 				float4x4 model = meshes[i].GetModel();
-				float3 position = model.TranslatePart();
-				float3 rotate = model.RotatePart().ToEulerXYZ();
-				float3 sacale = model.GetScale();
+				float3 translate;
+				float4x4 rotate;
+				float3 sacale;
+				model.Decompose(translate, rotate, sacale);
 
-				ImGui::InputFloat3("Position", position.ptr());
-				ImGui::InputFloat3("Rotate", rotate.ptr());
+				ImGui::InputFloat3("Position", translate.ptr());
+				ImGui::InputFloat3("Rotate", rotate.ToEulerXYZ().ptr());
 				ImGui::InputFloat3("Scale", sacale.ptr());
 				ImGui::Separator();
 

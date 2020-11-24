@@ -78,8 +78,11 @@ update_status ModuleTexture::PostUpdate()
 // Called before quitting
 bool ModuleTexture::CleanUp()
 {
-	LOG("Destroying ModuleTexture");
-	ilDeleteImage(texture);
-
 	return true;
 }
+
+void ModuleTexture::DeleteTexture(unsigned int textureId)
+{
+	glDeleteTextures(1, &textureId);
+}
+

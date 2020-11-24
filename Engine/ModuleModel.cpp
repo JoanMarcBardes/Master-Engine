@@ -24,6 +24,9 @@ ModuleModel::~ModuleModel()
 
 bool ModuleModel::CleanUp() 
 {
+    for (unsigned i = 0; i < texturesList.size(); ++i) {
+        App->texture->DeleteTexture(texturesList[i]);
+    }
     texturesList.clear();
     texturesList.shrink_to_fit();
     meshesList.clear();

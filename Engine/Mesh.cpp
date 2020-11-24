@@ -66,10 +66,10 @@ void Mesh::Draw(const unsigned program, const float4x4& proj, const float4x4& vi
     glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, (const float*)&proj);
 
     glActiveTexture(GL_TEXTURE0);
-    if (TexturesIds.size() > 0) {
-        glBindTexture(GL_TEXTURE_2D, TexturesIds[0]);
-        glUniform1i(glGetUniformLocation(program, "difuse"), 0);
-    }    
+    for (int i = 0; i < TexturesIds.size(); ++i) {
+        glBindTexture(GL_TEXTURE_2D, TexturesIds[i]);
+        glUniform1i(glGetUniformLocation(program, "difuse"+i), i);
+    }
 
     // draw mesh
     glBindVertexArray(vao);
