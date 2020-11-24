@@ -23,7 +23,7 @@ public:
 	void Draw();
 	void DrawTriangle(const float4x4& proj, const float4x4& view);
 	void DrawQuad(const float4x4& proj, const float4x4& view);
-	void DrawMesh(const float4x4& proj, const float4x4& view);
+	void DrawMesh(const float4x4& proj, const float4x4& view, const float4x4& model);
 
 
 	void* GetContext() const { return _context; }

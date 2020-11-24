@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<unsigned int> texturesIds, /*std::string*/ const char* _name)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<unsigned int> texturesIds, const char* _name)
 {
     Vertices = vertices;
     Indices = indices;
@@ -16,6 +16,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
     numVertices = vertices.size();
     numIndices = indices.size();
     name = _name;
+    model = float4x4::identity;
 
     setupMesh();
 }
@@ -57,10 +58,10 @@ void Mesh::setupMesh()
     glBindVertexArray(0);
 }
 
-void Mesh::Draw(const unsigned program, const float4x4& proj, const float4x4& view)
+void Mesh::Draw(const unsigned program, const float4x4& proj, const float4x4& view, const float4x4& _model)
 {
-    float4x4 model = float4x4::identity;
-    glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, &model[0][0]);
+    model = _model;
+    glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*)&model);
     glUniformMatrix4fv(glGetUniformLocation(program, "view"), 1, GL_TRUE, (const float*)&view);
     glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, (const float*)&proj);
 

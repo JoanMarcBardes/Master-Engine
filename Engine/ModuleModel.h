@@ -20,7 +20,7 @@ public:
 	Mesh createMesh(const aiMesh* mesh, const aiScene* scene);
 	std::vector<unsigned int> loadMaterials(const aiScene* scene);
 	std::vector<unsigned int> loadMaterials2(const aiMesh* mesh, const aiScene* scene);
-	void DrawMeshes(const unsigned program, const float4x4& proj, const float4x4& view);
+	void DrawMeshes(const unsigned program, const float4x4& proj, const float4x4& view, const float4x4& model);
 
 	std::vector<Mesh> GetMeshes() { return meshesList; }
 

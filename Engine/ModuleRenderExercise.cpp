@@ -209,7 +209,7 @@ void ModuleRenderExercise::Draw()
 	glUseProgram(_program);
 	//DrawQuad(proj, view);
 	//DrawTriangle(proj, view);
-	DrawMesh(proj, view);
+	DrawMesh(proj, view, model);
 }
 
 // This function must be called each frame for drawing the triangle
@@ -261,9 +261,9 @@ void ModuleRenderExercise::DrawQuad(const float4x4& proj, const float4x4& view)
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
-void ModuleRenderExercise::DrawMesh(const float4x4& proj, const float4x4& view)
+void ModuleRenderExercise::DrawMesh(const float4x4& proj, const float4x4& view, const float4x4& model)
 {
-	App->model->DrawMeshes(_program, proj, view);
+	App->model->DrawMeshes(_program, proj, view, model);
 }
 
 

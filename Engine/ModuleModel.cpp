@@ -145,10 +145,10 @@ vector<unsigned int> ModuleModel::loadMaterials2(const aiMesh* mesh, const aiSce
     return texturesIds;
 }
 
-void ModuleModel::DrawMeshes(const unsigned program, const float4x4& proj, const float4x4& view)
+void ModuleModel::DrawMeshes(const unsigned program, const float4x4& proj, const float4x4& view, const float4x4& model)
 {
     for (unsigned int i = 0; i < meshesList.size(); i++)
     {
-        meshesList[i].Draw(program, proj, view);
+        meshesList[i].Draw(program, proj, view, model);
     }
 }

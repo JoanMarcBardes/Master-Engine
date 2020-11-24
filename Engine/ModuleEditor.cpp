@@ -354,6 +354,20 @@ void ModuleEditor::WindowConfiguration()
 			if (ImGui::TreeNode((void*)(intptr_t)i, "Mesh %i", i))
 			{
 				ImGui::Text("Name: %s", meshes[i].GetName());
+				ImGui::Separator();
+
+				ImGui::Text("Transformation");
+				float4x4 model = meshes[i].GetModel();
+				float3 position = model.TranslatePart();
+				float3 rotate = model.RotatePart().ToEulerXYZ();
+				float3 sacale = model.GetScale();
+
+				ImGui::InputFloat3("Position", position.ptr());
+				ImGui::InputFloat3("Rotate", rotate.ptr());
+				ImGui::InputFloat3("Scale", sacale.ptr());
+				ImGui::Separator();
+
+				ImGui::Text("Geometry");
 				ImGui::Text("Num vertices: "); ImGui::SameLine();
 				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", meshes[i].GetNumVertices());
 

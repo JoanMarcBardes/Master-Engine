@@ -13,12 +13,13 @@ class Mesh
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<unsigned int> textureId, const char* name);
     ~Mesh();
-    void Draw(const unsigned program, const float4x4& proj, const float4x4& view);
+    void Draw(const unsigned program, const float4x4& proj, const float4x4& view, const float4x4& model);
 
     const unsigned int GetNumVertices() { return numVertices; };
     const unsigned int GetNumIndices() { return numIndices; };
     const std::vector<unsigned int> GetTexturesIds() { return TexturesIds; };
     const char* GetName() { return name; }
+    const float4x4 GetModel() { return model; }
 
 private:
     std::vector<Vertex>       Vertices;
@@ -27,6 +28,7 @@ private:
     unsigned int vao, vbo, ebo;
     unsigned int numVertices, numIndices;
     const char* name;
+    float4x4 model;
 
     void setupMesh();
 };
