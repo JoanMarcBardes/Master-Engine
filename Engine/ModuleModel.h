@@ -13,6 +13,7 @@ class ModuleModel : public Module
 public:
 	ModuleModel();
 	~ModuleModel();
+	bool CleanUp();
 
 	void Load(const char* file_name);
 	void LoadMeshes(const aiScene* scene);

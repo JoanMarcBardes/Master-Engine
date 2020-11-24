@@ -12,18 +12,34 @@
 
 using namespace std;
 
-ModuleModel::ModuleModel() { }
+void PrintLogAssimp(const char* message, char* user) { LOG(message); }
+
+ModuleModel::ModuleModel() 
+{
+}
 
 ModuleModel::~ModuleModel() 
+{    
+}
+
+bool ModuleModel::CleanUp() 
 {
     texturesList.clear();
     texturesList.shrink_to_fit();
     meshesList.clear();
     meshesList.shrink_to_fit();
+    aiDetachAllLogStreams();
+
+    return true;
 }
 
 void ModuleModel::Load(const char* file_name)
 {
+    LOG("ModuleModel Load\n");
+    struct aiLogStream stream;
+    stream.callback = PrintLogAssimp;
+    aiAttachLogStream(&stream);
+    
 	const aiScene* scene = aiImportFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene)
 	{

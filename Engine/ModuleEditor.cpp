@@ -75,7 +75,7 @@ update_status ModuleEditor::Update()
 	//ImGui::ShowDemoWindow();
     bool show = true;
 	//WindowHello();
-	//WindowConsole();
+	WindowConsole();
 	MainMenuBar();
 	WindowConfiguration();
 
