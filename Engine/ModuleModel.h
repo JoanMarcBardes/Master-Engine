@@ -29,6 +29,7 @@ private:
 	std::vector<unsigned int> texturesList;
 	std::vector<Mesh> meshesList;
 	std::string directory;
+	std::string directoryTexture = "Textures/";
 	std::vector<std::string> pathList;
 };
 

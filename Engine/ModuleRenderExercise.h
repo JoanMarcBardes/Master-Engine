@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "GL/glew.h"
 #include "MathGeoLib/Math/float4x4.h"
+#include <string>
 
 class ModuleRenderExercise : public Module
 {
@@ -24,6 +25,7 @@ public:
 	void DrawTriangle(const float4x4& proj, const float4x4& view);
 	void DrawQuad(const float4x4& proj, const float4x4& view);
 	void DrawMesh(const float4x4& proj, const float4x4& view, const float4x4& model);
+	void DropFile();
 
 
 	void* GetContext() const { return _context; }
@@ -34,5 +36,6 @@ private:
 
 	void* _context = nullptr;
 	unsigned _program = 0;
+	std::string _currentDir;
 };
 

@@ -25,6 +25,7 @@ bool ModuleTexture::Init()
 GLuint ModuleTexture::Load(const char* path)
 {
 	ILuint imageId;
+	GLuint texture = -1;
 	ilGenImages(1, &imageId); //Generation of one image name
 	ilBindImage(imageId);		//Binding of image name
 

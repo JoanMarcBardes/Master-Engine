@@ -31,6 +31,8 @@ bool ModuleModel::CleanUp()
     texturesList.shrink_to_fit();
     meshesList.clear();
     meshesList.shrink_to_fit();
+    pathList.clear();
+    pathList.shrink_to_fit();    
     aiDetachAllLogStreams();
 
     return true;
@@ -42,6 +44,8 @@ void ModuleModel::Load(const char* file_name)
     struct aiLogStream stream;
     stream.callback = PrintLogAssimp;
     aiAttachLogStream(&stream);
+
+    CleanUp();
     
 	const aiScene* scene = aiImportFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene)
@@ -131,6 +135,9 @@ vector<unsigned int> ModuleModel::loadMaterials2(const aiMesh* mesh, const aiSce
     aiString file;
     vector<unsigned int> texturesIds;
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    string path;
+    string pathSameFolder;
+    string pathTexture;
 
     unsigned int nDIFFUSE = material->GetTextureCount(aiTextureType_DIFFUSE);
     unsigned int nSPECULAR = material->GetTextureCount(aiTextureType_SPECULAR);
@@ -140,12 +147,14 @@ vector<unsigned int> ModuleModel::loadMaterials2(const aiMesh* mesh, const aiSce
     for (unsigned int i = 0; i < material->GetTextureCount(aiTextureType_DIFFUSE); i++)
     {
         material->GetTexture(aiTextureType_DIFFUSE, i, &file);
-        string path = (directory + file.data).c_str();
+        path = file.data;
+        pathSameFolder = (directory + file.data).c_str();
+        pathTexture = (directoryTexture + file.data).c_str();
 
         bool skip = false;
         for (unsigned int j = 0; j < pathList.size(); j++)
         {
-            if (pathList[j] == path)
+            if (pathList[j] == path || pathList[j] == pathSameFolder || pathList[j] == pathTexture)
             {
                 texturesIds.push_back(texturesList[j]);
                 skip = true;
@@ -154,8 +163,27 @@ vector<unsigned int> ModuleModel::loadMaterials2(const aiMesh* mesh, const aiSce
         }
         if (!skip)
         {   // if texture hasn't been loaded already, load it
-            texturesIds.push_back(App->texture->Load(path.c_str()));
-            texturesList.push_back(App->texture->Load(path.c_str()));
+            GLuint texture = App->texture->Load(file.data);
+            if (texture == -1)
+            {
+                LOG("Texture is NOT on the path described in the FBX");
+                texture = App->texture->Load(pathSameFolder.c_str());
+                if (texture == -1)
+                {
+                    LOG("Texture is NOT on the same folder you loaded the FBX");
+                    texture = App->texture->Load(pathTexture.c_str());
+                    if (texture == -1)
+                    {
+                        LOG("Texture is NOT on our own Textures/ folder");
+                    }
+                    else LOG("Texture loaded with our own Textures/ folder");
+                }
+                else LOG("Texture loaded with the same folder you loaded the FBX");
+            } 
+            else LOG("Texture loaded with the path described in the FBX");
+
+            texturesIds.push_back(texture);
+            texturesList.push_back(texture);
             pathList.push_back(path);
         }
         path.clear();
