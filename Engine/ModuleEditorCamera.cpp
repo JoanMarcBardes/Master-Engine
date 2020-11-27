@@ -70,11 +70,8 @@ bool ModuleEditorCamera::CleanUp()
 
 void ModuleEditorCamera::WindowResized(unsigned width, unsigned height)
 {
-	LOG("WindowResized EditorCamera");
 	aspectRatio = (float)width / (float)height;
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
-
-	//App->window->SetWidthHeight(width, height);
 }
 
 void ModuleEditorCamera::InputManager()

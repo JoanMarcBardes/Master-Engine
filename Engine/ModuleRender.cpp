@@ -97,6 +97,7 @@ bool ModuleRender::CleanUp()
 void ModuleRender::WindowResized(unsigned width, unsigned height)
 {
 	App->editorCamera->WindowResized(width, height);	
+	SDL_SetWindowSize(App->window->window, width, height);
 }
 
 void ModuleRender::DrawXYZ()

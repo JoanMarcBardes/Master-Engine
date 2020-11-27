@@ -1,7 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
-#include "ModuleRender.h"
 #include "SDL/include/SDL.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "DebugLeaks.h"
@@ -85,10 +84,6 @@ update_status ModuleInput::Update()
         {
             case SDL_QUIT:
                 return UPDATE_STOP;
-            case SDL_WINDOWEVENT:
-                if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED || sdlEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-                    App->renderer->WindowResized(sdlEvent.window.data1, sdlEvent.window.data2);
-                break;
 			case SDL_MOUSEBUTTONDOWN:
 				mouse_buttons[sdlEvent.button.button - 1] = KEY_DOWN;
 				if (sdlEvent.button.button == SDL_BUTTON_LEFT)

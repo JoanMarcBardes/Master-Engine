@@ -167,6 +167,12 @@ bool ModuleRenderExercise::CleanUp()
 	return true;
 }
 
+void ModuleRenderExercise::WindowResized(unsigned width, unsigned height)
+{
+	App->editorCamera->WindowResized(width, height);
+	SDL_SetWindowSize(App->window->window, width, height);
+}
+
 
 // This function must be called one time at creation of vertex buffer
 void ModuleRenderExercise::CreateTriangleVBO()

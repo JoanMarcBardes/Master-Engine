@@ -45,13 +45,21 @@ bool ModuleWindow::Init()
 		}
 		else
 		{
-			//Get window surface
-			
+			//Get window surface			
 			screen_surface = SDL_GetWindowSurface(window);
 		}
 	}
 
 	return ret;
+}
+// Called every draw update
+update_status ModuleWindow::Update()
+{
+	int width, height;
+	SDL_GetWindowSize(App->window->window, &width, &height);
+	App->window->SetWidthHeight(width, height);
+
+	return UPDATE_CONTINUE;
 }
 
 // Called before quitting
