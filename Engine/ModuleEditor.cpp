@@ -6,6 +6,7 @@
 #include "ModuleWindow.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleModel.h"
+#include "ModuleInput.h"
 #include "Mesh.h"
 #include "SDL.h"
 #include "GL/glew.h"
@@ -33,6 +34,7 @@ static void HelpMarker(const char* desc)
 ModuleEditor::ModuleEditor()
 {
 	fpsLog.resize(fpsLogSize);
+	msLog.resize(fpsLogSize);
 }
 
 // Destructor
@@ -74,20 +76,20 @@ update_status ModuleEditor::Update()
 {
 	//ImGui::ShowDemoWindow();
     bool show = true;
-	//WindowHello();
-	WindowConsole();
-	MainMenuBar();
-	WindowConfiguration();
+	update_status status = MainMenuBar();
+
+	if (showWindowConsole) WindowConsole(&showWindowConsole);
+	if (showWindowConfiguration) WindowConfiguration(&showWindowConfiguration);
+	if (showAbout) WindowAbout(&showAbout);
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	return UPDATE_CONTINUE;
+	return status;
 }
 
 update_status ModuleEditor::PostUpdate()
 {
-	//SDL_GL_MakeCurrent(App->window->window, App->renderer->GetContext());
 	return UPDATE_CONTINUE;
 }
 
@@ -101,46 +103,44 @@ bool ModuleEditor::CleanUp()
 	return true;
 }
 
-////////////////
-// Our state
-bool show_demo_window = true;
-bool show_another_window = false;
-ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-void ModuleEditor::WindowHello()
+void ModuleEditor::WindowConsole(bool* p_open)
 {
-	static float f = 0.0f;
-	static int counter = 0;
+	ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
+	if (!ImGui::Begin("Console", p_open))
+	{
+		ImGui::End();
+		return;
+	}
 
-	ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-	ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-	ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-	ImGui::Checkbox("Another Window", &show_another_window);
-
-	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-	ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-	if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-		counter++;
-	ImGui::SameLine();
-	ImGui::Text("counter = %d", counter);
-
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::End();
-}
-
-void ModuleEditor::WindowConsole()
-{
-	ImGui::Begin("Console");
+	if (ImGui::SmallButton("Clear")) { ClearLog(); }
 
 	ImGui::Separator();
-	if (ImGui::Button("ClearLog"))
-		ClearLog();
 
+	// Reserve enough left-over height for 1 separator + 1 input text
+	const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y;
+	ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), false, ImGuiWindowFlags_HorizontalScrollbar);
+
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
 	for (int i = 0; i < Items.Size; i++)
-		ImGui::TextUnformatted(Items[i]);	
-	
+	{
+		const char* item = Items[i];
+
+		ImVec4 color;
+		bool has_color = false;
+		if (strstr(item, "[error]")) { color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f); has_color = true; }
+		else if (strncmp(item, "# ", 2) == 0) { color = ImVec4(1.0f, 0.8f, 0.6f, 1.0f); has_color = true; }
+		if (has_color)
+			ImGui::PushStyleColor(ImGuiCol_Text, color);
+		ImGui::TextUnformatted(item);
+		if (has_color)
+			ImGui::PopStyleColor();
+	}
+
+	if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+		ImGui::SetScrollHereY(1.0f);
+
+	ImGui::PopStyleVar();
+	ImGui::EndChild();
 	ImGui::End();
 }
 
@@ -163,17 +163,14 @@ void ModuleEditor::AddLog(const char* fmt, ...)// IM_FMTARGS(2)
 	Items.push_back(Strdup(buf));
 }
 
-void ModuleEditor::WindowConfiguration()
+void ModuleEditor::WindowConfiguration(bool* p_open)
 {
-	ImGui::Begin("Configuration");
-	ImGui::Text("Options");
-
-	if (ImGui::CollapsingHeader("Help"))
+	if (!ImGui::Begin("Configuration", p_open, ImGuiWindowFlags_AlwaysUseWindowPadding))
 	{
-		if (ImGui::Button("Button"))
-			RequestBrowser("http://www.google.com");
-		ImGui::Separator();
+		ImGui::End();
+		return;
 	}
+	ImGui::Text("Options");
 
 	if (ImGui::CollapsingHeader("Application"))
 	{
@@ -191,32 +188,47 @@ void ModuleEditor::WindowConfiguration()
 		fpsLog.push_back(fps);
 		fpsLog.size();
 
-		char title[25];
-		sprintf_s(title, 25, "Framerate %i", fps);
-		float arr[100];
-		std::copy(fpsLog.begin(), fpsLog.end(), arr);
-		ImGui::PlotHistogram("##framerate", arr, IM_ARRAYSIZE(arr), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-		/*sprintf_s(title, 25, "Milliseconds %.1f", ms_log[ms_log.size() - 1]);
-		ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));*/
+		msLog.erase(msLog.begin());
+		msLog.push_back(1000.0f / fps);
+		msLog.size();
+
+		char title1[25];
+		sprintf_s(title1, 25, "Framerate %i", fps);
+		float arr1[100];
+		std::copy(fpsLog.begin(), fpsLog.end(), arr1);
+		ImGui::PlotHistogram("##framerate", arr1, IM_ARRAYSIZE(arr1), 0, title1, 0.0f, 100.0f, ImVec2(310, 100));
+
+		char title2[25];
+		sprintf_s(title2, 25, "Milliseconds %.3f", 1000.0f / fps);
+		float arr2[100];
+		std::copy(msLog.begin(), msLog.end(), arr2);
+		ImGui::PlotHistogram("##milliseconds", arr2, IM_ARRAYSIZE(arr2), 0, title2, 0.0f, 100.0f, ImVec2(310, 100));
+	}
+
+	if (ImGui::CollapsingHeader("Render"))
+	{
+		bool aplhaTest = App->renderExercise->GetEnableAlphaTest();
+		ImGui::Checkbox("AlphaTest", &aplhaTest);
+		App->renderExercise->SetEnableAlphaTest(aplhaTest);
+
+		bool cullFace = App->renderExercise->GetEnableCullFace();
+		ImGui::Checkbox("CullFace", &cullFace);
+		App->renderExercise->SetEnableCullFace(cullFace);
+
+		bool depthTest = App->renderExercise->GetEnableDepthTest();
+		ImGui::Checkbox("DepthTest", &depthTest);
+		App->renderExercise->SetEnableDepthTest(depthTest);
 	}
 
 	if (ImGui::CollapsingHeader("Window"))
-	{ 
-		static bool active = false;
-		ImGui::Checkbox("Active", &active);
-
+	{
 		static float brightness = App->window->GetBrightness();
 		ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f, "%0.1f");
 		App->window->SetBrightness(brightness);
 
-		//glutGet(GLUT_WINDOW_WIDTH)
-		//glutGet(GLUT_WINDOW_HEIGHT)
 		int width, height;
 		SDL_GetWindowSize(App->window->window, &width, &height);
-
-		//static int width = App->window->GetWidth(); 
 		ImGui::SliderInt("Width", &width, 0, 1920);
-		//static int height = App->window->GetHeight();
 		ImGui::SliderInt("Height", &height, 0, 1080);
 		App->window->SetWidthHeight(width,height);
 
@@ -243,27 +255,12 @@ void ModuleEditor::WindowConfiguration()
 			fullScreen = false;
 		}
 	}
-
-	if (ImGui::CollapsingHeader("Hardware"))
+	
+	if (ImGui::CollapsingHeader("Input"))
 	{
-		SDL_version linked;
-		SDL_GetVersion(&linked);		
-		ImGui::Text("SDL Version: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i.%i.%i", linked.major, linked.minor, linked.patch);
-
-		ImGui::Separator();
-		ImGui::Text("CPUs: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i (cache: %ikb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
-
-		ImGui::Text("System RAM: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", SDL_GetSystemRAM());
-
-		ImGui::Separator();
-		ImGui::Text("GPU: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", glGetString(GL_VENDOR));
-
-		ImGui::Text("Brand: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %s", glGetString(GL_RENDERER));
+		iPoint pos = App->input->GetMousePosition();
+		ImGui::Text("Mouse Position "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "(x: %i, y: %i)", pos.x, pos.y);
 	}
 
 	if (ImGui::CollapsingHeader("Camera"))
@@ -396,20 +393,71 @@ void ModuleEditor::WindowConfiguration()
 		}
 	}
 
+	if (ImGui::CollapsingHeader("Hardware"))
+	{
+		SDL_version linked;
+		SDL_GetVersion(&linked);
+		ImGui::Text("SDL Version: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i.%i.%i", linked.major, linked.minor, linked.patch);
+
+		ImGui::Separator();
+		ImGui::Text("CPUs: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i (cache: %ikb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+
+		ImGui::Text("System RAM: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", SDL_GetSystemRAM());
+
+		ImGui::Separator();
+		ImGui::Text("GPU: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", glGetString(GL_VENDOR));
+
+		ImGui::Text("Brand: "); ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %s", glGetString(GL_RENDERER));
+	}
+
 	ImGui::End();	
 }
 
-void ModuleEditor::MainMenuBar()
+//10. There must be a general menu with option to quit, visit the github page, and get info about the
+//		engine(“About”).It should also be able to turn on / off editor windows
+update_status ModuleEditor::MainMenuBar()
 {
+	update_status status = UPDATE_CONTINUE;
 	ImGui::BeginMainMenuBar();
 	if (ImGui::BeginMenu("Help"))
-	{
-		if (ImGui::MenuItem("Documentation"))
+	{		
+		if (ImGui::MenuItem("Github repository"))
 		{
 			RequestBrowser("http://www.google.com");
 		}
+		ImGui::MenuItem("About Dear ImGui", NULL, &showAbout);
+
+		if (ImGui::BeginMenu("Windows"))
+		{
+			ImGui::MenuItem("bWindowConsole", "", &showWindowConsole);
+			ImGui::MenuItem("WindowConfiguration", "", &showWindowConfiguration);
+			ImGui::EndMenu();
+		}
+		if (ImGui::MenuItem("Quit", "Alt+F4"))
+		{
+			status = UPDATE_STOP;
+		}
+		ImGui::EndMenu();
 	}
 	ImGui::EndMainMenuBar();
+	return status;
+}
+
+void ModuleEditor::WindowAbout(bool* p_open)
+{
+	if (!ImGui::Begin("About Dear ImGui", p_open, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::End();
+		return;
+	}
+	ImGui::Text("Options");
+
+	ImGui::End();
 }
 
 void ModuleEditor::RequestBrowser(const char* url)

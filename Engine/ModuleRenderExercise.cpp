@@ -117,8 +117,11 @@ bool ModuleRenderExercise::Init()
 
 	_program = App->program->CreateProgram(idVertex, idFragment);
 
-	glEnable(GL_DEPTH_TEST); // Enable depth test
-	glEnable(GL_CULL_FACE); // Enable cull backward faces
+	//glEnable(GL_DEPTH_TEST); // Enable depth test
+	//glEnable(GL_CULL_FACE); // Enable cull backward faces
+	SetGlEnable(enableDepthTest, GL_DEPTH_TEST);
+	SetGlEnable(enableCullFace, GL_CULL_FACE);
+	SetGlEnable(enableAlphaTest, GL_ALPHA_TEST);
 	glFrontFace(GL_CCW); // Front faces will be counter clockwise
 
 	// Current directory
@@ -331,4 +334,12 @@ void ModuleRenderExercise::DropFile()
 				break;		
 		}
 	}
+}
+
+void ModuleRenderExercise::SetGlEnable(const bool enable, const GLenum type)
+{
+	if (enable)
+		glEnable(type);
+	else
+		glDisable(type);
 }
