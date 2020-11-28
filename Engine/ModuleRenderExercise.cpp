@@ -112,13 +112,15 @@ bool ModuleRenderExercise::Init()
 	CreateQuadVBO();
 	LoadMeshes();
 
-	unsigned idVertex = App->program->CompileShader (GL_VERTEX_SHADER, App->program->LoadShaderSource("default_vertex.glsl"));
-	unsigned idFragment = App->program->CompileShader(GL_FRAGMENT_SHADER, App->program->LoadShaderSource("default_fragment.glsl"));
+	char* sourceVertex = App->program->LoadShaderSource("Shaders/vertexShader.glsl");
+	char* sourceFragment = App->program->LoadShaderSource("Shaders/fragmentShader.glsl");
+	unsigned idVertex = App->program->CompileShader (GL_VERTEX_SHADER, sourceVertex);
+	unsigned idFragment = App->program->CompileShader(GL_FRAGMENT_SHADER, sourceFragment);
+	free(sourceVertex);
+	free(sourceFragment);
 
 	_program = App->program->CreateProgram(idVertex, idFragment);
 
-	//glEnable(GL_DEPTH_TEST); // Enable depth test
-	//glEnable(GL_CULL_FACE); // Enable cull backward faces
 	SetGlEnable(enableDepthTest, GL_DEPTH_TEST);
 	SetGlEnable(enableCullFace, GL_CULL_FACE);
 	SetGlEnable(enableAlphaTest, GL_ALPHA_TEST);
@@ -218,17 +220,7 @@ void ModuleRenderExercise::CreateQuadVBO()
 
 void ModuleRenderExercise::LoadMeshes()
 {
-	//App->model->Load("BakerHouse.fbx");
 	App->model->Load("Models/BakerHouse/BakerHouse.fbx");
-	//App->model->Load("Models/backpack/backpack.obj");
-
-	//App->model->Load("Models/AmongUs/AmongUs.fbx");
-	//App->model->Load("Models/aug/aug.fbx");
-	//App->model->Load("Models/BurntCroissant/BurntCroissant.fbx");
-	//App->model->Load("Models/crow/crow.fbx");
-	//App->model->Load("Models/fox/fox.fbx");
-	//App->model->Load("Models/herschel_bag/herschel_bag.fbx");
-	//App->model->Load("Models/WoodGirl/WoodGirl.fbx");
 }
 
 
@@ -247,7 +239,7 @@ void ModuleRenderExercise::Draw()
 	int height = App->window->GetHeight();
 	int width = App->window->GetWidth();
 
-	App->debugDraw->Draw(view, proj, width, height);
+	App->debugDraw->Draw(view, proj, width, height); //draww axisTriad andxzSquareGrid(-10, 10, 0.0f, 1.0f, dd::colors::Gray);
 
 	glUseProgram(_program);
 	//DrawQuad(proj, view);
@@ -299,7 +291,7 @@ void ModuleRenderExercise::DrawQuad(const float4x4& proj, const float4x4& view)
 	glActiveTexture(GL_TEXTURE0);
 
 	//glBindTexture(GL_TEXTURE_2D, App->texture->GetTexture());
-	glUniform1i(glGetUniformLocation(_program, "mytexture"), 0);
+	//glUniform1i(glGetUniformLocation(_program, "mytexture"), 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }

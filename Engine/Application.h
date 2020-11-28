@@ -43,7 +43,7 @@ public:
 	ModuleModel* model = nullptr;
 
 private:
-	std::list<Module*> modules;
+	std::vector<Module*> modules;
 
 	unsigned int fps = 0;
 	unsigned int fpsCount = 0;

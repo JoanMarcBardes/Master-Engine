@@ -17,7 +17,6 @@ bool ModuleTexture::Init()
 	LOG("Creating ModuleTexture context");
 
 	ilInit();				//Initialization of DevIL
-	Load("Lenna.png");
 
 	return true;
 }
@@ -58,22 +57,6 @@ GLuint ModuleTexture::Load(const char* path)
 	ilDeleteImages(1, &imageId); //Because we have already copied image data into texture data we can release memory used by image.
 
 	return texture;
-}
-
-update_status ModuleTexture::PreUpdate()
-{
-	return UPDATE_CONTINUE;
-}
-
-// Called every draw update
-update_status ModuleTexture::Update()
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleTexture::PostUpdate()
-{
-	return UPDATE_CONTINUE;
 }
 
 // Called before quitting

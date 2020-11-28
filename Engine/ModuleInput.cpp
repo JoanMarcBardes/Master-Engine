@@ -46,6 +46,11 @@ update_status ModuleInput::Update()
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
+	if (GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	{
+		return UPDATE_STOP;
+	}
+
 	for (int i = 0; i < MAX_KEYS; ++i)
 	{
 		if (keys[i] == 1)
@@ -114,20 +119,13 @@ update_status ModuleInput::Update()
         }
 
     }
-
-
-    if (GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-    {
-        return UPDATE_STOP;
-    }
-
+	    
     return UPDATE_CONTINUE;
 }
 
 // Called before quitting
 bool ModuleInput::CleanUp()
 {
-	LOG("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	RELEASE_ARRAY(keyboard);
 	return true;

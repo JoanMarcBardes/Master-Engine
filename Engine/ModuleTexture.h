@@ -12,9 +12,6 @@ public:
 	~ModuleTexture();
 
 	bool Init();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
 	bool CleanUp();
 
 	GLuint Load(const char* path);
