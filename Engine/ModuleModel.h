@@ -1,8 +1,8 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "Assimp/include/assimp/scene.h"
 #include "GL/glew.h"
+#include "Assimp/include/assimp/scene.h"
 #include "Assimp/include/assimp/mesh.h"
 #include "Mesh.h"
 #include <vector>
@@ -15,21 +15,22 @@ public:
 	~ModuleModel();
 	bool CleanUp();
 
-	void Load(const char* file_name);
-	void LoadMeshes(const aiScene* scene);
-
-	Mesh createMesh(const aiMesh* mesh, const aiScene* scene);
-	std::vector<unsigned int> loadMaterials(const aiScene* scene);
-	std::vector<unsigned int> loadMaterials2(const aiMesh* mesh, const aiScene* scene);
+	void Load(const char* file_name);	
 	void DrawMeshes(const unsigned program, const float4x4& proj, const float4x4& view, const float4x4& model);
 
-	std::vector<Mesh> GetMeshes() { return meshesList; }
+	const std::vector<Mesh*> GetMeshes() { return meshesList; }
+	const std::vector<unsigned int> GetTexturesIds() { return texturesList; };
+	void SetTexture(unsigned int textureId);
 
 private:
 	std::vector<unsigned int> texturesList;
-	std::vector<Mesh> meshesList;
+	std::vector<Mesh*> meshesList;
+	std::vector<std::string> pathList;
 	std::string directory;
 	std::string directoryTexture = "Textures/";
-	std::vector<std::string> pathList;
+
+	void LoadMeshes(const aiScene* scene);
+	Mesh* CreateMesh(const aiMesh* mesh, const aiScene* scene);
+	void LoadMaterials(const aiScene* scene);
 };
 

@@ -315,12 +315,19 @@ void ModuleRenderExercise::DropFile()
 				{
 					int start_position_to_erase = s.find(_currentDir);
 					s.erase(start_position_to_erase, _currentDir.size());
-					LOG( ("Loading " + s).c_str());
+					LOG( ("Loading model" + s).c_str());
 					App->model->Load(s.c_str());
+				}
+				else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length())
+				{
+					int start_position_to_erase = s.find(_currentDir);
+					s.erase(start_position_to_erase, _currentDir.size());
+					LOG(("Loading model" + s).c_str());
+					App->model->SetTexture( App->texture->Load(s.c_str()) );
 				}
 				else
 				{
-					LOG( (s +" its not a file .fbx").c_str() );
+					LOG( (s +" its not a file .fbx, .png, .jpg or .dds").c_str() );
 				}
 				SDL_free(dropped_filedir);    // Free dropped_filedir memory
 				break;		

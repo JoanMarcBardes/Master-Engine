@@ -1,15 +1,15 @@
 #include "Mesh.h"
 #include "SDL.h"
 #include "GL/glew.h"
+#include "Globals.h"
 #include "DebugLeaks.h"
 #include <vector>
 #include <string>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<unsigned int> texturesIds, const char* _name)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const char* _name)
 {
     Vertices = vertices;
     Indices = indices;
-    TexturesIds = texturesIds;
 
     vao = vbo = ebo = 0;
 
@@ -23,16 +23,13 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 
 Mesh::~Mesh()
 {
+    LOG("Destroy Mesh");
     glDeleteBuffers(1, &vao);
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ebo);
 
     Vertices.clear();
-    Vertices.shrink_to_fit();
     Indices.clear();
-    Indices.shrink_to_fit();
-    TexturesIds.clear();
-    TexturesIds.shrink_to_fit();
 }
 
 void Mesh::setupMesh()
@@ -58,7 +55,7 @@ void Mesh::setupMesh()
     glBindVertexArray(0);
 }
 
-void Mesh::Draw(const unsigned program, const float4x4& proj, const float4x4& view, const float4x4& _model)
+void Mesh::Draw(const unsigned program, const float4x4& proj, const float4x4& view, const float4x4& _model, std::vector<unsigned int>& texturesList)
 {
     model = _model;
     glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*)&model);
@@ -66,9 +63,9 @@ void Mesh::Draw(const unsigned program, const float4x4& proj, const float4x4& vi
     glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, (const float*)&proj);
 
     glActiveTexture(GL_TEXTURE0);
-    for (unsigned int i = 0; i < TexturesIds.size(); ++i) {
-        glBindTexture(GL_TEXTURE_2D, TexturesIds[i]);
-        glUniform1i(glGetUniformLocation(program, "difuse"+i), i);
+    for (unsigned int i = 0; i < texturesList.size(); ++i) {
+        glBindTexture(GL_TEXTURE_2D, texturesList[i]);
+        glUniform1i(glGetUniformLocation(program, "texture"+i), i);
     }
 
     // draw mesh

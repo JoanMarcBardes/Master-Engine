@@ -344,17 +344,17 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 
 	if (ImGui::CollapsingHeader("Models info"))
 	{
-		std::vector<Mesh> meshes = App->model->GetMeshes();
-		
-		for( int i = 0; i<meshes.size(); ++i)
+		std::vector<Mesh*> meshes = App->model->GetMeshes();
+		int i = 0;
+		for (std::vector<Mesh*>::iterator it = meshes.begin(); it != meshes.end(); ++it)
 		{
 			if (ImGui::TreeNode((void*)(intptr_t)i, "Mesh %i", i))
 			{
-				ImGui::Text("Name: %s", meshes[i].GetName());
+				ImGui::Text("Name: %s", (*it)->GetName());
 				ImGui::Separator();
 
 				ImGui::Text("Transformation");
-				float4x4 model = meshes[i].GetModel();
+				float4x4 model = (*it)->GetModel();
 				float3 translate;
 				float4x4 rotate;
 				float3 sacale;
@@ -367,14 +367,14 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 
 				ImGui::Text("Geometry");
 				ImGui::Text("Num vertices: "); ImGui::SameLine();
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", meshes[i].GetNumVertices());
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", (*it)->GetNumVertices());
 
 				ImGui::Text("Num indices: "); ImGui::SameLine();
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", meshes[i].GetNumIndices());
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", (*it)->GetNumIndices());
 				ImGui::Separator();
 
 				ImGui::Text("Texture");
-				std::vector<unsigned int> texturesIds = meshes[0].GetTexturesIds();
+				std::vector<unsigned int> texturesIds = App->model->GetTexturesIds();
 				float my_tex_w = 150;
 				float my_tex_h = 150;
 				for (int j = 0; j < texturesIds.size(); ++j)
@@ -390,6 +390,7 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 
 				ImGui::TreePop();
 			}
+			++i;
 		}
 	}
 
