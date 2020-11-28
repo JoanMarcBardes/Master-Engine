@@ -168,6 +168,7 @@ bool ModuleRenderExercise::CleanUp()
 	DestroyVBO(_vboTriangle);
 	DestroyVBO(_vboQuad);
 	SDL_GL_DeleteContext(_context);
+	glDeleteProgram(_program);
 
 	return true;
 }
@@ -311,14 +312,14 @@ void ModuleRenderExercise::DropFile()
 				char* dropped_filedir = sdlEvent.drop.file;
 				string s(dropped_filedir);
 				ReplaceSlash(s);
-				if (s.find(".fbx") < s.length())
+				if (s.find(".fbx") < s.length() || s.find(".FBX") < s.length())
 				{
 					int start_position_to_erase = s.find(_currentDir);
 					s.erase(start_position_to_erase, _currentDir.size());
 					LOG( ("Loading model" + s).c_str());
 					App->model->Load(s.c_str());
 				}
-				else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length())
+				else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length() || s.find(".tga") < s.length())
 				{
 					int start_position_to_erase = s.find(_currentDir);
 					s.erase(start_position_to_erase, _currentDir.size());

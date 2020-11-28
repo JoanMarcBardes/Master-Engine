@@ -397,8 +397,8 @@
     <None Include="Assimp\include\assimp\SmoothingGroups.inl" />
     <None Include="Assimp\include\assimp\vector2.inl" />
     <None Include="Assimp\include\assimp\vector3.inl" />
-    <None Include="Game\default_fragment.glsl" />
-    <None Include="Game\default_vertex.glsl" />
+    <None Include="Game\Shaders\fragmentShader.glsl" />
+    <None Include="Game\Shaders\vertexShader.glsl" />
     <None Include="MathGeoLib\Geometry\KDTree.inl" />
     <None Include="MathGeoLib\Geometry\QuadTree.inl" />
     <None Include="MathGeoLib\Geometry\TriangleMesh_IntersectRay_AVX.inl" />

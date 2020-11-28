@@ -1,8 +1,5 @@
-#ifndef _MODULE_DEBUGDRAW_H_
-#define _MODULE_DEBUGDRAW_H_
-
+#pragma once
 #include "Module.h"
-
 #include "MathGeoLib/Math/float4x4.h"
 
 class DDRenderInterfaceCoreGL;
@@ -25,5 +22,3 @@ private:
 
     static DDRenderInterfaceCoreGL* implementation;
 };
-
-#endif /* _MODULE_DEBUGDRAW_H_ */

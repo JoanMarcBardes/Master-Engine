@@ -46,7 +46,7 @@ update_status ModuleInput::Update()
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
-	if (GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+	if (keyboard[SDL_SCANCODE_ESCAPE] == KEY_DOWN)
 	{
 		return UPDATE_STOP;
 	}

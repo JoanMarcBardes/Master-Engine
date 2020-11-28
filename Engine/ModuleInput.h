@@ -18,25 +18,13 @@ enum KeyState
 
 class ModuleInput : public Module
 {
-public:
-	
+public:	
 	ModuleInput();
 	~ModuleInput();
 
 	bool Init();
 	update_status Update();
 	bool CleanUp();
-
-	// Check key states (includes mouse and joy buttons)
-	KeyState GetKey(int id) const
-	{
-		return keyboard[id];
-	}
-
-	KeyState GetMouseButtonDown(int id) const
-	{
-		return mouse_buttons[id - 1];
-	}
 
 	// Get mouse / axis position
 	const iPoint& GetMouseMotion() const { return mouse_motion;}

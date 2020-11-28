@@ -1,6 +1,4 @@
-#ifndef __ModuleWindow_H__
-#define __ModuleWindow_H__
-
+#pragma once
 #include "Module.h"
 #include "SDL/include/SDL.h"
 
@@ -52,5 +50,3 @@ private:
 	bool bordered = true;
 	Uint32 windowsFull = 0;
 };
-
-#endif // __ModuleWindow_H__

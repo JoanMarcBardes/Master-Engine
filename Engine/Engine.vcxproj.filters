@@ -813,12 +813,6 @@
     <None Include="MathGeoLib\Math\Matrix.inl">
       <Filter>MathGeoLib\Math</Filter>
     </None>
-    <None Include="Game\default_fragment.glsl">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Game\default_vertex.glsl">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="Assimp\include\assimp\vector2.inl">
       <Filter>Assimp\include\assimp</Filter>
     </None>
@@ -848,6 +842,12 @@
     </None>
     <None Include="Assimp\include\assimp\SmoothingGroups.inl">
       <Filter>Assimp\include\assimp</Filter>
+    </None>
+    <None Include="Game\Shaders\fragmentShader.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Game\Shaders\vertexShader.glsl">
+      <Filter>Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

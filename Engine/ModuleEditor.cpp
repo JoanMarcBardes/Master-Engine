@@ -41,6 +41,8 @@ ModuleEditor::ModuleEditor()
 ModuleEditor::~ModuleEditor()
 {
 	ClearLog();
+	fpsLog.clear();
+	msLog.clear();
 }
 
 // Called before render is available
@@ -86,11 +88,6 @@ update_status ModuleEditor::Update()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	return status;
-}
-
-update_status ModuleEditor::PostUpdate()
-{
-	return UPDATE_CONTINUE;
 }
 
 // Called before quitting
