@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleTexture.h"
+#include "ModuleEditorCamera.h"
 #include "Assimp/include/assimp/scene.h"
 #include "Assimp/include/assimp/cimport.h"
 #include "Assimp/include/assimp/postprocess.h"
@@ -59,6 +60,7 @@ void ModuleModel::Load(const char* file_name)
 
         LoadMeshes(scene);
         LoadMaterials(scene);
+        CalculateVolumeCenter();
 	}
 	else
 	{
@@ -194,4 +196,43 @@ void ModuleModel::SetTexture(unsigned int textureId)
     }
     texturesList.clear();
     texturesList.push_back(textureId);
+}
+
+void ModuleModel::CalculateVolumeCenter()
+{
+    min = (*meshesList.begin())->GetMin();
+    max = (*meshesList.begin())->GetMax();
+    float3 Min;
+    float3 Max;
+
+    for (std::vector<Mesh*>::iterator it = meshesList.begin(); it != meshesList.end(); ++it)
+    {
+        Min =(*it)->GetMin();
+        Max =(*it)->GetMax();
+        //min
+        if (Min.x < min.x)
+            min.x = Min.x;
+        if (Min.y < min.y)
+            min.y = Min.y;
+        if (Min.z < min.z)
+            min.z = Min.z;
+
+        //max
+        if (Max.x > max.x)
+            max.x = Max.x;
+        if (Max.y > max.y)
+            max.y = Max.y;
+        if (Max.z > max.z)
+            max.z = Max.z;
+    }
+
+    width = max.x - min.x;
+    height = max.y - min.y;
+    lenght = max.z - min.z;
+
+    volume = width * height;// *lenght;
+    center = float3((min.x + max.x) / 2, (min.y + max.y) / 2, (min.z + max.z) / 2);
+
+    App->editorCamera->SetTarget(center);
+    App->editorCamera->AdaptSizeGeometry(volume);
 }

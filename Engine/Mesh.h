@@ -19,6 +19,8 @@ public:
     const unsigned int GetNumIndices() { return numIndices; };
     const char* GetName() { return name; }
     const float4x4 GetModel() { return model; }
+    const float3 GetMin() { return min; }
+    const float3 GetMax() { return max; }
 
 private:
     std::vector<Vertex>       Vertices;
@@ -28,6 +30,11 @@ private:
     const char* name;
     float4x4 model;
 
+    float3 min;
+    float3 max;
+
     void setupMesh();
+    void CalculateMinMax();
+
 };
 

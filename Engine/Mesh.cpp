@@ -19,6 +19,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, cons
     model = float4x4::identity;
 
     setupMesh();
+    CalculateMinMax();
 }
 
 Mesh::~Mesh()
@@ -72,4 +73,29 @@ void Mesh::Draw(const unsigned program, const float4x4& proj, const float4x4& vi
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
+}
+
+void Mesh::CalculateMinMax()
+{
+    min = Vertices[0].Position;
+    max = Vertices[0].Position;
+
+    for (int i = 1; i < Vertices.size(); ++i)
+    {
+        //min
+        if (Vertices[i].Position.x < min.x)
+            min.x = Vertices[i].Position.x;
+        if (Vertices[i].Position.y < min.y)
+            min.y = Vertices[i].Position.y;
+        if (Vertices[i].Position.z < min.z)
+            min.z = Vertices[i].Position.z;
+
+        //max
+        if (Vertices[i].Position.x > max.x)
+            max.x = Vertices[i].Position.x;
+        if (Vertices[i].Position.y > max.y)
+            max.y = Vertices[i].Position.y;
+        if (Vertices[i].Position.z > max.z)
+            max.z = Vertices[i].Position.z;
+    }
 }

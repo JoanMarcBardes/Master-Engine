@@ -28,9 +28,17 @@ private:
 	std::vector<std::string> pathList;
 	std::string directory;
 	std::string directoryTexture = "Textures/";
+	float3 min;
+	float3 max;
+	float3 center;
+	float width = 0;
+	float height = 0;
+	float lenght = 0;
+	float volume = 0;
 
 	void LoadMeshes(const aiScene* scene);
 	Mesh* CreateMesh(const aiMesh* mesh, const aiScene* scene);
 	void LoadMaterials(const aiScene* scene);
+	void CalculateVolumeCenter();
 };
 

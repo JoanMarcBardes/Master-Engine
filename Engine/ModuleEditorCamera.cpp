@@ -240,7 +240,7 @@ void ModuleEditorCamera::WheelMouse() {
 
 void ModuleEditorCamera::Focus() {
 	if (App->input->GetKey(SDL_SCANCODE_F)) {
-		LookAt(float3::zero);
+		LookAt(target);
 	}
 }
 
@@ -262,4 +262,11 @@ void ModuleEditorCamera::Orbit() {
 
 		LookAt(float3::zero);
 	}
+}
+
+void ModuleEditorCamera::AdaptSizeGeometry(float volume)
+{
+	position = float3(position.x, position.y, volume);
+	LookAt(target);
+	UpadateCamera();
 }

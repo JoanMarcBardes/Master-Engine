@@ -50,11 +50,15 @@ public:
 
 	void SetSpeed(float _speed) { speed = _speed; }
 
+	void AdaptSizeGeometry(float volume);
+	void SetTarget(float3 center) { target = center; }
+
 private:
 	Frustum frustum;
 	float3 position = float3::zero;
 	float3 front = -float3::unitZ;
 	float3 up = float3::unitY;
+	float3 target = float3::zero;
 
 	float nearPlane = 0.1f;
 	float farPlane = 200.0f;
