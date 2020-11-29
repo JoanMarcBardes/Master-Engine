@@ -37,12 +37,13 @@ bool ModuleInput::Init()
 }
 
 // Called every draw update
-update_status ModuleInput::Update()
+update_status ModuleInput::PreUpdate()
 {
     SDL_Event sdlEvent;
 
     mouse_motion = { 0, 0 };
 	mouse_wheel = { 0, 0 };
+	//memset(windowEvents, false, WE_COUNT * sizeof(bool));
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 
@@ -80,9 +81,11 @@ update_status ModuleInput::Update()
 	
     while (SDL_PollEvent(&sdlEvent) != 0)
     {
-		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);
+		ImGui_ImplSDL2_ProcessEvent(&sdlEvent);	
+
 		ImGuiIO& io = ImGui::GetIO();
-		if (io.WantCaptureKeyboard || io.WantCaptureMouse)
+		imgUiOn = io.WantCaptureKeyboard || io.WantCaptureMouse;
+		if (imgUiOn)
 			return UPDATE_CONTINUE;
 
         switch (sdlEvent.type)
@@ -91,18 +94,10 @@ update_status ModuleInput::Update()
                 return UPDATE_STOP;
 			case SDL_MOUSEBUTTONDOWN:
 				mouse_buttons[sdlEvent.button.button - 1] = KEY_DOWN;
-				if (sdlEvent.button.button == SDL_BUTTON_LEFT)
-					left_mouse = true;
-				else if (sdlEvent.button.button == SDL_BUTTON_RIGHT)
-					right_mouse = true;
 				break;
 
 			case SDL_MOUSEBUTTONUP:
 				mouse_buttons[sdlEvent.button.button - 1] = KEY_UP;
-				if (sdlEvent.button.button == SDL_BUTTON_LEFT)
-					left_mouse = false;
-				else if (sdlEvent.button.button == SDL_BUTTON_RIGHT)
-					right_mouse = false;
 				break;
 
 			case SDL_MOUSEMOTION:
@@ -117,7 +112,7 @@ update_status ModuleInput::Update()
 				mouse_wheel.y = sdlEvent.wheel.y;
 				break;
         }
-
+		
     }
 	    
     return UPDATE_CONTINUE;
@@ -129,4 +124,20 @@ bool ModuleInput::CleanUp()
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	RELEASE_ARRAY(keyboard);
 	return true;
+}
+
+KeyState ModuleInput::GetKey(int id) const
+{
+	if (imgUiOn)
+		return KEY_IDLE;
+
+	return keyboard[id];
+}
+
+KeyState ModuleInput::GetMouseButtonDown(int id) const
+{
+	if (imgUiOn)
+		return KEY_IDLE;
+
+	return mouse_buttons[id - 1];
 }

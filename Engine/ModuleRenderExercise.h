@@ -22,11 +22,13 @@ public:
 	bool GetEnableDepthTest() { return enableDepthTest; }
 	bool GetEnableCullFace() { return enableCullFace; }
 	bool GetEnableAlphaTest() { return enableAlphaTest; }
+	float4 GetBackground() { return background; }
 
 	void SetEnableDepthTest(const bool EnableDepthTest) { enableDepthTest = EnableDepthTest; SetGlEnable(enableDepthTest, GL_DEPTH_TEST); }
 	void SetEnableCullFace(const bool EnableCullFace) { enableCullFace = EnableCullFace; SetGlEnable(enableCullFace, GL_CULL_FACE); }
 	void SetEnableAlphaTest(const bool EnableAlphaTest) { enableAlphaTest = EnableAlphaTest; SetGlEnable(enableAlphaTest, GL_ALPHA_TEST); }
 	void SetGlEnable(const bool enable, const GLenum type);
+	void SetBackground(const float4 Background) { background = Background; }
 
 private:
 	unsigned _vboQuad = 0;
@@ -37,6 +39,7 @@ private:
 	bool enableDepthTest = true;
 	bool enableCullFace = true;
 	bool enableAlphaTest = true;
+	float4 background = float4(0.1f, 0.1f, 0.1f, 1.0f);
 
 	void CreateTriangleVBO();
 	void CreateQuadVBO();

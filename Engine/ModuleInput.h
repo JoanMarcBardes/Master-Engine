@@ -23,8 +23,13 @@ public:
 	~ModuleInput();
 
 	bool Init();
-	update_status Update();
+	update_status PreUpdate();
 	bool CleanUp();
+
+	// Check key states (includes mouse and joy buttons)
+	KeyState GetKey(int id) const;
+
+	KeyState GetMouseButtonDown(int id) const;
 
 	// Get mouse / axis position
 	const iPoint& GetMouseMotion() const { return mouse_motion;}
@@ -41,4 +46,5 @@ private:
 	iPoint mouse_wheel;
 	bool right_mouse = false;
 	bool left_mouse = false;
+	bool imgUiOn = false;
 };

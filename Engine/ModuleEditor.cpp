@@ -215,6 +215,15 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 		bool depthTest = App->renderExercise->GetEnableDepthTest();
 		ImGui::Checkbox("DepthTest", &depthTest);
 		App->renderExercise->SetEnableDepthTest(depthTest);
+
+		float4 background = App->renderExercise->GetBackground();
+		ImGui::ColorEdit3("Background", background.ptr());
+		ImGui::SameLine(); HelpMarker(
+			"Click on the color square to open a color picker.\n"
+			"Click and hold to use drag and drop.\n"
+			"Right-click on the color square to show options.\n"
+			"CTRL+click on individual component to input value.\n");
+		App->renderExercise->SetBackground(background);
 	}
 
 	if (ImGui::CollapsingHeader("Window"))
@@ -262,13 +271,6 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 
 	if (ImGui::CollapsingHeader("Camera"))
 	{
-		bool orbit = App->editorCamera->GetOrbit();
-		ImGui::Checkbox("Orbit", &orbit);
-		App->editorCamera->SetOrbit(orbit);
-
-		static bool active = false;
-		ImGui::Checkbox("Active", &active);
-
 		float3 front = App->editorCamera->GetFront();
 		ImGui::DragFloat3("Front", front.ptr());
 		App->editorCamera->SetFront(front);
@@ -281,32 +283,7 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 		ImGui::DragFloat3("Position", pos.ptr());
 		App->editorCamera->SetPosition(pos);
 
-		float3 direction = App->editorCamera->GetDiection();
-		ImGui::DragFloat3("Direction", direction.ptr());
-		App->editorCamera->SetDiection(direction);
-
-		float yaw = App->editorCamera->GetYaw();
-		ImGui::DragFloat("Yaw", &yaw, 0.01f);
-		App->editorCamera->SetYaw(yaw);
-
-		float pitch = App->editorCamera->GetPitch();
-		ImGui::DragFloat("Pitch", &pitch, 0.01f);
-		App->editorCamera->SetPitch(pitch);
-
-		float movementSpeed = App->editorCamera->GetMovementSpeed();
-		ImGui::DragFloat("Mov Speed", &movementSpeed, 0.01f);
-		App->editorCamera->SetMovementSpeed(movementSpeed);
-
-		float rotationSpeed = App->editorCamera->GetRotationSpeed();
-		ImGui::DragFloat("Rot Speed", &rotationSpeed, 0.005f);
-		App->editorCamera->SetRotationSpeed(rotationSpeed);
-
-		float zoomSpeed = App->editorCamera->GetZoomSpeed();
-		ImGui::DragFloat("Zoom Speed", &zoomSpeed, 0.005f);
-		App->editorCamera->SetZoomSpeed(zoomSpeed);
-
-		static bool frustum = false;
-		ImGui::Checkbox("Frustum Culling", &frustum);
+		ImGui::Separator();
 
 		float nearPlane = App->editorCamera->GetNearPlane();
 		ImGui::DragFloat("Near Plane", &nearPlane, 0.1f);
@@ -324,19 +301,9 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 		ImGui::DragFloat("Aspect Ratio", &ascpectRatio, 0.01f);
 		App->editorCamera->SetAspectRatio(ascpectRatio);
 
-		static float col1[3] = { 1.0f, 0.0f, 0.2f };
-		ImGui::ColorEdit3("Background", col1);
-		ImGui::SameLine(); HelpMarker(
-			"Click on the color square to open a color picker.\n"
-			"Click and hold to use drag and drop.\n"
-			"Right-click on the color square to show options.\n"
-			"CTRL+click on individual component to input value.\n");
-
-		ImGui::Text("Current: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "TODO");
-
-		static bool activeCamera = false;
-		ImGui::Checkbox("Is Active Camera", &activeCamera);
+		float speed = App->editorCamera->GetSpeed();
+		ImGui::DragFloat("Movement Speed", &speed, 0.01f);
+		App->editorCamera->SetSpeed(speed);
 	}
 
 	if (ImGui::CollapsingHeader("Models info"))

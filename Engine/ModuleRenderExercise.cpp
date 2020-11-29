@@ -138,8 +138,7 @@ update_status ModuleRenderExercise::PreUpdate()
 	int w, h;
 	SDL_GetWindowSize(App->window->window, &w, &h);
 	glViewport(0, 0, w, h);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-
+	glClearColor(background.x, background.y, background.z, background.w);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	return UPDATE_CONTINUE;
@@ -314,21 +313,17 @@ void ModuleRenderExercise::DropFile()
 				ReplaceSlash(s);
 				if (s.find(".fbx") < s.length() || s.find(".FBX") < s.length())
 				{
-					int start_position_to_erase = s.find(_currentDir);
-					s.erase(start_position_to_erase, _currentDir.size());
-					LOG( ("Loading model" + s).c_str());
+					LOG( ("Loading model " + s).c_str());
 					App->model->Load(s.c_str());
 				}
 				else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length() || s.find(".tga") < s.length())
 				{
-					int start_position_to_erase = s.find(_currentDir);
-					s.erase(start_position_to_erase, _currentDir.size());
-					LOG(("Loading model" + s).c_str());
+					LOG(("Loading texture " + s).c_str());
 					App->model->SetTexture( App->texture->Load(s.c_str()) );
 				}
 				else
 				{
-					LOG( (s +" its not a file .fbx, .png, .jpg or .dds").c_str() );
+					LOG( (s +" its not a file .fbx, .png, .jpg, .dds or .tga").c_str() );
 				}
 				SDL_free(dropped_filedir);    // Free dropped_filedir memory
 				break;		
