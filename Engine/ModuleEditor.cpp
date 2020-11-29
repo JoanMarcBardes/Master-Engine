@@ -1,7 +1,6 @@
 #include "ModuleEditor.h"
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleRender.h"
 #include "ModuleRenderExercise.h"
 #include "ModuleWindow.h"
 #include "ModuleEditorCamera.h"

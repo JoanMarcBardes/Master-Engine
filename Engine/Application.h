@@ -3,7 +3,6 @@
 #include "Globals.h"
 #include "Module.h"
 
-class ModuleRender;
 class ModuleWindow;
 class ModuleTextures;
 class ModuleInput;
@@ -29,7 +28,6 @@ public:
 	unsigned int GetFPS() { return fps; }
 
 public:
-	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
 	ModuleEditorCamera* editorCamera = nullptr;

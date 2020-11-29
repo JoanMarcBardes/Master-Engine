@@ -130,9 +130,6 @@
     <ClCompile Include="ModuleInput.cpp">
       <Filter>Module</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleRender.cpp">
-      <Filter>Module</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleWindow.cpp">
       <Filter>Module</Filter>
     </ClCompile>
@@ -416,9 +413,6 @@
       <Filter>MathGeoLib\emscripten</Filter>
     </ClInclude>
     <ClInclude Include="ModuleInput.h">
-      <Filter>Module</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleRender.h">
       <Filter>Module</Filter>
     </ClInclude>
     <ClInclude Include="ModuleWindow.h">
