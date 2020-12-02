@@ -92,6 +92,12 @@ Mesh* ModuleModel::CreateMesh(const aiMesh* mesh, const aiScene* scene)
         vector.z = mesh->mVertices[i].z;
         vertex.Position = vector;
 
+        // normals
+        vector.x = mesh->mNormals[i].x;
+        vector.y = mesh->mNormals[i].y;
+        vector.z = mesh->mNormals[i].z;
+        vertex.Normal = vector;
+
         //texture coordinates
         float2 vec;
         vec.x = mesh->mTextureCoords[0][i].x;

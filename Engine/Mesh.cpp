@@ -49,9 +49,12 @@ void Mesh::setupMesh()
     // vertex positions
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-    // vertex texture coords
+    // vertex normals
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+    // vertex texture coords
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 
     glBindVertexArray(0);
 }
@@ -64,10 +67,26 @@ void Mesh::Draw(const unsigned program, const float4x4& proj, const float4x4& vi
     glUniformMatrix4fv(glGetUniformLocation(program, "proj"), 1, GL_TRUE, (const float*)&proj);
 
     glActiveTexture(GL_TEXTURE0);
-    for (unsigned int i = 0; i < texturesList.size(); ++i) {
-        glBindTexture(GL_TEXTURE_2D, texturesList[i]);
-        glUniform1i(glGetUniformLocation(program, "texture"+i), i);
-    }
+    //for (unsigned int i = 0; i < texturesList.size(); ++i) {
+    glBindTexture(GL_TEXTURE_2D, texturesList[0]);
+    glUniform1i(glGetUniformLocation(program, "my_texture"), 0);
+    //}
+
+    float3 camera_pos = float3(0,0,5);
+    float3 light_dir = float3(1, 0, 0);
+    float4 light_color = float4(1,1,1,1);
+    float4 ambient_color = float4(0.1f, 0.1f, 0.1f, 1.0f);
+    float Ks = 0.7f;
+    float Kd = 0.6f;
+    int shininess = 70;
+
+    glUniform3f(glGetUniformLocation(program, "camera_pos"), camera_pos.x, camera_pos.y, camera_pos.z);
+    glUniform3f(glGetUniformLocation(program, "light_dir"), light_dir.x, light_dir.y, light_dir.z);
+    glUniform4f(glGetUniformLocation(program, "light_color"), light_color.x, light_color.y, light_color.z, light_color.w);
+    glUniform4f(glGetUniformLocation(program, "ambient_color"), ambient_color.x, ambient_color.y, ambient_color.z, ambient_color.w);
+    glUniform1f(glGetUniformLocation(program, "Ks"), Ks);
+    glUniform1f(glGetUniformLocation(program, "Kd"), Kd);
+    glUniform1i(glGetUniformLocation(program, "shininess"), shininess);
 
     // draw mesh
     glBindVertexArray(vao);

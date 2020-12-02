@@ -396,6 +396,8 @@
     <None Include="Assimp\include\assimp\vector2.inl" />
     <None Include="Assimp\include\assimp\vector3.inl" />
     <None Include="Game\Shaders\fragmentShader.glsl" />
+    <None Include="Game\Shaders\Phong_FragmentShader.glsl" />
+    <None Include="Game\Shaders\Phong_VertexShader.glsl" />
     <None Include="Game\Shaders\vertexShader.glsl" />
     <None Include="MathGeoLib\Geometry\KDTree.inl" />
     <None Include="MathGeoLib\Geometry\QuadTree.inl" />

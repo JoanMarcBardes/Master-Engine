@@ -111,8 +111,8 @@ bool ModuleRenderExercise::Init()
 	CreateQuadVBO();
 	LoadMeshes();
 
-	char* sourceVertex = App->program->LoadShaderSource("Shaders/vertexShader.glsl");
-	char* sourceFragment = App->program->LoadShaderSource("Shaders/fragmentShader.glsl");
+	char* sourceVertex = App->program->LoadShaderSource("Shaders/Phong_VertexShader.glsl"); //vertexShader //Phong_VertexShader
+	char* sourceFragment = App->program->LoadShaderSource("Shaders/Phong_FragmentShader.glsl"); //fragmentShader //Phong_FragmentShader
 	unsigned idVertex = App->program->CompileShader (GL_VERTEX_SHADER, sourceVertex);
 	unsigned idFragment = App->program->CompileShader(GL_FRAGMENT_SHADER, sourceFragment);
 	free(sourceVertex);
