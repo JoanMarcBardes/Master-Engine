@@ -16,7 +16,7 @@ public:
 	bool CleanUp();
 
 	void Load(const char* file_name);	
-	void DrawMeshes(const unsigned program, const float4x4& proj, const float4x4& view, const float4x4& model);
+	void DrawMeshes(const unsigned program);
 
 	const std::vector<Mesh*> GetMeshes() { return meshesList; }
 	const std::vector<unsigned int> GetTexturesIds() { return texturesList; };

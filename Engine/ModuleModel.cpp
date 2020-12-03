@@ -186,11 +186,17 @@ void ModuleModel::LoadMaterials(const aiScene* scene)
     }
 }
 
-void ModuleModel::DrawMeshes(const unsigned program, const float4x4& proj, const float4x4& view, const float4x4& model)
+void ModuleModel::DrawMeshes(const unsigned program)
 {
     for (std::vector<Mesh*>::iterator it = meshesList.begin(); it != meshesList.end(); ++it)
     {
-        (*it)->Draw(program, proj, view, model, texturesList);
+        glActiveTexture(GL_TEXTURE0);
+        //for (unsigned int i = 0; i < texturesList.size(); ++i) {
+        glBindTexture(GL_TEXTURE_2D, texturesList[0]);
+        glUniform1i(glGetUniformLocation(program, "my_texture"), 0);
+        //}
+
+        (*it)->Draw();
     }
 }
 

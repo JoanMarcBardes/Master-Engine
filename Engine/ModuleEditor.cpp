@@ -215,6 +215,8 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 		ImGui::Checkbox("DepthTest", &depthTest);
 		App->renderExercise->SetEnableDepthTest(depthTest);
 
+		ImGui::Separator();
+
 		float4 background = App->renderExercise->GetBackground();
 		ImGui::ColorEdit3("Background", background.ptr());
 		ImGui::SameLine(); HelpMarker(
@@ -223,6 +225,30 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 			"Right-click on the color square to show options.\n"
 			"CTRL+click on individual component to input value.\n");
 		App->renderExercise->SetBackground(background);
+
+		float3 lightDir = App->renderExercise->GetLightDir();
+		ImGui::DragFloat3("Light Direction", lightDir.ptr(), 0.1f);
+		App->renderExercise->SetLightDir(lightDir);
+
+		float4 lightColor = App->renderExercise->GetLightColor();
+		ImGui::ColorEdit3("Light Color", lightColor.ptr());
+		App->renderExercise->SetLightColor(lightColor);
+
+		float4 ambientColor = App->renderExercise->GetAmbientColor();
+		ImGui::ColorEdit3("Ambient Color", ambientColor.ptr());
+		App->renderExercise->SetAmbientColor(ambientColor);
+
+		float Ks = App->renderExercise->GetKs();
+		ImGui::DragFloat("Ks", &Ks, 0.01f);
+		App->renderExercise->SetKs(Ks);
+
+		float Kd = App->renderExercise->GetKd();
+		ImGui::DragFloat("Kd", &Kd, 0.01f);
+		App->renderExercise->SetKd(Kd);
+
+		int shininess = App->renderExercise->GetShininess();
+		ImGui::DragInt("Shininess", &shininess, 1);
+		App->renderExercise->SetShininess(shininess);
 	}
 
 	if (ImGui::CollapsingHeader("Window"))

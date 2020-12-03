@@ -297,7 +297,21 @@ void ModuleRenderExercise::DrawQuad(const float4x4& proj, const float4x4& view)
 
 void ModuleRenderExercise::DrawMesh(const float4x4& proj, const float4x4& view, const float4x4& model)
 {
-	App->model->DrawMeshes(_program, proj, view, model);
+	glUniformMatrix4fv(glGetUniformLocation(_program, "model"), 1, GL_TRUE, (const float*)&model);
+	glUniformMatrix4fv(glGetUniformLocation(_program, "view"), 1, GL_TRUE, (const float*)&view);
+	glUniformMatrix4fv(glGetUniformLocation(_program, "proj"), 1, GL_TRUE, (const float*)&proj);
+
+	float3 camera_pos = App->editorCamera->GetPosition();
+
+	glUniform3f(glGetUniformLocation(_program, "camera_pos"), camera_pos.x, camera_pos.y, camera_pos.z);
+	glUniform3f(glGetUniformLocation(_program, "light_dir"), light_dir.x, light_dir.y, light_dir.z);
+	glUniform4f(glGetUniformLocation(_program, "light_color"), light_color.x, light_color.y, light_color.z, light_color.w);
+	glUniform4f(glGetUniformLocation(_program, "ambient_color"), ambient_color.x, ambient_color.y, ambient_color.z, ambient_color.w);
+	glUniform1f(glGetUniformLocation(_program, "Ks"), Ks);
+	glUniform1f(glGetUniformLocation(_program, "Kd"), Kd);
+	glUniform1i(glGetUniformLocation(_program, "shininess"), shininess);
+
+	App->model->DrawMeshes(_program);
 }
 
 void ModuleRenderExercise::DropFile()
