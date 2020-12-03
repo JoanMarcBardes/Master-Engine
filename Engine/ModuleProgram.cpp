@@ -4,15 +4,6 @@
 #include "GL/glew.h"
 #include "DebugLeaks.h"
 
-
-ModuleProgram::ModuleProgram()
-{
-}
-
-ModuleProgram::~ModuleProgram()
-{
-}
-
 bool ModuleProgram::Init()
 {
 	return true;

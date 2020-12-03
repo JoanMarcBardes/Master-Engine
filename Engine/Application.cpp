@@ -18,6 +18,7 @@ using namespace std;
 Application::Application()
 {
 	// Order matters: they will Init/start/update in this order
+	modules.reserve(9);
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(texture = new ModuleTexture());
 	modules.push_back(model = new ModuleModel());

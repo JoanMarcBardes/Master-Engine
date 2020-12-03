@@ -3,15 +3,6 @@
 #include "DevIL-SDK/include/IL/ilu.h"
 #include "DebugLeaks.h"
 
-ModuleTexture::ModuleTexture()
-{
-}
-
-ModuleTexture::~ModuleTexture()
-{
-	CleanUp();
-}
-
 bool ModuleTexture::Init()
 {
 	LOG("Creating ModuleTexture context");
@@ -57,12 +48,6 @@ GLuint ModuleTexture::Load(const char* path)
 	ilDeleteImages(1, &imageId); //Because we have already copied image data into texture data we can release memory used by image.
 
 	return texture;
-}
-
-// Called before quitting
-bool ModuleTexture::CleanUp()
-{
-	return true;
 }
 
 void ModuleTexture::DeleteTexture(unsigned int textureId)

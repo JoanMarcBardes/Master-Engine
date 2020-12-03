@@ -22,9 +22,9 @@ public:
 	ModuleInput();
 	~ModuleInput();
 
-	bool Init();
-	update_status PreUpdate();
-	bool CleanUp();
+	bool Init() override;
+	update_status PreUpdate() override;
+	bool CleanUp() override;
 
 	// Check key states (includes mouse and joy buttons)
 	KeyState GetKey(int id) const;

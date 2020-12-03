@@ -14,11 +14,11 @@ public:
 	ModuleEditorCamera();
 	~ModuleEditorCamera();
 
-	bool Init();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
-	bool CleanUp();
+	bool Init() override;
+	update_status PreUpdate() override;
+	update_status Update() override;
+	update_status PostUpdate() override;
+	bool CleanUp() override;
 	void WindowResized(unsigned width, unsigned height);
 
 	//get

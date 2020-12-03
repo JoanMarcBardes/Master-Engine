@@ -9,12 +9,11 @@ class ModuleWindow : public Module
 public:
 
 	ModuleWindow();
-
 	virtual ~ModuleWindow();
 
-	bool Init();
-	update_status Update();
-	bool CleanUp();
+	bool Init() override;
+	update_status Update() override;
+	bool CleanUp() override;
 
 	//get
 	const float GetBrightness() const { return SDL_GetWindowBrightness(window); }

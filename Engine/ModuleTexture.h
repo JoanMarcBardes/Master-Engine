@@ -8,14 +8,10 @@
 class ModuleTexture : public Module
 {
 public:
-	ModuleTexture();
-	~ModuleTexture();
 
-	bool Init();
-	bool CleanUp();
+	bool Init() override;
 
 	GLuint Load(const char* path);
-
 	void DeleteTexture(unsigned int textureId);
 };
 

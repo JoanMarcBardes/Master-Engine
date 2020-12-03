@@ -581,21 +581,12 @@ const char * DDRenderInterfaceCoreGL::textFragShaderSrc = "\n"
 
 DDRenderInterfaceCoreGL* ModuleDebugDraw::implementation = 0;
 
-ModuleDebugDraw::ModuleDebugDraw() 
-{
-}
-
-ModuleDebugDraw::~ModuleDebugDraw()
-{
-}
-
 bool ModuleDebugDraw::Init()
 {
     implementation = new DDRenderInterfaceCoreGL;
     dd::initialize(implementation);
     return true;
 }
-
 
 bool ModuleDebugDraw::CleanUp()
 {
@@ -605,11 +596,6 @@ bool ModuleDebugDraw::CleanUp()
     implementation = 0;
 
     return true;
-}
-
-update_status  ModuleDebugDraw::Update()
-{
-	return UPDATE_CONTINUE;
 }
 
 void ModuleDebugDraw::Draw(const float4x4& view, const float4x4& proj, unsigned width, unsigned height)
