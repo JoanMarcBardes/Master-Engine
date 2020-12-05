@@ -1,8 +1,8 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "MathGeoLib/Geometry/Frustum.h"
-#include "MathGeoLib/Math/float3x3.h"
+#include "Libraries/MathGeoLib/Geometry/Frustum.h"
+#include "Libraries/MathGeoLib/Math/float3x3.h"
 
 struct SDL_Texture;
 struct SDL_Renderer;

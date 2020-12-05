@@ -1,6 +1,6 @@
 #pragma once
 #include "Module.h"
-#include "SDL/include/SDL.h"
+#include "Libraries/SDL/include/SDL.h"
 
 class Application;
 

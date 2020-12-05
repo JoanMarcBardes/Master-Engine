@@ -1,7 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "DevIL-SDK/include/IL/il.h"
+#include "Libraries/DevIL-SDK/include/IL/il.h"
 #include "GL/glew.h"
 
 

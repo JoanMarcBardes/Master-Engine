@@ -48,8 +48,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef AI_ASSIMP_H_INC
 #define AI_ASSIMP_H_INC
 
-#include "Assimp/include/assimp/types.h"
-#include "Assimp/include/assimp/importerdesc.h"
+#include "Libraries/Assimp/include/assimp/types.h"
+#include "Libraries/Assimp/include/assimp/importerdesc.h"
 
 #ifdef __cplusplus
 extern "C" {

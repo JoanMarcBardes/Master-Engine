@@ -1,8 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
-#include "SDL/include/SDL.h"
-#include "ImGui/imgui_impl_sdl.h"
+#include "Libraries/SDL/include/SDL.h"
+#include "Libraries/ImGui/imgui_impl_sdl.h"
 #include "DebugLeaks.h"
 
 #define MAX_KEYS 300

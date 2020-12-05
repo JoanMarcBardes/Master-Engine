@@ -1,6 +1,6 @@
 #include "ModuleTexture.h"
 #include "ModuleRenderExercise.h"
-#include "DevIL-SDK/include/IL/ilu.h"
+#include "Libraries/DevIL-SDK/include/IL/ilu.h"
 #include "DebugLeaks.h"
 
 bool ModuleTexture::Init()

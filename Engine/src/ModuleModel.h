@@ -2,8 +2,8 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GL/glew.h"
-#include "Assimp/include/assimp/scene.h"
-#include "Assimp/include/assimp/mesh.h"
+#include "Libraries/Assimp/include/assimp/scene.h"
+#include "Libraries/Assimp/include/assimp/mesh.h"
 #include "Mesh.h"
 #include <vector>
 #include <string>

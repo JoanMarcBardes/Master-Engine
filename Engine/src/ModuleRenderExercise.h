@@ -2,7 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GL/glew.h"
-#include "MathGeoLib/Math/float4x4.h"
+#include "Libraries/MathGeoLib/Math/float4x4.h"
 #include <string>
 
 class ModuleRenderExercise : public Module

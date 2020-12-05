@@ -6,9 +6,9 @@
 #include "Point.h"
 #include "SDL.h"
 #include "GL/glew.h"
-#include "MathGeoLib/Geometry/Frustum.h"
-#include "MathGeoLib/Time/Clock.h"
-#include "ImGui/imgui_impl_sdl.h"
+#include "Libraries/MathGeoLib/Geometry/Frustum.h"
+#include "Libraries/MathGeoLib/Time/Clock.h"
+#include "Libraries/ImGui/imgui_impl_sdl.h"
 #include "DebugLeaks.h"
 
 ModuleEditorCamera::ModuleEditorCamera()

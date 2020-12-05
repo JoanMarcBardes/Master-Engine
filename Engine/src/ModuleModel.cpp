@@ -3,9 +3,9 @@
 #include "Application.h"
 #include "ModuleTexture.h"
 #include "ModuleEditorCamera.h"
-#include "Assimp/include/assimp/scene.h"
-#include "Assimp/include/assimp/cimport.h"
-#include "Assimp/include/assimp/postprocess.h"
+#include "Libraries/Assimp/include/assimp/scene.h"
+#include "Libraries/Assimp/include/assimp/cimport.h"
+#include "Libraries/Assimp/include/assimp/postprocess.h"
 #include "Mesh.h"
 #include "DebugLeaks.h"
 #include <vector>

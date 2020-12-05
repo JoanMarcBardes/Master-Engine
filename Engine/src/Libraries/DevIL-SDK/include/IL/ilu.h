@@ -21,7 +21,7 @@
 #define __ilu_h_
 #define __ILU_H__
 
-#include "DevIL-SDK/include/IL/il.h"
+#include "Libraries/DevIL-SDK/include/IL/il.h"
 
 #ifdef __cplusplus
 extern "C" {

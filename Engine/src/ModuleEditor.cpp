@@ -9,9 +9,9 @@
 #include "Mesh.h"
 #include "SDL.h"
 #include "GL/glew.h"
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_sdl.h"
-#include "ImGui/imgui_impl_opengl3.h"
+#include "Libraries/ImGui/imgui.h"
+#include "Libraries/ImGui/imgui_impl_sdl.h"
+#include "Libraries/ImGui/imgui_impl_opengl3.h"
 #include "DebugLeaks.h"
 #include <vector>
 #include <string>

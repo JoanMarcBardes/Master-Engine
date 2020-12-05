@@ -50,8 +50,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef AI_ANIM_H_INC
 #define AI_ANIM_H_INC
 
-#include "Assimp/include/assimp/types.h"
-#include "Assimp/include/assimp/quaternion.h"
+#include "Libraries/Assimp/include/assimp/types.h"
+#include "Libraries/Assimp/include/assimp/quaternion.h"
 
 #ifdef __cplusplus
 extern "C" {
