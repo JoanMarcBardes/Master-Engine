@@ -138,7 +138,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Component.h" />
     <ClInclude Include="src\DebugLeaks.h" />
+    <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Globals.h" />
     <ClInclude Include="src\Libraries\Assimp\include\assimp\aabb.h" />
     <ClInclude Include="src\Libraries\Assimp\include\assimp\ai_assert.h" />
@@ -317,12 +319,16 @@
     <ClInclude Include="src\ModuleModel.h" />
     <ClInclude Include="src\ModuleProgram.h" />
     <ClInclude Include="src\ModuleRenderExercise.h" />
+    <ClInclude Include="src\ModuleScene.h" />
     <ClInclude Include="src\ModuleTexture.h" />
     <ClInclude Include="src\ModuleWindow.h" />
     <ClInclude Include="src\Point.h" />
+    <ClInclude Include="src\Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui_demo.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui_draw.cpp" />
@@ -381,8 +387,10 @@
     <ClCompile Include="src\ModuleModel.cpp" />
     <ClCompile Include="src\ModuleProgram.cpp" />
     <ClCompile Include="src\ModuleRenderExercise.cpp" />
+    <ClCompile Include="src\ModuleScene.cpp" />
     <ClCompile Include="src\ModuleTexture.cpp" />
     <ClCompile Include="src\ModuleWindow.cpp" />
+    <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\Shaders\fragmentShader.glsl" />

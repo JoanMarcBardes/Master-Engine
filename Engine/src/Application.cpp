@@ -9,6 +9,7 @@
 #include "ModuleDebugDraw.h"
 #include "ModuleTexture.h"
 #include "ModuleModel.h"
+#include "ModuleScene.h"
 #include "Libraries/MathGeoLib/Time/Clock.h"
 
 #include "DebugLeaks.h"
@@ -18,7 +19,7 @@ using namespace std;
 Application::Application()
 {
 	// Order matters: they will Init/start/update in this order
-	modules.reserve(9);
+	modules.reserve(10);
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(texture = new ModuleTexture());
 	modules.push_back(model = new ModuleModel());
@@ -28,6 +29,7 @@ Application::Application()
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(debugDraw = new ModuleDebugDraw());
 	modules.push_back(editorCamera = new ModuleEditorCamera());
+	modules.push_back(scene = new ModuleScene());
 }
 
 Application::~Application()

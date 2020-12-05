@@ -13,6 +13,7 @@ class ModuleEditor;
 class ModuleDebugDraw;
 class ModuleTexture;
 class ModuleModel;
+class ModuleScene;
 
 class Application
 {
@@ -37,6 +38,7 @@ public:
 	ModuleDebugDraw* debugDraw = nullptr;
 	ModuleTexture* texture = nullptr;
 	ModuleModel* model = nullptr;
+	ModuleScene* scene = nullptr;
 
 private:
 	std::vector<Module*> modules;

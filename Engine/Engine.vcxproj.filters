@@ -2,42 +2,41 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
-      <Filter>Main</Filter>
+      <Filter>src\Main</Filter>
     </ClCompile>
     <ClCompile Include="src\Main.cpp">
-      <Filter>Main</Filter>
+      <Filter>src\Main</Filter>
     </ClCompile>
     <ClCompile Include="src\ModuleDebugDraw.cpp">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClCompile>
     <ClCompile Include="src\ModuleEditor.cpp">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClCompile>
     <ClCompile Include="src\ModuleEditorCamera.cpp">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClCompile>
     <ClCompile Include="src\ModuleInput.cpp">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClCompile>
     <ClCompile Include="src\ModuleModel.cpp">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClCompile>
     <ClCompile Include="src\ModuleProgram.cpp">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClCompile>
     <ClCompile Include="src\ModuleRenderExercise.cpp">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClCompile>
     <ClCompile Include="src\ModuleTexture.cpp">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClCompile>
     <ClCompile Include="src\ModuleWindow.cpp">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClCompile>
     <ClCompile Include="src\log.cpp">
-      <Filter>Utils</Filter>
+      <Filter>src\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui.cpp">
       <Filter>Libraries\ImGui</Filter>
     </ClCompile>
@@ -182,51 +181,65 @@
     <ClCompile Include="src\Libraries\MathGeoLib\Time\Clock.cpp">
       <Filter>Libraries\MathGeoLib\Time</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Component.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ModuleScene.cpp">
+      <Filter>src\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Transform.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
-      <Filter>Main</Filter>
+      <Filter>src\Main</Filter>
     </ClInclude>
     <ClInclude Include="src\Globals.h">
-      <Filter>Main</Filter>
+      <Filter>src\Main</Filter>
     </ClInclude>
     <ClInclude Include="src\Module.h">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClInclude>
     <ClInclude Include="src\ModuleDebugDraw.h">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClInclude>
     <ClInclude Include="src\ModuleEditor.h">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClInclude>
     <ClInclude Include="src\ModuleEditorCamera.h">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClInclude>
     <ClInclude Include="src\ModuleInput.h">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClInclude>
     <ClInclude Include="src\ModuleModel.h">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClInclude>
     <ClInclude Include="src\ModuleProgram.h">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClInclude>
     <ClInclude Include="src\ModuleRenderExercise.h">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClInclude>
     <ClInclude Include="src\ModuleTexture.h">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClInclude>
     <ClInclude Include="src\ModuleWindow.h">
-      <Filter>Module</Filter>
+      <Filter>src\Module</Filter>
     </ClInclude>
     <ClInclude Include="src\DebugLeaks.h">
-      <Filter>Utils</Filter>
+      <Filter>src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Point.h">
-      <Filter>Utils</Filter>
+      <Filter>src\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Libraries\Assimp\include\assimp\aabb.h">
       <Filter>Libraries\Assimp\include\assimp</Filter>
     </ClInclude>
@@ -731,20 +744,23 @@
     <ClInclude Include="src\Libraries\MathGeoLib\Time\Clock.h">
       <Filter>Libraries\MathGeoLib\Time</Filter>
     </ClInclude>
+    <ClInclude Include="src\ModuleScene.h">
+      <Filter>src\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mesh.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Component.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Transform.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Module">
-      <UniqueIdentifier>{cfb89837-841f-4999-aca9-e3f1ae1b2b72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main">
-      <UniqueIdentifier>{5feaf842-ea11-482f-9b7b-dde7d2748ff2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utils">
-      <UniqueIdentifier>{01d6c87b-3a7e-43c0-aca6-b50e45b30231}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{e6a3428d-4ad4-4d1c-b48e-a0b27d7b16d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Libraries">
       <UniqueIdentifier>{84740472-cd59-420a-8338-f4928ef513b5}</UniqueIdentifier>
     </Filter>
@@ -787,19 +803,34 @@
     <Filter Include="Libraries\MathGeoLib\emscripten">
       <UniqueIdentifier>{f91025f9-e473-4394-8484-3d6232aa86b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{134c6dc1-8a0b-4442-8b38-88a49be5b338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Main">
+      <UniqueIdentifier>{5feaf842-ea11-482f-9b7b-dde7d2748ff2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Module">
+      <UniqueIdentifier>{cfb89837-841f-4999-aca9-e3f1ae1b2b72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Shader">
+      <UniqueIdentifier>{e6a3428d-4ad4-4d1c-b48e-a0b27d7b16d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Utils">
+      <UniqueIdentifier>{01d6c87b-3a7e-43c0-aca6-b50e45b30231}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\Shaders\fragmentShader.glsl">
-      <Filter>Shader</Filter>
+      <Filter>src\Shader</Filter>
     </None>
     <None Include="Game\Shaders\vertexShader.glsl">
-      <Filter>Shader</Filter>
+      <Filter>src\Shader</Filter>
     </None>
     <None Include="Game\Shaders\Phong_FragmentShader.glsl">
-      <Filter>Shader</Filter>
+      <Filter>src\Shader</Filter>
     </None>
     <None Include="Game\Shaders\Phong_VertexShader.glsl">
-      <Filter>Shader</Filter>
+      <Filter>src\Shader</Filter>
     </None>
     <None Include="src\Libraries\Assimp\include\assimp\.editorconfig">
       <Filter>Libraries\Assimp\include\assimp</Filter>
