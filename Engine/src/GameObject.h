@@ -17,12 +17,16 @@ public:
 	void Update();
 	Component* CreateComponent(Component::Type type);
 	void AddComponent(Component* component);
+	Component* GetComponent(Component::Type type);
 
 	void SetActive(bool isActive) { active = isActive; }
 	bool IsActive() const { return active; };
 
 	std::vector<GameObject*>& GameObject::GetChilds();
 	GameObject* GetChild(const char* name) const;
+
+	void SetParent(GameObject* gameObject, GameObject* next = nullptr);
+	void RemoveChild(GameObject* gameObject);
 
 private:
 	bool ContainsType(Component::Type type); // GameObject only can contains one component of the same type

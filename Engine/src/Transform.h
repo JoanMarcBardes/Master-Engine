@@ -12,11 +12,12 @@ public:
 	Transform(GameObject* ownerGameObject, float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one);
 
 	//get
-	float4x4 GetTransform() const	  { return transform; }
-	float3	 GetPosition() const	  { return position; }
-	Quat	 GetRotation() const	  { return rotation; }
-	float3	 GetScale() const		  { return scale; }
-	float3	 GetRotationEuler() const { return rotationEuler; }
+	float4x4 GetTransform() const		{ return transform; }
+	float3	 GetPosition() const		{ return position; }
+	Quat	 GetRotation() const		{ return rotation; }
+	float3	 GetScale() const			{ return scale; }
+	float3	 GetRotationEuler() const	{ return rotationEuler; }
+	float4x4 GetTransformGlobal() const { return transformGlobal; }
 
 	//set
 	void SetTransform(float4x4 transform);
@@ -24,9 +25,13 @@ public:
 	void SetRotation(Quat rotation);
 	void SetScale(float3 scale);
 	void SetRotationEuler(float3 rotation_euler);
+	void SetTransformGlobal(float4x4 transform_global);
+
+	void OnUpdateTransform(const float4x4& parent_global);
 
 private:
 	void UpdateTransform();
+	void UpdatePosRotSca();
 
 private:
 	float4x4	transform;
@@ -34,5 +39,8 @@ private:
 	Quat		rotation;
 	float3		scale;
 	float3		rotationEuler;
+
+	float4x4	transformGlobal;
+
 };
 

@@ -60,6 +60,17 @@ void GameObject::AddComponent(Component* component)
 	component->gameObject = this;
 }
 
+Component* GameObject::GetComponent(Component::Type type)
+{
+	for each (Component* component in components)
+	{
+		if (component->GetType() == type)
+			return component;
+	}
+	LOG("[error] dont't find andy component of type: %s", type);
+	return nullptr;
+}
+
 bool GameObject::ContainsType(Component::Type type)
 {
 	for each (Component* component in components)
@@ -90,4 +101,32 @@ GameObject* GameObject::GetChild(const char* name) const
 	}
 	LOG("[error] don't find any GameObject with name: %s", name);
 	return nullptr;
+}
+
+void GameObject::SetParent(GameObject* newParent, GameObject* next = nullptr)
+{
+	if (this != newParent && newParent != nullptr)
+	{
+		float4x4 global = newParent->transform->GetTransformGlobal();
+		if (parent != nullptr)
+		{
+			parent->RemoveChild(this);
+		}
+		parent = newParent;
+		parent->childs.push_back(this);
+
+		transform->OnUpdateTransform(global);
+	}
+}
+
+void GameObject::RemoveChild(GameObject* gameObject)
+{
+	for (std::vector<GameObject*>::iterator it = childs.begin(); it != childs.end(); it++)
+	{
+		if ((*it) == gameObject)
+		{
+			childs.erase(it);
+			break;
+		}
+	}
 }
