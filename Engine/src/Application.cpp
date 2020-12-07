@@ -44,10 +44,12 @@ bool Application::Init()
 {
 	bool ret = true;
 
-	fpsInital = Clock::Tick();
-
 	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 		ret = (*it)->Init();
+
+	frameTimer.Start();
+	if (fpsMax > 0)
+		msMax = (float)1000 / (float)fpsMax;
 
 	return ret;
 }
@@ -55,7 +57,9 @@ bool Application::Init()
 update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
-	CalculateFPS();
+
+	deltaTime = frameTimer.GetTimerSec();
+	frameTimer.Start();
 
 	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PreUpdate();
@@ -65,6 +69,8 @@ update_status Application::Update()
 
 	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PostUpdate();		
+
+	CalculateFPS();
 
 	return ret;
 }
@@ -79,13 +85,33 @@ bool Application::CleanUp()
 	return ret;
 }
 
-void Application::CalculateFPS() {
+void Application::CalculateFPS() 
+{
+	float frame = frameTimer.GetTimer();
+	if (frame > 0 && frame < msMax)
+	{
+		SDL_Delay(msMax - frame);
+	}
+
 	fpsCount++;
-	unsigned int fpsInterval = Clock::Tick() - fpsInital;
-	if (fpsInterval > Clock::TicksPerSec())
+	if (fpsInterval.GetTimer() >= 1000)
 	{
 		fps = fpsCount;
 		fpsCount = 0;
-		fpsInital = Clock::Tick();
+		fpsInterval.Start();
 	}
+
+}
+
+void Application::SetFpsMax(unsigned int FpsMax)
+{
+	fpsMax = FpsMax;
+	if (fpsMax > 0)
+		msMax = (float)1000 / (float)fpsMax;
+}
+
+void Application::SetTitle(const char* Title)
+{
+	title = Title;
+	window->SetTitle(Title);
 }

@@ -199,6 +199,9 @@
     <ClCompile Include="src\Material.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Timer.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -764,6 +767,9 @@
     </ClInclude>
     <ClInclude Include="src\Material.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Timer.h">
+      <Filter>src\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

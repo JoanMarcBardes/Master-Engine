@@ -174,11 +174,20 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 
 	if (ImGui::CollapsingHeader("Application"))
 	{
-		static char appName[128] = "Joan Marc Engine";
-		ImGui::InputText("App Name", appName, IM_ARRAYSIZE(appName));
+		char appName[50];
+		strcpy_s(appName, 50, App->GetTitle());
+		if (ImGui::InputText("Project Name", appName, IM_ARRAYSIZE(appName), ImGuiInputTextFlags_EnterReturnsTrue))
+			App->SetTitle(appName);
 
-		static char organization[128] = "UPC talent";
-		ImGui::InputText("Organization", organization, IM_ARRAYSIZE(organization));
+		char organization[50];
+		strcpy_s(organization, 50, App->GetOrganizatio());
+		if (ImGui::InputText("Organization Name", organization, IM_ARRAYSIZE(organization), ImGuiInputTextFlags_EnterReturnsTrue))
+			App->SetOrganizatio(organization);
+
+		int fpsMax = App->GetFpsMax();
+		if(ImGui::SliderInt("fps Max", &fpsMax, 1, 60))
+			App->SetFpsMax(fpsMax);
+		ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
 
 		unsigned int fps = App->GetFPS();
 		ImGui::Text("FPS: "); ImGui::SameLine();

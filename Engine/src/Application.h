@@ -1,7 +1,9 @@
 #pragma once
 #include<vector>
+#include<string>
 #include "Globals.h"
 #include "Module.h"
+#include "Timer.h"
 
 class ModuleWindow;
 class ModuleTextures;
@@ -28,6 +30,15 @@ public:
 
 	unsigned int GetFPS() { return fps; }
 
+	unsigned int GetFpsMax() { return fpsMax; }
+	void SetFpsMax(unsigned int FpsMax);
+
+	const char* GetTitle() const { return title.c_str(); }
+	const char* GetOrganizatio() const { return organization.c_str(); }
+
+	void SetTitle(const char* Title);
+	void SetOrganizatio(const char* Organization) { organization = Organization; }
+
 public:
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
@@ -45,7 +56,17 @@ private:
 
 	unsigned int fps = 0;
 	unsigned int fpsCount = 0;
-	unsigned int fpsInital = 0;
+
+	Timer frameTimer;
+	float deltaTime;
+
+	Timer fpsInterval;
+
+	unsigned int fpsMax = 30;
+	float msMax = 0.0f;
+
+	std::string title = TITLE;
+	std::string organization = ORGANIZATION;
 
 private: 
 	void CalculateFPS();

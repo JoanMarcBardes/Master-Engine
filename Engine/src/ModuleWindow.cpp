@@ -96,3 +96,8 @@ void ModuleWindow::SetWidthHeight(const int w, const int h)
 	App->editorCamera->WindowResized(width, height);
 	SDL_SetWindowSize(window, width, height); 
 }
+
+void ModuleWindow::SetTitle(const char* newTitle)
+{
+	SDL_SetWindowTitle(window, newTitle);
+}

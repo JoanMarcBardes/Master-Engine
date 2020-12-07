@@ -35,6 +35,8 @@ public:
 	void SetBorderless(const bool active) { bordered = active; SDL_SetWindowBordered(window, active ? SDL_TRUE : SDL_FALSE); }
 	void SetFullDesktop(const bool active) { windowsFull = active ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0; SDL_SetWindowFullscreen(window, windowsFull); }
 
+	void SetTitle(const char* newTitle);
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window = NULL;
