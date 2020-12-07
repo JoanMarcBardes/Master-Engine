@@ -196,6 +196,9 @@
     <ClCompile Include="src\Transform.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Material.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -757,6 +760,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Transform.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Material.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

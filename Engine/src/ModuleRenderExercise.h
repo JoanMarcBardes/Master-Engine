@@ -20,6 +20,7 @@ public:
 
 	//get
 	void* GetContext() const { return _context; }
+	unsigned GetProgram() const { return _program; }
 	bool GetEnableDepthTest() { return enableDepthTest; }
 	bool GetEnableCullFace() { return enableCullFace; }
 	bool GetEnableAlphaTest() { return enableAlphaTest; }

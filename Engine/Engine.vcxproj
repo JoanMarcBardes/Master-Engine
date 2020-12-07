@@ -310,6 +310,7 @@
     <ClInclude Include="src\Libraries\MathGeoLib\Math\TransformOps.h" />
     <ClInclude Include="src\Libraries\MathGeoLib\Math\vec2d.h" />
     <ClInclude Include="src\Libraries\MathGeoLib\Time\Clock.h" />
+    <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Module.h" />
     <ClInclude Include="src\ModuleDebugDraw.h" />
@@ -379,6 +380,7 @@
     <ClCompile Include="src\Libraries\MathGeoLib\Time\Clock.cpp" />
     <ClCompile Include="src\log.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\ModuleDebugDraw.cpp" />
     <ClCompile Include="src\ModuleEditor.cpp" />

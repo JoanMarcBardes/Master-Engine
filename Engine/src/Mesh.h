@@ -1,16 +1,20 @@
 #pragma once
-#include "Libraries/MathGeoLib/Geometry/Frustum.h"
+#include "Component.h"
+#include "Libraries/MathGeoLib/MathGeoLib.h"
 #include <vector>
 #include <string>
 
-struct Vertex {
-    float3 Position;
-    float3 Normal;
-    float2 TexCoords;
-};
+class GameObject;
 
-class Mesh
+class Mesh : public Component
 {
+public: 
+    struct Vertex {
+        float3 Position;
+        float3 Normal;
+        float2 TexCoords;
+    };
+
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const char* name);
     ~Mesh();

@@ -1,4 +1,6 @@
 #include "GameObject.h"
+#include "Mesh.h"
+#include "Material.h"
 #include "Globals.h"
 
 GameObject::GameObject(const char* name) : name(name)
@@ -18,6 +20,27 @@ GameObject::GameObject(GameObject* parent, const char* name, const float3& trans
 	if (parent)
 		parent->childs.push_back(this);
 	AddComponent(new Transform(this, translation, rotation, scale));
+}
+
+GameObject::~GameObject()
+{
+	if (parent) {
+		parent->RemoveChild(this);
+		parent = nullptr;
+	}
+
+	for (int i = 0; i < childs.size(); i++)
+	{
+		delete childs[i];
+		childs[i] = nullptr;
+	}
+	childs.clear();
+
+	for (int i = 0; i < components.size(); i++)
+	{
+		delete components[i];
+		components[i] = nullptr;
+	}
 }
 
 
@@ -58,6 +81,11 @@ void GameObject::AddComponent(Component* component)
 	}
 	components.push_back(component);
 	component->gameObject = this;
+
+	if(component->GetType() == Component::Type::Transform)
+	{
+		transform = (Transform*)component;
+	}
 }
 
 Component* GameObject::GetComponent(Component::Type type)
@@ -67,7 +95,7 @@ Component* GameObject::GetComponent(Component::Type type)
 		if (component->GetType() == type)
 			return component;
 	}
-	LOG("[error] dont't find andy component of type: %s", type);
+	//LOG("[error] dont't find andy component of type: %i", type);
 	return nullptr;
 }
 
@@ -103,7 +131,7 @@ GameObject* GameObject::GetChild(const char* name) const
 	return nullptr;
 }
 
-void GameObject::SetParent(GameObject* newParent, GameObject* next = nullptr)
+void GameObject::SetParent(GameObject* newParent)
 {
 	if (this != newParent && newParent != nullptr)
 	{
@@ -127,6 +155,28 @@ void GameObject::RemoveChild(GameObject* gameObject)
 		{
 			childs.erase(it);
 			break;
+		}
+	}
+}
+
+
+void GameObject::Draw(unsigned program)
+{
+	if (active)
+	{
+		Mesh* mesh = (Mesh*)GetComponent(Component::Type::Mesh);
+		if(mesh)
+			mesh->Draw();
+
+		Material* material = (Material*)GetComponent(Component::Type::Material);
+		if (material)
+			material->Draw(program);
+
+		// Draw the childs
+		std::vector<GameObject*> childs = GetChilds();
+		for each (GameObject* child in childs)
+		{
+			child->Draw(program);
 		}
 	}
 }

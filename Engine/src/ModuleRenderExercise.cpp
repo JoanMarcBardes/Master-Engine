@@ -15,6 +15,7 @@
 #include "ModuleTexture.h"
 #include "ModuleModel.h"
 #include "DebugLeaks.h"
+#include "ModuleScene.h"
 #include <string>
 #include <direct.h>
 #include <crtdbg.h>
@@ -304,7 +305,8 @@ void ModuleRenderExercise::DrawMesh(const float4x4& proj, const float4x4& view, 
 	glUniform1f(glGetUniformLocation(_program, "Kd"), Kd);
 	glUniform1i(glGetUniformLocation(_program, "shininess"), shininess);
 
-	App->model->DrawMeshes(_program);
+	//App->model->DrawMeshes(_program);
+	App->scene->Draw(_program);
 }
 
 void ModuleRenderExercise::DropFile()

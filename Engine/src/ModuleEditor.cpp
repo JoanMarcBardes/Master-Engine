@@ -7,6 +7,8 @@
 #include "ModuleModel.h"
 #include "ModuleInput.h"
 #include "Mesh.h"
+#include "ModuleScene.h"
+#include "Material.h"
 #include "SDL.h"
 #include "GL/glew.h"
 #include "Libraries/ImGui/imgui.h"
@@ -82,6 +84,8 @@ update_status ModuleEditor::Update()
 	if (showWindowConsole) WindowConsole(&showWindowConsole);
 	if (showWindowConfiguration) WindowConfiguration(&showWindowConfiguration);
 	if (showAbout) WindowAbout(&showAbout);
+	if (showWindowGameObjectHierarchy) WindowGameObjectHierarchy(&showWindowGameObjectHierarchy);
+	if (showWindowInspector) WindowInspector(&showWindowInspector);
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -426,6 +430,8 @@ update_status ModuleEditor::MainMenuBar()
 		{
 			ImGui::MenuItem("bWindowConsole", "", &showWindowConsole);
 			ImGui::MenuItem("WindowConfiguration", "", &showWindowConfiguration);
+			ImGui::MenuItem("WindowGameObjectHierarchy", "", &showWindowGameObjectHierarchy);
+			ImGui::MenuItem("WindowInspector", "", &showWindowInspector);
 			ImGui::EndMenu();
 		}
 		if (ImGui::MenuItem("Quit", "Alt+F4"))
@@ -485,3 +491,132 @@ void ModuleEditor::RequestBrowser(const char* url)
 {
 	ShellExecute(NULL, "open", url, NULL, NULL, SW_SHOWDEFAULT);
 }
+
+
+void ModuleEditor::WindowGameObjectHierarchy(bool* p_open)
+{
+	if (!ImGui::Begin("GameObjectHierarchy", p_open/*, ImGuiWindowFlags_AlwaysUseWindowPadding*/))
+	{
+		ImGui::End();
+		return;
+	}
+
+	if (ImGui::TreeNode("Root"))
+	{
+		GameObject* root = App->scene->GetRoot();
+		TreeChilds(root);
+		ImGui::TreePop();
+	}
+
+	ImGui::End();
+}
+
+void ModuleEditor::TreeChilds(GameObject* parent)
+{
+	std::vector<GameObject*> childs = parent->GetChilds();
+	for each (GameObject * child in childs)
+	{
+		if (ImGui::TreeNodeEx(child->name.c_str()))
+		{
+			if (ImGui::SmallButton("Select"))
+				selected = child;
+			
+			ImGui::SameLine();
+			ImGui::PushID(0);
+			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1.0f, 0.7f, 0.7f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1.0f, 0.8f, 0.8f));
+			if (ImGui::Button("Delete"))
+			{
+				delete child;
+			}
+			ImGui::PopStyleColor(3);
+			ImGui::PopID();
+
+			TreeChilds(child);
+			ImGui::TreePop();
+		}
+	}
+}
+
+void ModuleEditor::WindowInspector(bool* p_open)
+{
+	if (!ImGui::Begin("Inspector", p_open))
+	{
+		ImGui::End();
+		return;
+	}
+
+	if (selected)
+	{
+		bool active = selected->IsActive();
+		if (ImGui::Checkbox("Active", &active))
+			selected->SetActive(active);
+
+		ImGui::SameLine();
+		char goName[50];
+		strcpy_s(goName, 50, selected->name.c_str());
+		ImGuiInputTextFlags textFlags = ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue;
+		if (ImGui::InputText("###", goName, 50, textFlags))
+			selected->name = goName;
+
+		ImGui::Separator();
+
+		Transform* transform = (Transform*)selected->GetComponent(Component::Type::Transform);
+		if (ImGui::CollapsingHeader("Transform"))
+		{
+			float3 position = transform->GetPosition();
+			float3 rotationEuler = transform->GetRotationEuler();
+			float3 scale = transform->GetScale();
+
+			if(ImGui::InputFloat3("Position", position.ptr()))
+				transform->SetPosition(position);
+			if(ImGui::InputFloat3("Rotate", rotationEuler.ptr()))
+				transform->SetRotationEuler(rotationEuler);
+			if(ImGui::InputFloat3("Scale", scale.ptr()))
+				transform->SetScale(scale);
+		}
+		
+		Mesh* mesh = (Mesh*)selected->GetComponent(Component::Type::Mesh);
+		if (mesh && ImGui::CollapsingHeader("Mesh"))
+		{
+			ImGui::Text("Num vertices: "); ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", mesh->GetNumVertices());
+
+			ImGui::Text("Num indices: "); ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", mesh->GetNumIndices());
+		}
+
+		Material* material = (Material*)selected->GetComponent(Component::Type::Material);
+		if (material && ImGui::CollapsingHeader("Material"))
+		{
+			ImGui::Text("Texture");
+			std::vector<std::string> paths = material->GetPaths();
+			for (int i = 0; i < paths.size(); ++i)
+			{
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", paths[i].c_str());
+			}
+
+			std::vector<unsigned int> textures = material->GetTextures();
+			float my_tex_w = 150;
+			float my_tex_h = 150;
+			for (int j = 0; j < textures.size(); ++j)
+			{
+				if (j != 0) ImGui::SameLine();
+				ImVec2 pos = ImGui::GetCursorScreenPos();
+				ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
+				ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
+				ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
+				ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
+				ImGui::Image((ImTextureID)textures[j], ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
+			}
+		}
+	}
+	else
+	{
+		ImGui::Text("Select a GameObject");
+	}
+
+	ImGui::End();
+}
+

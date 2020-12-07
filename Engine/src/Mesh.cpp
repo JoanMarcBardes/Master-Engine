@@ -6,16 +6,13 @@
 #include <vector>
 #include <string>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const char* _name)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const char* name) : 
+    Component(Component::Type::Mesh, gameObject), Vertices(vertices), Indices(indices), name(name)
 {
-    Vertices = vertices;
-    Indices = indices;
-
     vao = vbo = ebo = 0;
 
     numVertices = vertices.size();
     numIndices = indices.size();
-    name = _name;
     model = float4x4::identity;
 
     setupMesh();

@@ -5,6 +5,7 @@
 #include "Libraries/Assimp/include/assimp/scene.h"
 #include "Libraries/Assimp/include/assimp/mesh.h"
 #include "Mesh.h"
+#include "Material.h"
 #include <vector>
 #include <string>
 
@@ -37,8 +38,10 @@ private:
 	float volume = 0;
 
 	void LoadMeshes(const aiScene* scene);
+	void processNode(aiNode* node, const aiScene* scene, GameObject* parent = nullptr);
+
 	Mesh* CreateMesh(const aiMesh* mesh, const aiScene* scene);
-	void LoadMaterials(const aiScene* scene);
+	Material* LoadMaterials(const aiScene* scene);
 	void CalculateVolumeCenter();
 };
 
