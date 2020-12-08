@@ -9,6 +9,7 @@
 #include "Mesh.h"
 #include "ModuleScene.h"
 #include "Material.h"
+#include "Time.h"
 #include "SDL.h"
 #include "GL/glew.h"
 #include "Libraries/ImGui/imgui.h"
@@ -86,6 +87,7 @@ update_status ModuleEditor::Update()
 	if (showAbout) WindowAbout(&showAbout);
 	if (showWindowGameObjectHierarchy) WindowGameObjectHierarchy(&showWindowGameObjectHierarchy);
 	if (showWindowInspector) WindowInspector(&showWindowInspector);
+	if (showWindowPlayStopStep) WindowPlayStopStep(&showWindowPlayStopStep);
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -441,6 +443,7 @@ update_status ModuleEditor::MainMenuBar()
 			ImGui::MenuItem("WindowConfiguration", "", &showWindowConfiguration);
 			ImGui::MenuItem("WindowGameObjectHierarchy", "", &showWindowGameObjectHierarchy);
 			ImGui::MenuItem("WindowInspector", "", &showWindowInspector);
+			ImGui::MenuItem("WindowPlayStopStep", "", &showWindowPlayStopStep);
 			ImGui::EndMenu();
 		}
 		if (ImGui::MenuItem("Quit", "Alt+F4"))
@@ -629,3 +632,31 @@ void ModuleEditor::WindowInspector(bool* p_open)
 	ImGui::End();
 }
 
+void ModuleEditor::WindowPlayStopStep(bool* p_open)
+{
+	if (!ImGui::Begin("PlayStopStep", p_open)) 
+	{
+		ImGui::End();
+		return;
+	}
+
+	std::string name = Time::running ? "Stop" : "Play";
+	if (ImGui::Button(name.c_str()))
+	{
+		Time::running ? Time::Stop() : Time::Play();
+	}
+	ImGui::SameLine();
+	std::string name2 = Time::paused ? "Continue" : "Pause";
+	if (ImGui::Button(name2.c_str()))
+	{
+		Time::paused ? Time::Continue() : Time::Pause();
+	}
+	ImGui::SameLine();
+	//ImGuiButtonFlags flag = Time::paused ? 1 << 15 : 1 << 14; // ImGuiButtonFlags_AlignTextBaseLine or ImGuiButtonFlags_Disabled
+	if (ImGui::Button("Step"))
+	{
+		Time::DoStep();
+	}
+
+	ImGui::End();
+}

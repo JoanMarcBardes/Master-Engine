@@ -29,6 +29,7 @@ private:
 	bool showAbout = false;
 	bool showWindowGameObjectHierarchy = true;
 	bool showWindowInspector = true;
+	bool showWindowPlayStopStep = true;
 
 	void ClearLog();
 	static char* Strdup(const char* s) { size_t len = strlen(s) + 1; void* buf = malloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)s, len); }
@@ -44,6 +45,8 @@ private:
 
 	GameObject* selected = nullptr;
 	void WindowInspector(bool* p_open);
+
+	void WindowPlayStopStep(bool* p_open);
 
 };
 

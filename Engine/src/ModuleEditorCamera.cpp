@@ -7,8 +7,8 @@
 #include "SDL.h"
 #include "GL/glew.h"
 #include "Libraries/MathGeoLib/Geometry/Frustum.h"
-#include "Libraries/MathGeoLib/Time/Clock.h"
 #include "Libraries/ImGui/imgui_impl_sdl.h"
+#include "Time.h"
 #include "DebugLeaks.h"
 
 ModuleEditorCamera::ModuleEditorCamera()
@@ -40,9 +40,7 @@ update_status ModuleEditorCamera::PreUpdate()
 // Called every draw update
 update_status ModuleEditorCamera::Update()
 {
-	float currentFrame = Clock::Time();
-	deltaTime = (currentFrame - lastFrame) * 0.01f;
-	lastFrame = currentFrame;
+	deltaTime = Time::deltaTime;
 	
 	MoveForward();
 	MoveLateral();

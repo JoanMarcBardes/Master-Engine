@@ -181,25 +181,28 @@
     <ClCompile Include="src\Libraries\MathGeoLib\Time\Clock.cpp">
       <Filter>Libraries\MathGeoLib\Time</Filter>
     </ClCompile>
-    <ClCompile Include="src\Mesh.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Component.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameObject.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\ModuleScene.cpp">
       <Filter>src\Module</Filter>
     </ClCompile>
-    <ClCompile Include="src\Transform.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\Timer.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Component.cpp">
+      <Filter>src\GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="src\Material.cpp">
-      <Filter>src</Filter>
+      <Filter>src\GameObject\Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\Timer.cpp">
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>src\GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Transform.cpp">
+      <Filter>src\GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject.cpp">
+      <Filter>src\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Time.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
   </ItemGroup>
@@ -753,22 +756,25 @@
     <ClInclude Include="src\ModuleScene.h">
       <Filter>src\Module</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mesh.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameObject.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\Timer.h">
+      <Filter>src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Component.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Transform.h">
-      <Filter>src</Filter>
+      <Filter>src\GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="src\Material.h">
-      <Filter>src</Filter>
+      <Filter>src\GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="src\Timer.h">
+    <ClInclude Include="src\Mesh.h">
+      <Filter>src\GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Transform.h">
+      <Filter>src\GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject.h">
+      <Filter>src\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Time.h">
       <Filter>src\Utils</Filter>
     </ClInclude>
   </ItemGroup>
@@ -829,6 +835,12 @@
     </Filter>
     <Filter Include="src\Utils">
       <UniqueIdentifier>{01d6c87b-3a7e-43c0-aca6-b50e45b30231}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GameObject">
+      <UniqueIdentifier>{90814183-360e-4275-9434-c07657ce8703}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GameObject\Component">
+      <UniqueIdentifier>{59a019b3-aab7-4039-bbf7-c3c0cb994f80}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

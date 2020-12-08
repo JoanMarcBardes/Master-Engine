@@ -10,8 +10,7 @@
 #include "ModuleTexture.h"
 #include "ModuleModel.h"
 #include "ModuleScene.h"
-#include "Libraries/MathGeoLib/Time/Clock.h"
-
+#include "Time.h"
 #include "DebugLeaks.h"
 
 using namespace std;
@@ -60,6 +59,7 @@ update_status Application::Update()
 
 	deltaTime = frameTimer.GetTimerSec();
 	frameTimer.Start();
+	Time::PreUpdate(deltaTime);
 
 	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PreUpdate();
@@ -71,6 +71,7 @@ update_status Application::Update()
 		ret = (*it)->PostUpdate();		
 
 	CalculateFPS();
+	Time::PostUpdate();
 
 	return ret;
 }

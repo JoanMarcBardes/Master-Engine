@@ -324,6 +324,7 @@
     <ClInclude Include="src\ModuleTexture.h" />
     <ClInclude Include="src\ModuleWindow.h" />
     <ClInclude Include="src\Point.h" />
+    <ClInclude Include="src\Time.h" />
     <ClInclude Include="src\Timer.h" />
     <ClInclude Include="src\Transform.h" />
   </ItemGroup>
@@ -393,6 +394,7 @@
     <ClCompile Include="src\ModuleScene.cpp" />
     <ClCompile Include="src\ModuleTexture.cpp" />
     <ClCompile Include="src\ModuleWindow.cpp" />
+    <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\Timer.cpp" />
     <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
