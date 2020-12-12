@@ -22,9 +22,11 @@ public:
 
 	void SetActive(bool isActive) { active = isActive; }
 	bool IsActive() const { return active; };
+	unsigned GetID() const { return id; }
 
 	std::vector<GameObject*>& GameObject::GetChilds();
 	GameObject* GetChild(const char* name) const;
+	unsigned GetNumChilds() const { return childs.size(); }
 
 	void SetParent(GameObject* gameObject);
 	void RemoveChild(GameObject* gameObject);
@@ -45,6 +47,7 @@ public:
 
 private:
 	unsigned program = 0;
+	unsigned id = 0;
 
 	bool active = true;
 	std::vector<GameObject*> childs;

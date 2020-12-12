@@ -3,14 +3,18 @@
 #include "Material.h"
 #include "Globals.h"
 
+LCG randomID;
+
 GameObject::GameObject(const char* name) : name(name), parent(nullptr)
 {
+	id = randomID.Int();
 	this->transform = new Transform(this, float3::zero, Quat::identity, float3::one);
 	AddComponent(this->transform);
 }
 
 GameObject::GameObject(GameObject* parent, const float4x4& transform, const char* name) : parent(parent), name(name)
 {
+	id = randomID.Int();
 	if (parent)
 		parent->childs.push_back(this);
 	this->transform = new Transform(this, transform);
@@ -19,6 +23,7 @@ GameObject::GameObject(GameObject* parent, const float4x4& transform, const char
 
 GameObject::GameObject(GameObject* parent, const char* name, const float3& translation, const Quat& rotation, const float3& scale) : parent(parent), name(name)
 {
+	id = randomID.Int();
 	if (parent)
 		parent->childs.push_back(this);
 	this->transform = new Transform(this, translation, rotation, scale);
@@ -178,7 +183,9 @@ void GameObject::Draw(unsigned program)
 
 		Material* material = (Material*)GetComponent(Component::Type::Material);
 		if (material)
+		{
 			material->Draw(program);
+		}
 
 		// Draw the childs
 		std::vector<GameObject*> childs = GetChilds();

@@ -526,29 +526,33 @@ void ModuleEditor::WindowGameObjectHierarchy(bool* p_open)
 
 void ModuleEditor::TreeChilds(GameObject* parent)
 {
+	static ImGuiTreeNodeFlags baseFlags;
 	std::vector<GameObject*> childs = parent->GetChilds();
 	for each (GameObject * child in childs)
 	{
-		if (ImGui::TreeNodeEx(child->name.c_str()))
+		if (child->GetNumChilds() > 0)
 		{
-			if (ImGui::SmallButton("Select"))
-				selected = child;
+			baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
+			bool node_open = ImGui::TreeNodeEx(child->name.c_str(), baseFlags);			
 			
-			ImGui::SameLine();
-			ImGui::PushID(0);
-			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1.0f, 0.7f, 0.7f));
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1.0f, 0.8f, 0.8f));
-			if (ImGui::Button("Delete"))
-			{
-				delete child;
-			}
-			ImGui::PopStyleColor(3);
-			ImGui::PopID();
+			if (ImGui::IsItemClicked())
+				selected = child;		
 
-			TreeChilds(child);
-			ImGui::TreePop();
+			if (node_open)
+			{
+				TreeChilds(child);
+				ImGui::TreePop();
+			}
 		}
+		else
+		{
+			ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
+			ImGui::TreeNodeEx(child->name.c_str(), nodeFlags);
+
+			if (ImGui::IsItemClicked())
+				selected = child;
+		}		
+		
 	}
 }
 
@@ -572,6 +576,24 @@ void ModuleEditor::WindowInspector(bool* p_open)
 		ImGuiInputTextFlags textFlags = ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue;
 		if (ImGui::InputText("###", goName, 50, textFlags))
 			selected->name = goName;
+
+
+		ImGui::SameLine();
+		ImGui::PushID(0);
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(1.0f, 0.7f, 0.7f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(1.0f, 0.8f, 0.8f));
+		if (ImGui::SmallButton("Delete"))
+		{
+			delete selected;
+			selected = nullptr;
+			ImGui::PopStyleColor(3);
+			ImGui::PopID();
+			ImGui::End();
+			return;
+		}
+		ImGui::PopStyleColor(3);
+		ImGui::PopID();
 
 		ImGui::Separator();
 
