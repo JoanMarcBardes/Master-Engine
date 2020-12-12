@@ -15,6 +15,7 @@
 #include "Libraries/ImGui/imgui.h"
 #include "Libraries/ImGui/imgui_impl_sdl.h"
 #include "Libraries/ImGui/imgui_impl_opengl3.h"
+#include "Libraries/MathGeoLib/MathGeoLib.h"
 #include "DebugLeaks.h"
 #include <vector>
 #include <string>
@@ -581,11 +582,25 @@ void ModuleEditor::WindowInspector(bool* p_open)
 			float3 rotationEuler = transform->GetRotationEuler();
 			float3 scale = transform->GetScale();
 
-			if(ImGui::InputFloat3("Position", position.ptr()))
+			if(ImGui::DragFloat3("Position", position.ptr(), 0.1f))
 				transform->SetPosition(position);
-			if(ImGui::InputFloat3("Rotate", rotationEuler.ptr()))
+			if(ImGui::DragFloat3("Rotate", rotationEuler.ptr(), 0.1f))
 				transform->SetRotationEuler(rotationEuler);
-			if(ImGui::InputFloat3("Scale", scale.ptr()))
+			if(ImGui::DragFloat3("Scale", scale.ptr(), 0.1f))
+				transform->SetScale(scale);
+
+			ImGui::Separator();
+
+			float4x4 globalTransfrom= transform->GetTransformGlobal();
+			Quat rotation;
+			globalTransfrom.Decompose(position, rotation, scale);
+			rotationEuler = rotation.ToEulerXYZ() * RADTODEG;
+
+			if (ImGui::DragFloat3("PositionGlobal", position.ptr(), 0.1f))
+				transform->SetPosition(position);
+			if (ImGui::DragFloat3("RotateGlobal", rotationEuler.ptr(), 0.1f))
+				transform->SetRotationEuler(rotationEuler);
+			if (ImGui::DragFloat3("ScaleGlobal", scale.ptr(), 0.1f))
 				transform->SetScale(scale);
 		}
 		

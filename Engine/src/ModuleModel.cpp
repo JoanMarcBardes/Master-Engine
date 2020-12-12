@@ -49,9 +49,7 @@ void ModuleModel::Load(const char* file_name)
     struct aiLogStream stream;
     stream.callback = PrintLogAssimp;
     aiAttachLogStream(&stream);
-
-    //CleanUp();
-    
+        
 	const aiScene* scene = aiImportFile(file_name, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene)
 	{
@@ -97,7 +95,6 @@ void ModuleModel::processNode(aiNode* node, const aiScene* scene, GameObject* pa
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         GameObject* child = App->scene->CreateGameObject(mesh->mName.C_Str(), parent);
         if (parent) {
-            child->SetParent(parent);
             child->SetProgram(parent->GetProgram());
         }
         Mesh* newMesh = CreateMesh(mesh, scene);

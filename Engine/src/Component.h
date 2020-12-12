@@ -1,4 +1,5 @@
 #pragma once
+#include "Libraries/MathGeoLib/Math/float4x4.h"
 
 class GameObject;
 
@@ -18,6 +19,7 @@ public:
 	virtual ~Component();
 
 	virtual void Update() {};
+	virtual void OnUpdateTransform(const float4x4& parent_global = float4x4::identity);
 
 	void SetActive(bool isActive) { active = isActive; }
 	bool IsActive() const { return active; };

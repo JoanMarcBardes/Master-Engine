@@ -291,7 +291,7 @@ void ModuleRenderExercise::DrawQuad(const float4x4& proj, const float4x4& view)
 
 void ModuleRenderExercise::DrawMesh(const float4x4& proj, const float4x4& view, const float4x4& model)
 {
-	glUniformMatrix4fv(glGetUniformLocation(_program, "model"), 1, GL_TRUE, (const float*)&model);
+	//glUniformMatrix4fv(glGetUniformLocation(_program, "model"), 1, GL_TRUE, (const float*)&model);
 	glUniformMatrix4fv(glGetUniformLocation(_program, "view"), 1, GL_TRUE, (const float*)&view);
 	glUniformMatrix4fv(glGetUniformLocation(_program, "proj"), 1, GL_TRUE, (const float*)&proj);
 

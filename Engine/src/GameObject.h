@@ -34,6 +34,8 @@ public:
 	void SetProgram(unsigned newProgram) { program = newProgram; }
 	unsigned GetProgram() { return program; }
 
+	void OnUpdateTransform();
+
 private:
 	bool ContainsType(Component::Type type); // GameObject only can contains one component of the same type
 

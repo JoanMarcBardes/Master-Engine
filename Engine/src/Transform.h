@@ -18,6 +18,7 @@ public:
 	float3	 GetScale() const			{ return scale; }
 	float3	 GetRotationEuler() const	{ return rotationEuler; }
 	float4x4 GetTransformGlobal() const { return transformGlobal; }
+	bool GetToUpdate() const			{ return toUpdate; }
 
 	//set
 	void SetTransform(float4x4 transform);
@@ -27,7 +28,9 @@ public:
 	void SetRotationEuler(float3 rotation_euler);
 	void SetTransformGlobal(float4x4 transform_global);
 
-	void OnUpdateTransform(const float4x4& parent_global);
+	 void OnUpdateTransform(const float4x4& parent_global = float4x4::identity) override;
+
+	void Draw(unsigned program);
 
 private:
 	void UpdateTransform();
@@ -40,7 +43,8 @@ private:
 	float3		scale;
 	float3		rotationEuler;
 
-	float4x4	transformGlobal;
+	float4x4	transformGlobal = float4x4::identity;
+	bool toUpdate = false;
 
 };
 

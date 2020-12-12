@@ -1,6 +1,7 @@
 #include "Transform.h"
 #include "Globals.h"
 #include "GameObject.h"
+#include "GL/glew.h"
 
 Transform::Transform(GameObject* ownerGameObject, const float4x4& transform) : 
 	Component(Component::Type::Transform, ownerGameObject), transform(transform)
@@ -25,18 +26,21 @@ void Transform::SetTransform(float4x4 newTransform)
 void Transform::SetPosition(float3 newPosition)
 {
 	position = newPosition;
+	toUpdate = true;
 	UpdateTransform();
 }
 
 void Transform::SetRotation(Quat newRotation)
 {
 	rotation = newRotation;
+	toUpdate = true;
 	UpdateTransform();
 }
 
 void Transform::SetScale(float3 newScale)
 {
 	scale = newScale;
+	toUpdate = true;
 	UpdateTransform();
 }
 
@@ -45,6 +49,7 @@ void Transform::SetRotationEuler(float3 newRotationEuler)
 	float3 aux = (newRotationEuler - rotationEuler) * DEGTORAD;
 	rotation = rotation * Quat::FromEulerXYZ(aux.x, aux.y, aux.z);
 	rotationEuler = newRotationEuler;
+	toUpdate = true;
 	UpdateTransform();
 }
 
@@ -58,9 +63,10 @@ void Transform::SetTransformGlobal(float4x4 global)
 }
 
 
-void Transform::OnUpdateTransform(const float4x4& parent_global)
+void Transform::OnUpdateTransform(const float4x4& parentGlobal)
 {
-	transformGlobal = parent_global * transform;
+	transformGlobal = parentGlobal * transform;
+	toUpdate = false;
 	UpdatePosRotSca();
 }
 
@@ -73,4 +79,9 @@ void Transform::UpdatePosRotSca()
 {
 	transform.Decompose(position, rotation, scale);
 	rotationEuler = rotation.ToEulerXYZ() * RADTODEG;
+}
+
+void Transform::Draw(unsigned program)
+{
+	glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, (const float*)&transformGlobal);
 }

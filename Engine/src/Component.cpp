@@ -8,3 +8,8 @@ Component::~Component()
 {
 
 }
+
+void Component::OnUpdateTransform(const float4x4& parent_global)
+{
+	//for override
+}

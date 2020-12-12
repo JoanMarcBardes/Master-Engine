@@ -3,23 +3,26 @@
 #include "Material.h"
 #include "Globals.h"
 
-GameObject::GameObject(const char* name) : name(name)
+GameObject::GameObject(const char* name) : name(name), parent(nullptr)
 {
-	AddComponent(new Transform(this, float3::zero, Quat::identity, float3::one));
+	this->transform = new Transform(this, float3::zero, Quat::identity, float3::one);
+	AddComponent(this->transform);
 }
 
 GameObject::GameObject(GameObject* parent, const float4x4& transform, const char* name) : parent(parent), name(name)
 {
 	if (parent)
 		parent->childs.push_back(this);
-	AddComponent(new Transform(this, transform));
+	this->transform = new Transform(this, transform);
+	AddComponent(this->transform);
 }
 
 GameObject::GameObject(GameObject* parent, const char* name, const float3& translation, const Quat& rotation, const float3& scale) : parent(parent), name(name)
 {
 	if (parent)
 		parent->childs.push_back(this);
-	AddComponent(new Transform(this, translation, rotation, scale));
+	this->transform = new Transform(this, translation, rotation, scale);
+	AddComponent(this->transform);
 }
 
 GameObject::~GameObject()
@@ -46,6 +49,9 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
+	if (transform->GetToUpdate())
+		OnUpdateTransform();
+
 	std::vector<Component*>::iterator it;
 	for (it = components.begin(); it != components.end(); ++it)
 	{
@@ -133,18 +139,18 @@ GameObject* GameObject::GetChild(const char* name) const
 
 void GameObject::SetParent(GameObject* newParent)
 {
+	float4x4 global = float4x4::identity;
 	if (this != newParent && newParent != nullptr)
 	{
-		float4x4 global = newParent->transform->GetTransformGlobal();
+		global = newParent->transform->GetTransformGlobal();
 		if (parent != nullptr)
 		{
 			parent->RemoveChild(this);
 		}
 		parent = newParent;
 		parent->childs.push_back(this);
-
-		transform->OnUpdateTransform(global);
 	}
+	transform->SetTransformGlobal(global);
 }
 
 void GameObject::RemoveChild(GameObject* gameObject)
@@ -163,7 +169,9 @@ void GameObject::RemoveChild(GameObject* gameObject)
 void GameObject::Draw(unsigned program)
 {
 	if (active)
-	{
+	{		
+		transform->Draw(program);
+
 		Mesh* mesh = (Mesh*)GetComponent(Component::Type::Mesh);
 		if(mesh)
 			mesh->Draw();
@@ -178,5 +186,18 @@ void GameObject::Draw(unsigned program)
 		{
 			child->Draw(program);
 		}
+	}
+}
+
+void GameObject::OnUpdateTransform()
+{
+	float4x4 parentTransform = float4x4::identity;
+	if(parent)
+		parentTransform = parent->transform->GetTransformGlobal();
+	transform->OnUpdateTransform(parentTransform);
+
+	for each (GameObject * child in childs)
+	{
+		child->OnUpdateTransform();
 	}
 }
