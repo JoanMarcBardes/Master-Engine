@@ -142,11 +142,30 @@ GameObject* GameObject::GetChild(const char* name) const
 	return nullptr;
 }
 
+GameObject* GameObject::FindGameObjectId(unsigned int target)
+{
+	GameObject* go = nullptr;
+	if (id == target) return this;
+	for each (GameObject * child in childs)
+	{
+		go = (*child).FindGameObjectId(target);
+		if (go)
+			return go;
+	}
+	return nullptr;
+}
+
 void GameObject::SetParent(GameObject* newParent)
 {
 	float4x4 global = float4x4::identity;
+	if (newParent->parent == this)
+	{
+		LOG("children to parent");
+		newParent->SetParent(parent);
+	}
 	if (this != newParent && newParent != nullptr)
 	{
+		LOG( ("Actual parent: " + parent->name).c_str());
 		global = newParent->transform->GetTransformGlobal();
 		if (parent != nullptr)
 		{
@@ -154,6 +173,7 @@ void GameObject::SetParent(GameObject* newParent)
 		}
 		parent = newParent;
 		parent->childs.push_back(this);
+		LOG(("Actual parent: " + parent->name).c_str());
 	}
 	transform->SetTransformGlobal(global);
 }

@@ -44,3 +44,18 @@ void ModuleScene::Draw(unsigned program)
 		child->Draw(program);
 	}
 }
+
+
+GameObject* ModuleScene::FindGameObjectId(unsigned int id)
+{
+	GameObject* go = nullptr;
+	std::vector<GameObject*> childs = root->GetChilds();
+	for each (GameObject * child in childs)
+	{
+		go = child->FindGameObjectId(id);
+		if (go)
+			return go;
+	}
+
+	return go;
+}

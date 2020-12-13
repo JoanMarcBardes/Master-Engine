@@ -18,6 +18,8 @@ public:
 
 	void Draw(unsigned program);
 
+	GameObject* FindGameObjectId(unsigned int id);
+
 private:
 	std::vector<GameObject*> gameObjects;
 	GameObject* root;

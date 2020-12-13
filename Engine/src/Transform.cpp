@@ -60,6 +60,7 @@ void Transform::SetTransformGlobal(float4x4 global)
 	float4x4 localTransform = parentTransform->GetTransformGlobal().Inverted() * global;
 	transform = localTransform;
 	transformGlobal = global;
+	toUpdate = true;
 }
 
 

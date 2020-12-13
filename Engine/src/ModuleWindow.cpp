@@ -29,8 +29,8 @@ bool ModuleWindow::Init()
 		//Create window
 		SDL_DisplayMode DM;
 		SDL_GetCurrentDisplayMode(0, &DM);
-		width = DM.w;
-		height = DM.h;
+		width = DM.w * 0.95f;
+		height = DM.h * 0.95f;
 
 
 		Uint32 flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;

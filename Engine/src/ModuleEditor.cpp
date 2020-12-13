@@ -517,6 +517,17 @@ void ModuleEditor::WindowGameObjectHierarchy(bool* p_open)
 	if (ImGui::TreeNode("Root"))
 	{
 		GameObject* root = App->scene->GetRoot();
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("_TREENODE"))
+			{
+				LOG(root->name.c_str());
+				selected->SetParent(root);
+			}
+			ImGui::EndDragDropTarget();
+		}
+
 		TreeChilds(root);
 		ImGui::TreePop();
 	}
@@ -526,34 +537,55 @@ void ModuleEditor::WindowGameObjectHierarchy(bool* p_open)
 
 void ModuleEditor::TreeChilds(GameObject* parent)
 {
-	static ImGuiTreeNodeFlags baseFlags;
+	static ImGuiTreeNodeFlags baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
 	std::vector<GameObject*> childs = parent->GetChilds();
 	for each (GameObject * child in childs)
 	{
+		ImGuiTreeNodeFlags nodeFlags = baseFlags;
+		if (selected && child->GetID() == selected->GetID())
+			nodeFlags |= ImGuiTreeNodeFlags_Selected;
+
+		if (child->GetNumChilds() == 0) 
+			nodeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
+
+		bool node_open = ImGui::TreeNodeEx(child->name.c_str(), nodeFlags);
+
+		if (ImGui::GetIO().KeyCtrl && ImGui::IsItemClicked())
+			selected = nullptr;
+		else if (ImGui::IsItemClicked())
+			selected = child;
+
+		if (ImGui::BeginDragDropSource())
+		{
+			ImGui::SetDragDropPayload("_TREENODE", NULL, 0);
+			ImGui::Text("%s", child->name.c_str());
+			ImGui::EndDragDropSource();
+		}
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("_TREENODE"))
+			{
+				bool isLeaf = child->GetNumChilds() == 0;
+				LOG(child->name.c_str());
+				selected->SetParent(child);
+
+				if (isLeaf) // is target gameObject is leaf need to skipe the TreePop
+					return;
+			}
+			ImGui::EndDragDropTarget();
+		}
+
 		if (child->GetNumChilds() > 0)
 		{
-			baseFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
-			bool node_open = ImGui::TreeNodeEx(child->name.c_str(), baseFlags);			
-			
-			if (ImGui::IsItemClicked())
-				selected = child;		
-
 			if (node_open)
 			{
 				TreeChilds(child);
 				ImGui::TreePop();
 			}
 		}
-		else
-		{
-			ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; // ImGuiTreeNodeFlags_Bullet
-			ImGui::TreeNodeEx(child->name.c_str(), nodeFlags);
-
-			if (ImGui::IsItemClicked())
-				selected = child;
-		}		
 		
 	}
+	
 }
 
 void ModuleEditor::WindowInspector(bool* p_open)

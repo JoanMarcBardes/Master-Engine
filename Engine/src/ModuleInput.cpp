@@ -85,8 +85,6 @@ update_status ModuleInput::PreUpdate()
 
 		ImGuiIO& io = ImGui::GetIO();
 		imgUiOn = io.WantCaptureKeyboard || io.WantCaptureMouse;
-		if (imgUiOn)
-			return UPDATE_CONTINUE;
 
         switch (sdlEvent.type)
         {

@@ -27,6 +27,7 @@ public:
 	std::vector<GameObject*>& GameObject::GetChilds();
 	GameObject* GetChild(const char* name) const;
 	unsigned GetNumChilds() const { return childs.size(); }
+	GameObject* FindGameObjectId(unsigned int id);
 
 	void SetParent(GameObject* gameObject);
 	void RemoveChild(GameObject* gameObject);
