@@ -160,20 +160,19 @@ void GameObject::SetParent(GameObject* newParent)
 	float4x4 global = float4x4::identity;
 	if (newParent->parent == this)
 	{
-		LOG("children to parent");
+		LOG("[warning] make children the parent of the gameObject");
 		newParent->SetParent(parent);
 	}
 	if (this != newParent && newParent != nullptr)
 	{
-		LOG( ("Actual parent: " + parent->name).c_str());
 		global = newParent->transform->GetTransformGlobal();
+
 		if (parent != nullptr)
 		{
 			parent->RemoveChild(this);
 		}
 		parent = newParent;
 		parent->childs.push_back(this);
-		LOG(("Actual parent: " + parent->name).c_str());
 	}
 	transform->SetTransformGlobal(global);
 }

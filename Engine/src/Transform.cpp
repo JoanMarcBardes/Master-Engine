@@ -53,22 +53,37 @@ void Transform::SetRotationEuler(float3 newRotationEuler)
 	UpdateTransform();
 }
 
-
-void Transform::SetTransformGlobal(float4x4 global)
+void Transform::SetTransformGlobal(float4x4 newglobal)
 {
-	Transform* parentTransform = (Transform*)gameObject->parent->GetComponent(Component::Type::Transform);
-	float4x4 localTransform = parentTransform->GetTransformGlobal().Inverted() * global;
-	transform = localTransform;
-	transformGlobal = global;
+	float3		newGposition;
+	Quat		newGrotation;
+	float3		newGscale;
+	newglobal.Decompose(newGposition, newGrotation, newGscale);
+	float3 newGrotationE = newGrotation.ToEulerXYZ() * RADTODEG;
+
+	float3		gPosition;
+	Quat		gRotation;
+	float3		gScale;
+	transformGlobal.Decompose(gPosition, gRotation, gScale);
+
+	gPosition = gPosition - newGposition;
+
+	float3 gRotationE = gRotation.ToEulerXYZ() * RADTODEG;
+	float3 aux2 = (gRotationE - newGrotationE) * DEGTORAD;
+	gRotation = Quat::FromEulerXYZ(aux2.x, aux2.y, aux2.z);
+
+	gScale = float3::one + gScale - newGscale;
+
+	transform = float4x4::FromTRS(gPosition, gRotation, gScale);
+	transformGlobal = newglobal;
 	toUpdate = true;
 }
-
 
 void Transform::OnUpdateTransform(const float4x4& parentGlobal)
 {
 	transformGlobal = parentGlobal * transform;
-	toUpdate = false;
 	UpdatePosRotSca();
+	toUpdate = false;
 }
 
 void Transform::UpdateTransform()
