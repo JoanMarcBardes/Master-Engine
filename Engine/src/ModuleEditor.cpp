@@ -90,6 +90,28 @@ update_status ModuleEditor::Update()
 	if (showWindowInspector) WindowInspector(&showWindowInspector);
 	if (showWindowPlayStopStep) WindowPlayStopStep(&showWindowPlayStopStep);
 
+	SDL_GetWindowSize(App->window->window, &w, &h);
+	float fW = (float)w;
+	float fH = (float)h;
+
+	fW = fW / 5;
+	fH = fH - (fH / 4);
+	ImVec2 size(fW, fH);
+
+	fW = (float)w;
+	fW = fW / 5;
+
+	ImVec2 pos0(fW, menuSize);
+	ImVec2 sizeView(fW * 3, size.y);
+
+	ImGui::SetNextWindowPos(pos0);
+	ImGui::Begin("Viewport", 0, ImGuiWindowFlags_NoMove);
+
+	ImGui::Image((ImTextureID)App->renderExercise->GetRenderText(), { sizeView.x * 0.985f, sizeView.y * 0.95f }, { 0,1 }, { 1,0 });
+
+	ImGui::SetWindowSize(sizeView);
+	ImGui::End();
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -108,8 +130,23 @@ bool ModuleEditor::CleanUp()
 
 void ModuleEditor::WindowConsole(bool* p_open)
 {
-	ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-	if (!ImGui::Begin("Console", p_open))
+	SDL_GetWindowSize(App->window->window, &w, &h);
+	float fW = (float)w;
+	float fH = (float)h;
+
+	fH = fH - (fH / 4);
+
+	ImVec2 pos3(0.0f, fH + menuSize);
+	ImGui::SetNextWindowPos(pos3);
+
+	fW = fW - (fW / 5);
+	fH = (float)h;
+	fH = fH / 4;
+
+	ImVec2 size = { fW,fH - menuSize };
+	//ImGui::SetNextWindowSize(size, ImGuiCond_FirstUseEver);
+
+	if (!ImGui::Begin("Console", p_open, ImGuiWindowFlags_NoMove))
 	{
 		ImGui::End();
 		return;
@@ -145,6 +182,7 @@ void ModuleEditor::WindowConsole(bool* p_open)
 
 	ImGui::PopStyleVar();
 	ImGui::EndChild();
+	ImGui::SetWindowSize(size);
 	ImGui::End();
 }
 
@@ -169,7 +207,18 @@ void ModuleEditor::AddLog(const char* fmt, ...)// IM_FMTARGS(2)
 
 void ModuleEditor::WindowConfiguration(bool* p_open)
 {
-	if (!ImGui::Begin("Configuration", p_open, ImGuiWindowFlags_AlwaysUseWindowPadding))
+	SDL_GetWindowSize(App->window->window, &w, &h);
+	float fW = (float)w;
+	float fH = (float)h;
+
+	fW = fW / 5;
+	fH = fH - (fH / 4);
+	ImVec2 size(fW, fH);
+
+	ImVec2 pos(0.0f, menuSize);
+	ImGui::SetNextWindowPos(pos);
+
+	if (!ImGui::Begin("Configuration", p_open, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoMove))
 	{
 		ImGui::End();
 		return;
@@ -422,6 +471,7 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %s", glGetString(GL_RENDERER));
 	}
 
+	ImGui::SetWindowSize(size);
 	ImGui::End();	
 }
 
@@ -454,6 +504,7 @@ update_status ModuleEditor::MainMenuBar()
 		}
 		ImGui::EndMenu();
 	}
+	menuSize = ImGui::GetWindowSize().y;
 	ImGui::EndMainMenuBar();
 	return status;
 }
@@ -506,9 +557,27 @@ void ModuleEditor::RequestBrowser(const char* url)
 	ShellExecute(NULL, "open", url, NULL, NULL, SW_SHOWDEFAULT);
 }
 
-
 void ModuleEditor::WindowGameObjectHierarchy(bool* p_open)
 {
+	SDL_GetWindowSize(App->window->window, &w, &h);
+	float fW = (float)w;
+	float fH = (float)h;
+
+	fH = (float)h / 2 + menuSize;
+
+	fW = (float)w;
+	fW = fW - (fW / 5);
+
+	ImVec2 pos2(fW, fH);
+	ImGui::SetNextWindowPos(pos2);
+
+	fW = (float)w;
+	fH = (float)h;
+
+	fW = fW / 5;
+	fH = fH / 2 - menuSize;
+	ImVec2 size(fW, fH);
+
 	if (!ImGui::Begin("GameObjectHierarchy", p_open/*, ImGuiWindowFlags_AlwaysUseWindowPadding*/))
 	{
 		ImGui::End();
@@ -533,6 +602,7 @@ void ModuleEditor::WindowGameObjectHierarchy(bool* p_open)
 		ImGui::TreePop();
 	}
 
+	ImGui::SetWindowSize(size);
 	ImGui::End();
 }
 
@@ -591,6 +661,23 @@ void ModuleEditor::TreeChilds(GameObject* parent)
 
 void ModuleEditor::WindowInspector(bool* p_open)
 {
+	SDL_GetWindowSize(App->window->window, &w, &h);
+	float fW = (float)w;
+	float fH = (float)h;
+
+	fW = (float)w;
+	fW = fW - (fW / 5);
+
+	ImVec2 pos2(fW, menuSize);
+	ImGui::SetNextWindowPos(pos2); 
+	
+	fW = (float)w;
+	fH = (float)h;
+
+	fW = fW / 5;
+	fH = fH / 2;
+	ImVec2 size(fW, fH);
+
 	if (!ImGui::Begin("Inspector", p_open))
 	{
 		ImGui::End();
@@ -699,6 +786,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 		ImGui::Text("Select a GameObject");
 	}
 
+	ImGui::SetWindowSize(size);
 	ImGui::End();
 }
 

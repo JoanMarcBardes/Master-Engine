@@ -23,6 +23,8 @@ private:
 	std::vector<int> fpsLog;
 	std::vector<float> msLog;
 	int fpsLogSize = 100;
+	int w = 0, h = 0;
+	float menuSize = 0.0f;
 
 	bool showWindowConfiguration = true;
 	bool showWindowConsole = true;

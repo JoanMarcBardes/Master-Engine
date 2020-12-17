@@ -32,6 +32,10 @@ public:
 	float GetKs() { return Ks; }
 	float GetKd() { return Kd; }
 	int GetShininess() { return shininess; }
+	unsigned int GetRenderText() {
+		RenderToTexture();
+		return renderedTexture;
+	}
 
 	// set
 	void SetEnableDepthTest(const bool EnableDepthTest) { enableDepthTest = EnableDepthTest; SetGlEnable(enableDepthTest, GL_DEPTH_TEST); }
@@ -56,7 +60,7 @@ private:
 	bool enableDepthTest = true;
 	bool enableCullFace = true;
 	bool enableAlphaTest = true;
-	float4 background = float4(0.1f, 0.1f, 0.1f, 1.0f);
+	float4 background = float4(0.5f, 0.5f, 0.5f, 1.0f);
 
 	float3 light_dir = float3(1, 0, 0);
 	float4 light_color = float4(1, 1, 1, 1);
@@ -64,6 +68,8 @@ private:
 	float Ks = 0.7f;
 	float Kd = 0.6f;
 	int shininess = 70;
+	unsigned int renderedTexture;
+	unsigned int depthrenderbuffer;
 
 	void CreateTriangleVBO();
 	void CreateQuadVBO();
@@ -74,5 +80,6 @@ private:
 	void DrawQuad(const float4x4& proj, const float4x4& view);
 	void DrawMesh(const float4x4& proj, const float4x4& view, const float4x4& model);
 	void DropFile();
+	void RenderToTexture();
 };
 
