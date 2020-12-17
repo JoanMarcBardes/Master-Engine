@@ -3,6 +3,13 @@
 #include "GameObject.h"
 #include "GL/glew.h"
 
+void MinScale(float3& scale)
+{
+	if (scale.x < 0.0001f) scale.x = 0.0001f;
+	if (scale.y < 0.0001f) scale.y = 0.0001f;
+	if (scale.z < 0.0001f) scale.z = 0.0001f;
+}
+
 Transform::Transform(GameObject* ownerGameObject, const float4x4& transform) : 
 	Component(Component::Type::Transform, ownerGameObject), transform(transform)
 {
@@ -39,6 +46,8 @@ void Transform::SetRotation(Quat newRotation)
 
 void Transform::SetScale(float3 newScale)
 {
+	MinScale(newScale);
+
 	scale = newScale;
 	toUpdate = true;
 	UpdateTransform();
@@ -72,7 +81,8 @@ void Transform::SetTransformGlobal(float4x4 newglobal)
 	float3 aux2 = (gRotationE - newGrotationE) * DEGTORAD;
 	gRotation = Quat::FromEulerXYZ(aux2.x, aux2.y, aux2.z);
 
-	gScale = float3::one + gScale - newGscale;
+	gScale = float3(gScale.x / newGscale.x, gScale.y / newGscale.y, gScale.z / newGscale.z);
+	MinScale(gScale);
 
 	transform = float4x4::FromTRS(gPosition, gRotation, gScale);
 	transformGlobal = newglobal;
