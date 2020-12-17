@@ -92,6 +92,9 @@ bool ModuleRenderExercise::Init()
 	_context = SDL_GL_CreateContext(App->window->window);
 	GLenum err = glewInit();
 
+	if (SDL_GL_SetSwapInterval(VSYNC) < 0)
+		LOG("Warning: Unable to set VSync! SDL Error: %s", SDL_GetError());
+
 #ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);

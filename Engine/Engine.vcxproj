@@ -74,13 +74,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./src/Libraries/Assimp/include/assimp; ./src/Libraries/DevIL-SDK/include/IL; ./imgui-docking; ./src/Libraries/glew-2.1.0/include; ./src/Libraries/SDL/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src/Libraries/Brofiler/Brofiler; ./src/Libraries/Assimp/include/assimp; ./src/Libraries/DevIL-SDK/include/IL; ./imgui-docking; ./src/Libraries/glew-2.1.0/include; ./src/Libraries/SDL/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./src/Libraries/Assimp/lib; ./src/Libraries/DevIL-SDK/lib/x86/Release; ./src/Libraries/glew-2.1.0/lib/Release/Win32; ./src/Libraries/SDL/lib/x86;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc141-mt.lib;ILUT.lib;ILU.lib;DevIL.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./src/Libraries/Brofiler/Brofiler; ./src/Libraries/Assimp/lib; ./src/Libraries/DevIL-SDK/lib/x86/Release; ./src/Libraries/glew-2.1.0/lib/Release/Win32; ./src/Libraries/SDL/lib/x86;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ProfilerCore32.lib; assimp-vc141-mt.lib;ILUT.lib;ILU.lib;DevIL.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -106,15 +106,15 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./src/Libraries/Assimp/include/assimp; ./src/Libraries/DevIL-SDK/include/IL; ./imgui-docking; ./src/Libraries/glew-2.1.0/include; ./src/Libraries/SDL/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src/Libraries/Brofiler/Brofiler; ./src/Libraries/Assimp/include/assimp; ./src/Libraries/DevIL-SDK/include/IL; ./imgui-docking; ./src/Libraries/glew-2.1.0/include; ./src/Libraries/SDL/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./src/Libraries/Assimp/lib; ./src/Libraries/DevIL-SDK/lib/x86/Release; ./src/Libraries/glew-2.1.0/lib/Release/Win32; ./src/Libraries/SDL/lib/x86;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc141-mt.lib;ILUT.lib;ILU.lib;DevIL.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./src/Libraries/Brofiler/Brofiler; ./src/Libraries/Assimp/lib; ./src/Libraries/DevIL-SDK/lib/x86/Release; ./src/Libraries/glew-2.1.0/lib/Release/Win32; ./src/Libraries/SDL/lib/x86;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ProfilerCore32.lib; assimp-vc141-mt.lib;ILUT.lib;ILU.lib;DevIL.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -218,6 +218,7 @@
     <ClInclude Include="src\Libraries\Assimp\include\assimp\Vertex.h" />
     <ClInclude Include="src\Libraries\Assimp\include\assimp\XMLTools.h" />
     <ClInclude Include="src\Libraries\Assimp\include\assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="src\Libraries\Brofiler\Brofiler\Brofiler.h" />
     <ClInclude Include="src\Libraries\DevIL-SDK\include\IL\devil_cpp_wrapper.hpp" />
     <ClInclude Include="src\Libraries\DevIL-SDK\include\IL\devil_internal_exports.h" />
     <ClInclude Include="src\Libraries\DevIL-SDK\include\IL\il.h" />

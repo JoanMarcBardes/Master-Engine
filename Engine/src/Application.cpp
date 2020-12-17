@@ -12,6 +12,7 @@
 #include "ModuleScene.h"
 #include "Time.h"
 #include "DebugLeaks.h"
+#include "Brofiler.h"
 
 using namespace std;
 
@@ -55,6 +56,8 @@ bool Application::Init()
 
 update_status Application::Update()
 {
+	BROFILER_CATEGORY("Update", Profiler::Color::Orchid);
+
 	update_status ret = UPDATE_CONTINUE;
 
 	deltaTime = frameTimer.GetTimerSec();
@@ -78,6 +81,7 @@ update_status Application::Update()
 
 bool Application::CleanUp()
 {
+	BROFILER_CATEGORY("CleanUp", Profiler::Color::Orchid);
 	bool ret = true;
 
 	for(vector<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
@@ -91,7 +95,7 @@ void Application::CalculateFPS()
 	float frame = frameTimer.GetTimer();
 	if (frame > 0 && frame < msMax)
 	{
-		SDL_Delay(msMax - frame);
+		//SDL_Delay(msMax - frame);
 	}
 
 	fpsCount++;

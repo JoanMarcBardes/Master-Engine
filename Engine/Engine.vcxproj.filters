@@ -777,6 +777,9 @@
     <ClInclude Include="src\Time.h">
       <Filter>src\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\Libraries\Brofiler\Brofiler\Brofiler.h">
+      <Filter>Libraries\Brofiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -841,6 +844,9 @@
     </Filter>
     <Filter Include="src\GameObject\Component">
       <UniqueIdentifier>{59a019b3-aab7-4039-bbf7-c3c0cb994f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\Brofiler">
+      <UniqueIdentifier>{a6a12504-071c-45cc-a951-8706ac44a88f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

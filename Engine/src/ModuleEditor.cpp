@@ -189,7 +189,7 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 			App->SetOrganizatio(organization);
 
 		int fpsMax = App->GetFpsMax();
-		if(ImGui::SliderInt("fps Max", &fpsMax, 1, 60))
+		if(ImGui::SliderInt("fps Max", &fpsMax, 1, 120))
 			App->SetFpsMax(fpsMax);
 		ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
 
