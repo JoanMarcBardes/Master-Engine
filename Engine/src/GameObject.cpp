@@ -40,14 +40,12 @@ GameObject::~GameObject()
 	for (int i = 0; i < childs.size(); i++)
 	{
 		delete childs[i];
-		childs[i] = nullptr;
 	}
 	childs.clear();
 
 	for (int i = 0; i < components.size(); i++)
 	{
 		delete components[i];
-		components[i] = nullptr;
 	}
 }
 
@@ -106,9 +104,20 @@ Component* GameObject::GetComponent(Component::Type type)
 		if (component->GetType() == type)
 			return component;
 	}
-	//LOG("[error] dont't find andy component of type: %i", type);
 	return nullptr;
 }
+
+/*template<typename AuxComponent>
+AuxComponent* GameObject::GetComponent()
+{
+	Component::Type type = AuxComponent::GetType();
+	for each (Component * component in components)
+	{
+		if (component->GetType() == type)
+			return (AuxComponent*)component;
+	}
+	return nullptr;
+}*/
 
 bool GameObject::ContainsType(Component::Type type)
 {
@@ -196,11 +205,11 @@ void GameObject::Draw(unsigned program)
 	{		
 		transform->Draw(program);
 
-		Mesh* mesh = (Mesh*)GetComponent(Component::Type::Mesh);
+		Mesh* mesh = GetComponent<Mesh>();
 		if(mesh)
 			mesh->Draw();
 
-		Material* material = (Material*)GetComponent(Component::Type::Material);
+		Material* material = GetComponent< Material>();
 		if (material)
 		{
 			material->Draw(program);

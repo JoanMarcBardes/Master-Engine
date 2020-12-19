@@ -19,6 +19,17 @@ public:
 	Component* CreateComponent(Component::Type type);
 	void AddComponent(Component* component);
 	Component* GetComponent(Component::Type type);
+	template<typename AuxComponent>
+	AuxComponent* GetComponent()
+	{
+		Component::Type type = AuxComponent::GetType();
+		for each (Component * component in components)
+		{
+			if (component->GetType() == type)
+				return (AuxComponent*)component;
+		}
+		return nullptr;
+	}
 
 	void SetActive(bool isActive) { active = isActive; }
 	bool IsActive() const { return active; };

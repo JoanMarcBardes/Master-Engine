@@ -19,6 +19,7 @@ public:
 	float3	 GetRotationEuler() const	{ return rotationEuler; }
 	float4x4 GetTransformGlobal() const { return transformGlobal; }
 	bool GetToUpdate() const			{ return toUpdate; }
+	static Type GetType()				{ return Type::Transform; };
 
 	//set
 	void SetTransform(float4x4 transform);

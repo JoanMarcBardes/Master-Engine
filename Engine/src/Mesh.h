@@ -26,6 +26,7 @@ public:
     const float4x4 GetModel() { return model; }
     const float3 GetMin() { return min; }
     const float3 GetMax() { return max; }
+    static Type GetType() { return Type::Mesh; };
 
 private:
     std::vector<Vertex>       Vertices;

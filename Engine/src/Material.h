@@ -14,6 +14,7 @@ public:
 
 	std::vector<unsigned int> GetTextures() { return textures; }
 	std::vector<std::string> GetPaths() { return paths; }
+	static Type GetType() { return Type::Material; };
 
 private:
 	std::vector<unsigned int> textures;

@@ -630,7 +630,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 
 		ImGui::Separator();
 
-		Transform* transform = (Transform*)selected->GetComponent(Component::Type::Transform);
+		Transform* transform = selected->GetComponent<Transform>();
 		if (ImGui::CollapsingHeader("Transform"))
 		{
 			float3 position = transform->GetPosition();
@@ -659,7 +659,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 				transform->SetScale(scale);
 		}
 		
-		Mesh* mesh = (Mesh*)selected->GetComponent(Component::Type::Mesh);
+		Mesh* mesh = selected->GetComponent< Mesh>();
 		if (mesh && ImGui::CollapsingHeader("Mesh"))
 		{
 			ImGui::Text("Num vertices: "); ImGui::SameLine();
@@ -669,7 +669,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", mesh->GetNumIndices());
 		}
 
-		Material* material = (Material*)selected->GetComponent(Component::Type::Material);
+		Material* material = selected->GetComponent<Material>();
 		if (material && ImGui::CollapsingHeader("Material"))
 		{
 			ImGui::Text("Texture");
