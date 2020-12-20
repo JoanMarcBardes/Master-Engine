@@ -94,9 +94,7 @@ void ModuleModel::processNode(aiNode* node, const aiScene* scene, GameObject* pa
         // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         GameObject* child = App->scene->CreateGameObject(mesh->mName.C_Str(), parent);
-        if (parent) {
-            child->SetProgram(parent->GetProgram());
-        }
+
         Mesh* newMesh = CreateMesh(mesh, scene);
         child->AddComponent(newMesh);
         meshesList.push_back(newMesh);
@@ -179,6 +177,12 @@ Material* ModuleModel::LoadMaterials(const aiScene* scene)
     for (unsigned int i = 0; i < scene->mNumMaterials; i++)
     {
         if (scene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, i, &file) == AI_SUCCESS)
+            textureFound = true;
+        else if (scene->mMaterials[i]->GetTexture(aiTextureType_SPECULAR, i, &file) == AI_SUCCESS)
+            textureFound = true;
+        else if (scene->mMaterials[i]->GetTexture(aiTextureType_HEIGHT, i, &file) == AI_SUCCESS)
+            textureFound = true;
+        else if (scene->mMaterials[i]->GetTexture(aiTextureType_AMBIENT, i, &file) == AI_SUCCESS)
             textureFound = true;
         else
             textureFound = false;
@@ -292,6 +296,6 @@ void ModuleModel::CalculateVolumeCenter()
     volume = width * height;// *lenght;
     center = float3((min.x + max.x) / 2, (min.y + max.y) / 2, (min.z + max.z) / 2);
 
-    App->editorCamera->SetTarget(center);
+    //App->editorCamera->SetTarget(center);
     //App->editorCamera->AdaptSizeGeometry(volume);
 }

@@ -11,7 +11,8 @@ public:
 		None,
 		Transform,
 		Mesh,
-		Material
+		Material,
+		Camera
 	};
 
 public:

@@ -45,9 +45,6 @@ public:
 
 	void Draw(unsigned program);
 
-	void SetProgram(unsigned newProgram) { program = newProgram; }
-	unsigned GetProgram() { return program; }
-
 	void OnUpdateTransform();
 
 private:
@@ -58,7 +55,6 @@ public:
 	GameObject* parent = nullptr;
 
 private:
-	unsigned program = 0;
 	unsigned id = 0;
 
 	bool active = true;

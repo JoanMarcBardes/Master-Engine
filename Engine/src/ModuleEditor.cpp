@@ -311,7 +311,7 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "(x: %i, y: %i)", pos.x, pos.y);
 	}
 
-	if (ImGui::CollapsingHeader("Camera"))
+	/*if (ImGui::CollapsingHeader("Camera"))
 	{
 		float3 front = App->editorCamera->GetFront();
 		ImGui::DragFloat3("Front", front.ptr());
@@ -346,7 +346,7 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 		float speed = App->editorCamera->GetSpeed();
 		ImGui::DragFloat("Movement Speed", &speed, 0.01f);
 		App->editorCamera->SetSpeed(speed);
-	}
+	}*/
 
 	if (ImGui::CollapsingHeader("Models info"))
 	{

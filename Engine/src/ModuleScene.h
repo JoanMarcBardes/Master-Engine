@@ -23,7 +23,5 @@ public:
 private:
 	std::vector<GameObject*> gameObjects;
 	GameObject* root;
-
-	unsigned idVertex = 0;
-	unsigned idFragment = 0;
+	GameObject* mainCamera;
 };
