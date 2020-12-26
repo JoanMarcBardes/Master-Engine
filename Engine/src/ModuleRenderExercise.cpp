@@ -235,7 +235,13 @@ void ModuleRenderExercise::Draw()
 	int height = App->window->GetHeight();
 	int width = App->window->GetWidth();
 
-	App->debugDraw->Draw(view, proj, width, height); //draww axisTriad andxzSquareGrid(-10, 10, 0.0f, 1.0f, dd::colors::Gray);
+	std::vector<Camera*> allCameras = App->editorCamera->GetAllCameras();
+	for each (Camera* cam in allCameras)
+	{
+		App->debugDraw->DrawCamera(cam->frustum.ViewProjMatrix().Inverted());
+	}
+	App->debugDraw->Draw(view, proj, width, height); //draw axisTriad and xzSquareGrid
+
 
 	glUseProgram(_program);
 	//DrawQuad(proj, view);

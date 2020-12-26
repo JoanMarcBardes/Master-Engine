@@ -311,43 +311,6 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "(x: %i, y: %i)", pos.x, pos.y);
 	}
 
-	/*if (ImGui::CollapsingHeader("Camera"))
-	{
-		float3 front = App->editorCamera->GetFront();
-		ImGui::DragFloat3("Front", front.ptr());
-		App->editorCamera->SetFront(front);
-
-		float3 up = App->editorCamera->GetUp();
-		ImGui::DragFloat3("Up", up.ptr());
-		App->editorCamera->SetUp(up);
-
-		float3 pos = App->editorCamera->GetPosition();
-		ImGui::DragFloat3("Position", pos.ptr());
-		App->editorCamera->SetPosition(pos);
-
-		ImGui::Separator();
-
-		float nearPlane = App->editorCamera->GetNearPlane();
-		ImGui::DragFloat("Near Plane", &nearPlane, 0.1f);
-		App->editorCamera->SetNearPlane(nearPlane);
-
-		float farPlane = App->editorCamera->GetFarPlane();
-		ImGui::DragFloat("Far Plane", &farPlane, 1.0f);
-		App->editorCamera->SetFarPlane(farPlane);
-
-		float fov = App->editorCamera->GetFOV();
-		ImGui::DragFloat("Field of View", &fov, 1.0f);
-		App->editorCamera->SetFOV(fov);
-
-		float ascpectRatio = App->editorCamera->GetAspectRatio();
-		ImGui::DragFloat("Aspect Ratio", &ascpectRatio, 0.01f);
-		App->editorCamera->SetAspectRatio(ascpectRatio);
-
-		float speed = App->editorCamera->GetSpeed();
-		ImGui::DragFloat("Movement Speed", &speed, 0.01f);
-		App->editorCamera->SetSpeed(speed);
-	}*/
-
 	if (ImGui::CollapsingHeader("Models info"))
 	{
 		std::vector<Mesh*> meshes = App->model->GetMeshes();
@@ -659,7 +622,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 				transform->SetScale(scale);
 		}
 		
-		Mesh* mesh = selected->GetComponent< Mesh>();
+		Mesh* mesh = selected->GetComponent<Mesh>();
 		if (mesh && ImGui::CollapsingHeader("Mesh"))
 		{
 			ImGui::Text("Num vertices: "); ImGui::SameLine();
@@ -692,6 +655,48 @@ void ModuleEditor::WindowInspector(bool* p_open)
 				ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
 				ImGui::Image((ImTextureID)textures[j], ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
 			}
+		}
+
+		Camera* camera = selected->GetComponent<Camera>();
+		if (camera && ImGui::CollapsingHeader("Camera"))
+		{
+			bool activeC = camera->IsActive();
+			if (ImGui::Checkbox("Current Camera", &activeC))
+				App->editorCamera->SetActiveCamera(camera, activeC);
+
+			float3 front = camera->frustum.Front();
+			if (ImGui::DragFloat3("Front", front.ptr()))
+				camera->frustum.SetFront(front);
+
+			float3 up = camera->frustum.Up();
+			if (ImGui::DragFloat3("Up", up.ptr()))
+				camera->frustum.SetUp(up);
+
+			float3 pos = camera->frustum.Pos();
+			if (ImGui::DragFloat3("Position", pos.ptr()))
+				camera->frustum.SetPos(pos);
+
+			ImGui::Separator();
+
+			float nearPlane = camera->nearPlane;
+			if (ImGui::DragFloat("Near Plane", &nearPlane, 0.1f))
+				camera->nearPlane = nearPlane;
+
+			float farPlane = camera->farPlane;
+			if (ImGui::DragFloat("Far Plane", &farPlane, 1.0f))
+				camera->farPlane = farPlane;
+
+			float fov = camera->fov;
+			if (ImGui::DragFloat("Field of View", &fov, 1.0f))
+				camera->fov = fov;
+
+			float ascpectRatio = camera->aspectRatio;
+			if (ImGui::DragFloat("Aspect Ratio", &ascpectRatio, 0.01f))
+				camera->aspectRatio = ascpectRatio;
+
+			float speed = App->editorCamera->GetSpeed();
+			if (ImGui::DragFloat("Movement Speed", &speed, 0.01f))
+				App->editorCamera->SetSpeed(speed);
 		}
 	}
 	else

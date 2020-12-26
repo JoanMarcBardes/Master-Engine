@@ -8,14 +8,17 @@
 ModuleScene::ModuleScene()
 {
 	root = new GameObject(nullptr, "Root");
-
-	mainCamera = new GameObject(nullptr, "MainCamera");
+	mainCamera = new GameObject(root, "MainCamera");
 	mainCamera->AddComponent(new Camera(nullptr));
 }
 
 bool ModuleScene::Init()
 {
-	App->editorCamera->SetCurrentCamera(mainCamera->GetComponent<Camera>());
+	GameObject* cullingCamera = new GameObject(root, "CullingCamera");
+	cullingCamera->AddComponent(new Camera(nullptr));
+
+	App->editorCamera->AddCamera(mainCamera->GetComponent<Camera>(), true);
+	App->editorCamera->AddCamera(cullingCamera->GetComponent<Camera>());
 
 	return true;
 }

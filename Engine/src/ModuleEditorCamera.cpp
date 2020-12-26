@@ -177,3 +177,46 @@ void ModuleEditorCamera::Orbit()
 	currentCamera->LookAt(target);
 	UpadateCamera();
 }*/
+
+void ModuleEditorCamera::SetCurrentCamera(Camera* camera)
+{
+	currentCamera = camera;
+}
+
+void ModuleEditorCamera::AddCamera(Camera* camera, bool setAsCurrentCamera)
+{
+	allCameras.push_back(camera);
+	if (setAsCurrentCamera)
+		SetActiveCamera(camera,true);
+}
+
+void ModuleEditorCamera::SetActiveCamera(Camera* camera, bool active)
+{
+	if (active)
+	{
+		for each (Camera * cam in allCameras)
+		{
+			cam->SetActive(false);
+		}
+		camera->SetActive(true);
+		SetCurrentCamera(camera);
+	}
+	else
+	{
+		bool anyCamera = false;
+		for each (Camera * cam in allCameras)
+		{
+			if (cam != camera)
+			{
+				cam->SetActive(true);
+				SetCurrentCamera(cam);
+				anyCamera = true;
+				break;
+			}
+		}
+		camera->SetActive(false);
+
+		if(!anyCamera)
+			SetCurrentCamera(nullptr);
+	}
+}

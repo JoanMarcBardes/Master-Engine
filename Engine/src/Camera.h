@@ -16,25 +16,27 @@ public:
 
 	const float4x4 GetProjection() { return frustum.ProjectionMatrix(); }
 	const float4x4 GetViewMatrix() { return frustum.ViewMatrix(); }
-	const float3   GetPosition()   { return position; }
+	const float3   GetPosition()   { return frustum.Pos(); }
 
 	static Type GetType() { return Type::Camera; };
+	void SetActive(bool isActive) { active = isActive; }
+	bool IsActive() const { return active; };
 
-private:
+public:
 	Frustum frustum;
-	float3 position = float3::zero;
-	float3 front = -float3::unitZ;
-	float3 up = float3::unitY;
-	float3 target = float3::zero;
-
 	float nearPlane = 0.1f;
 	float farPlane = 200.0f;
 	float fov = 90;
 	float aspectRatio = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
 
+private:
+	bool active = false;
+	float3 target = float3::zero;
+
 	float deltaTime = 0.0f;	// Time between current frame and last frame
 	float lastFrame = 0.0f; // Time of last frame
 	float speed = 0.05;
+
 
 public:
 	void ConstrainFOV();
@@ -52,7 +54,6 @@ public:
 	void WheelMouse(float speedWheelMouse, iPoint mouse_wheel);
 	void Focus();
 	void Orbit(float speedOrbit, iPoint mouse);
-
 
 };
 

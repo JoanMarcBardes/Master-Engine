@@ -4,13 +4,12 @@
 Camera::Camera(GameObject* ownerGameObject) :
 	Component(Component::Type::Camera, ownerGameObject)
 {
-	position = float3(0, 2, 6);
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 	frustum.SetViewPlaneDistances(nearPlane, farPlane);
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
-	frustum.SetPos(position);
-	frustum.SetFront(front);
-	frustum.SetUp(up);
+	frustum.SetPos(float3(0, 2, 6));
+	frustum.SetFront(-float3::unitZ);
+	frustum.SetUp(float3::unitY);
 }
 
 void Camera::Update()
@@ -36,27 +35,22 @@ void Camera::UpadateCamera()
 {
 	frustum.SetViewPlaneDistances(nearPlane, farPlane);
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
-	frustum.SetPos(position);
-	frustum.SetFront(front);
-	frustum.SetUp(up);
 }
 
 void Camera::Rotate(const float3x3& rotationMatrix)
 {
-	vec oldFront = front.Normalized();
-	vec oldUp = up.Normalized();
-	front = rotationMatrix.MulDir(oldFront);
-	up = rotationMatrix.MulDir(oldUp);
-	frustum.SetFront(front);
-	frustum.SetUp(up);
+	vec oldFront = frustum.Front().Normalized();
+	vec oldUp = frustum.Up().Normalized();
+	frustum.SetFront(rotationMatrix.MulDir(oldFront));
+	frustum.SetUp(rotationMatrix.MulDir(oldUp));
 }
 
 void Camera::LookAt(const float3& newTarget)
 {
-	float3 direction = newTarget - position;
+	float3 direction = newTarget - frustum.Pos();
 	direction.Normalize();
 
-	Rotate(float3x3::LookAt(front.Normalized(), direction, up.Normalized(), float3::unitY));
+	Rotate(float3x3::LookAt(frustum.Front().Normalized(), direction, frustum.Up().Normalized(), float3::unitY));
 }
 
 void Camera::Yaw(float speedYaw)
@@ -67,37 +61,37 @@ void Camera::Yaw(float speedYaw)
 
 void Camera::Pitch(float speedPitch) 
 {
-	vec newFront = (front * cos(speedPitch) + up * sin(speedPitch)).Normalized();
+	vec newFront = (frustum.Front() * cos(speedPitch) + frustum.Up() * sin(speedPitch)).Normalized();
 	vec newUp = frustum.WorldRight().Cross(newFront);
-	front = newFront;
-	up = newUp;	
+	frustum.SetFront(newFront);
+	frustum.SetUp(newUp);
 }
 
 void Camera::MoveForward(float speedForward)
 {
-	frustum.Translate(front * speedForward);
-	position = frustum.Pos();	
+	frustum.Translate(frustum.Front() * speedForward);
+	frustum.SetPos(frustum.Pos());
 }
 
 void Camera::MoveLateral(float speedLateral) 
 {
 	frustum.Translate(frustum.WorldRight() * speedLateral);
-	position = frustum.Pos();
+	frustum.SetPos(frustum.Pos());
 }
 
 void Camera::MoveUp(float speedUp)
 {
-	position.y += speedUp;
+	frustum.SetPos( float3(frustum.Pos().x, frustum.Pos().y + speedUp, frustum.Pos().z) );
 }
 
 void Camera::RotateMouse(float speedRotateMouse, iPoint mouse)
 {
 	Rotate(frustum.WorldMatrix().RotatePart().RotateY(-mouse.x * speedRotateMouse * deltaTime));
 
-	vec newFront = (front * cos(-mouse.y * speedRotateMouse * deltaTime) + up * sin(-mouse.y * speedRotateMouse * deltaTime)).Normalized();
+	vec newFront = (frustum.Front() * cos(-mouse.y * speedRotateMouse * deltaTime) + frustum.Up() * sin(-mouse.y * speedRotateMouse * deltaTime)).Normalized();
 	vec oldUp = frustum.WorldRight().Cross(newFront);
-	front = newFront;
-	up = oldUp;
+	frustum.SetFront(newFront);
+	frustum.SetUp(oldUp);
 }
 
 void Camera::WheelMouse(float speedWheelMouse, iPoint mouse_wheel)
@@ -114,11 +108,12 @@ void Camera::Focus()
 void Camera::Orbit(float speedOrbit, iPoint mouse)
 {
 	frustum.Translate(frustum.WorldRight() * -mouse.x * speedOrbit * deltaTime);
-	position = frustum.Pos();
+	frustum.SetPos(frustum.Pos());
 
 	frustum.Translate(frustum.Front() * mouse.y * speedOrbit * deltaTime);
-	position = frustum.Pos();
-	position.y += mouse.y * speedOrbit * deltaTime;
+	frustum.SetPos(frustum.Pos());
+		
+	frustum.SetPos(float3(frustum.Pos().x, frustum.Pos().y + mouse.y * speedOrbit * deltaTime, frustum.Pos().z));
 
 	LookAt(float3::zero);
 }
