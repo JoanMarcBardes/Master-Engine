@@ -17,32 +17,9 @@
 #include "DebugLeaks.h"
 #include "ModuleScene.h"
 #include <string>
-#include <direct.h>
 #include <crtdbg.h>
 
 using namespace std;
-
-std::string get_current_dir() {
-	char buff[FILENAME_MAX]; //create string buffer to hold path
-	_getcwd(buff, FILENAME_MAX);
-	string current_dir(buff);
-	return current_dir;
-}
-
-void ReplaceSlash(string& str)
-{
-	string oldStr = "\\";
-	string newStr = "/";
-	size_t index = 0;
-	while (true) {
-		index = str.find(oldStr, index);
-		if (index == string::npos) break;
-
-		str.replace(index, oldStr.length(), newStr);
-
-		index += 3; //Advance index forward so the next iteration doesn't pick it up as well.
-	}
-}
 
 void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
@@ -102,8 +79,6 @@ bool ModuleRenderExercise::Init()
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
 #endif
 
-	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
-
 	CreateTriangleVBO();
 	CreateQuadVBO();
 	LoadMeshes();
@@ -121,11 +96,7 @@ bool ModuleRenderExercise::Init()
 	SetGlEnable(enableCullFace, GL_CULL_FACE);
 	SetGlEnable(enableAlphaTest, GL_ALPHA_TEST);
 	glFrontFace(GL_CCW); // Front faces will be counter clockwise
-
-	// Current directory
-	_currentDir = get_current_dir() + "\\";
-	ReplaceSlash(_currentDir);
-
+	
 	return true;
 }
 
@@ -143,7 +114,6 @@ update_status ModuleRenderExercise::PreUpdate()
 // Called every draw update
 update_status ModuleRenderExercise::Update()
 {
-	DropFile();
 	Draw();
 
 	return UPDATE_CONTINUE;
@@ -316,36 +286,6 @@ void ModuleRenderExercise::DrawMesh(const float4x4& proj, const float4x4& view, 
 
 	//App->model->DrawMeshes(_program);
 	App->scene->Draw(_program);
-}
-
-void ModuleRenderExercise::DropFile()
-{
-	SDL_Event sdlEvent;
-	while (SDL_PollEvent(&sdlEvent) != 0)
-	{
-		switch (sdlEvent.type) {
-			case (SDL_DROPFILE):      // In case if dropped file
-				char* dropped_filedir = sdlEvent.drop.file;
-				string s(dropped_filedir);
-				ReplaceSlash(s);
-				if (s.find(".fbx") < s.length() || s.find(".FBX") < s.length())
-				{
-					LOG( ("Loading model " + s).c_str());
-					App->model->Load(s.c_str());
-				}
-				else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length() || s.find(".tga") < s.length())
-				{
-					LOG(("Loading texture " + s).c_str());
-					App->model->SetTexture( App->texture->Load(s.c_str()) );
-				}
-				else
-				{
-					LOG( (s +" its not a file .fbx, .png, .jpg, .dds or .tga").c_str() );
-				}
-				SDL_free(dropped_filedir);    // Free dropped_filedir memory
-				break;		
-		}
-	}
 }
 
 void ModuleRenderExercise::SetGlEnable(const bool enable, const GLenum type)

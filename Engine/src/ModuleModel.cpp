@@ -4,7 +4,6 @@
 #include "ModuleTexture.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleScene.h"
-#include "Libraries/Assimp/include/assimp/scene.h"
 #include "Libraries/Assimp/include/assimp/cimport.h"
 #include "Libraries/Assimp/include/assimp/postprocess.h"
 #include "Mesh.h"

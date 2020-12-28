@@ -47,4 +47,6 @@ private:
 	bool right_mouse = false;
 	bool left_mouse = false;
 	bool imgUiOn = false;
+
+	std::string _currentDir;
 };

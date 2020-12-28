@@ -311,58 +311,6 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "(x: %i, y: %i)", pos.x, pos.y);
 	}
 
-	if (ImGui::CollapsingHeader("Models info"))
-	{
-		std::vector<Mesh*> meshes = App->model->GetMeshes();
-		int i = 0;
-		for (std::vector<Mesh*>::iterator it = meshes.begin(); it != meshes.end(); ++it)
-		{
-			if (ImGui::TreeNode((void*)(intptr_t)i, "Mesh %i", i))
-			{
-				ImGui::Text("Name: %s", (*it)->GetName());
-				ImGui::Separator();
-
-				ImGui::Text("Transformation");
-				float4x4 model = (*it)->GetModel();
-				float3 translate;
-				float4x4 rotate;
-				float3 sacale;
-				model.Decompose(translate, rotate, sacale);
-
-				ImGui::InputFloat3("Position", translate.ptr());
-				ImGui::InputFloat3("Rotate", rotate.ToEulerXYZ().ptr());
-				ImGui::InputFloat3("Scale", sacale.ptr());
-				ImGui::Separator();
-
-				ImGui::Text("Geometry");
-				ImGui::Text("Num vertices: "); ImGui::SameLine();
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", (*it)->GetNumVertices());
-
-				ImGui::Text("Num indices: "); ImGui::SameLine();
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", (*it)->GetNumIndices());
-				ImGui::Separator();
-
-				ImGui::Text("Texture");
-				std::vector<unsigned int> texturesIds = App->model->GetTexturesIds();
-				float my_tex_w = 150;
-				float my_tex_h = 150;
-				for (int j = 0; j < texturesIds.size(); ++j)
-				{
-					if (j != 0) ImGui::SameLine();
-					ImVec2 pos = ImGui::GetCursorScreenPos();
-					ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
-					ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
-					ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
-					ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
-					ImGui::Image((ImTextureID)texturesIds[j], ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
-				}
-
-				ImGui::TreePop();
-			}
-			++i;
-		}
-	}
-
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
 		SDL_version linked;

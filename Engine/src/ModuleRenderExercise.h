@@ -52,7 +52,6 @@ private:
 	unsigned _vboTriangle = 0;
 	void* _context = nullptr;
 	unsigned _program = 0;
-	std::string _currentDir;
 	bool enableDepthTest = true;
 	bool enableCullFace = true;
 	bool enableAlphaTest = true;
@@ -73,6 +72,5 @@ private:
 	void DrawTriangle(const float4x4& proj, const float4x4& view);
 	void DrawQuad(const float4x4& proj, const float4x4& view);
 	void DrawMesh(const float4x4& proj, const float4x4& view, const float4x4& model);
-	void DropFile();
 };
 
