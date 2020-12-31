@@ -145,7 +145,7 @@ update_status ModuleInput::PreUpdate()
 				char* dropped_filedir = sdlEvent.drop.file;
 				string s(dropped_filedir);
 				ReplaceSlash(s);
-				if (s.find(".fbx") < s.length() || s.find(".FBX") < s.length())
+				if (s.find(".fbx") < s.length() || s.find(".FBX") < s.length() || s.find(".obj") < s.length())
 				{
 					LOG( ("Loading model " + s).c_str());
 					App->model->Load(s.c_str());

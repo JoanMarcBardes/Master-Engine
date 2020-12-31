@@ -83,8 +83,8 @@ bool ModuleRenderExercise::Init()
 	CreateQuadVBO();
 	LoadMeshes();
 
-	char* sourceVertex = App->program->LoadShaderSource("Shaders/Phong_VertexShader.glsl"); //vertexShader //Phong_VertexShader
-	char* sourceFragment = App->program->LoadShaderSource("Shaders/Phong_FragmentShader.glsl"); //fragmentShader //Phong_FragmentShader
+	char* sourceVertex = App->program->LoadShaderSource("Shaders/Phong_BRDF_VS.glsl"); //Phong_BRDF_VS //Phong_VertexShader
+	char* sourceFragment = App->program->LoadShaderSource("Shaders/Phong_BRDF_PS.glsl"); //Phong_BRDF_PS //Phong_FragmentShader
 	unsigned idVertex = App->program->CompileShader (GL_VERTEX_SHADER, sourceVertex);
 	unsigned idFragment = App->program->CompileShader(GL_FRAGMENT_SHADER, sourceFragment);
 	free(sourceVertex);
@@ -278,11 +278,16 @@ void ModuleRenderExercise::DrawMesh(const float4x4& proj, const float4x4& view, 
 
 	glUniform3f(glGetUniformLocation(_program, "camera_pos"), camera_pos.x, camera_pos.y, camera_pos.z);
 	glUniform3f(glGetUniformLocation(_program, "light_dir"), light_dir.x, light_dir.y, light_dir.z);
-	glUniform4f(glGetUniformLocation(_program, "light_color"), light_color.x, light_color.y, light_color.z, light_color.w);
-	glUniform4f(glGetUniformLocation(_program, "ambient_color"), ambient_color.x, ambient_color.y, ambient_color.z, ambient_color.w);
-	glUniform1f(glGetUniformLocation(_program, "Ks"), Ks);
-	glUniform1f(glGetUniformLocation(_program, "Kd"), Kd);
+	glUniform3f(glGetUniformLocation(_program, "light_color"), light_color.x, light_color.y, light_color.z);
+
+	glUniform3f(glGetUniformLocation(_program, "ambient_color"), ambient_color.x, ambient_color.y, ambient_color.z);
 	glUniform1i(glGetUniformLocation(_program, "shininess"), shininess);
+	glUniform3f(glGetUniformLocation(_program, "diffuse_color"), diffuse_color.x, diffuse_color.y, diffuse_color.z);
+	glUniform3f(glGetUniformLocation(_program, "specular_color"), specular_color.x, specular_color.y, specular_color.z);
+
+	glUniform1i(glGetUniformLocation(_program, "has_diffuse_map"), has_diffuse_map);
+	glUniform1i(glGetUniformLocation(_program, "has_specular_map"), has_specular_map);
+	glUniform1i(glGetUniformLocation(_program, "shininess_alpha"), shininess_alpha);
 
 	//App->model->DrawMeshes(_program);
 	App->scene->Draw(_program);

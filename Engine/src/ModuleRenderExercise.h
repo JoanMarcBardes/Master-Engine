@@ -27,11 +27,14 @@ public:
 	float4 GetBackground() { return background; }
 
 	float3 GetLightDir() { return light_dir; }
-	float4 GetLightColor() { return light_color; }
-	float4 GetAmbientColor() { return ambient_color; }
-	float GetKs() { return Ks; }
-	float GetKd() { return Kd; }
+	float3 GetLightColor() { return light_color; }
+	float3 GetAmbientColor() { return ambient_color; }
 	int GetShininess() { return shininess; }
+	float3 GetDiffuseColor() { return diffuse_color; }
+	float3 GetSpecularColor() { return specular_color; }
+	int GetHasDiffuseMap() { return has_diffuse_map; }
+	int GetHasSpecularMap() { return has_specular_map; }
+	int GetShininessApha() { return shininess_alpha; }
 
 	// set
 	void SetEnableDepthTest(const bool EnableDepthTest) { enableDepthTest = EnableDepthTest; SetGlEnable(enableDepthTest, GL_DEPTH_TEST); }
@@ -41,11 +44,14 @@ public:
 	void SetBackground(const float4 Background) { background = Background; }
 
 	void SetLightDir(const float3 lightDir) { light_dir = lightDir; }
-	void SetLightColor(const float4 lightColor) { light_color = lightColor; }
-	void SetAmbientColor(const float4 ambientColor) { ambient_color = ambientColor; }
-	void SetKs(const float ks) { Ks = ks; }
-	void SetKd(const float kd) { Kd = kd; }
+	void SetLightColor(const float3 lightColor) { light_color = lightColor; }
+	void SetAmbientColor(const float3 ambientColor) { ambient_color = ambientColor; }
 	void SetShininess(const int Shinines) { shininess = Shinines; }
+	void SetDiffuseColor(const float3 diffuseColor) { diffuse_color = diffuseColor; }
+	void SetSpecularColor(const float3 specularColor) { specular_color = specularColor; }
+	void SetHasDiffuseMap(const int hasDiffuseMap) { has_diffuse_map = hasDiffuseMap; }
+	void SetHasSpecularMap(const int hasSpecularMap) { has_specular_map = hasSpecularMap; }
+	void SetShininessApha(const int shininessAlpha) { shininess_alpha = shininessAlpha; }
 
 private:
 	unsigned _vboQuad = 0;
@@ -58,11 +64,15 @@ private:
 	float4 background = float4(0.1f, 0.1f, 0.1f, 1.0f);
 
 	float3 light_dir = float3(1, 0, 0);
-	float4 light_color = float4(1, 1, 1, 1);
-	float4 ambient_color = float4(0.1f, 0.1f, 0.1f, 1.0f);
-	float Ks = 0.7f;
-	float Kd = 0.6f;
+	float3 light_color = float3(1, 1, 1);
+	float3 ambient_color = float3(0.1f, 0.1f, 0.1f);
 	int shininess = 70;
+	float3 diffuse_color = float3(1.0f, 0.1f, 0.1f);
+	float3 specular_color = float3(0.08f, 0.08f, 0.08f);
+	int has_diffuse_map = 1;
+	int has_specular_map = 1;
+	int shininess_alpha = 1;
+
 
 	void CreateTriangleVBO();
 	void CreateQuadVBO();

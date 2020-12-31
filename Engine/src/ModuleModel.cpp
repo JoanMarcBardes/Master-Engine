@@ -16,7 +16,9 @@ using namespace std;
 void PrintLogAssimp(const char* message, char* user) { LOG(message); }
 
 ModuleModel::ModuleModel() 
-{
+{    
+    textureTypesList.push_back(aiTextureType_DIFFUSE);
+    textureTypesList.push_back(aiTextureType_SPECULAR);
 }
 
 ModuleModel::~ModuleModel() 
@@ -98,7 +100,7 @@ void ModuleModel::processNode(aiNode* node, const aiScene* scene, GameObject* pa
         child->AddComponent(newMesh);
         meshesList.push_back(newMesh);
 
-        Material* material = LoadMaterials(scene);
+        Material* material = LoadMaterials(scene->mMaterials[mesh->mMaterialIndex]);
         child->AddComponent(material);
     }
     // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
@@ -157,37 +159,25 @@ Mesh* ModuleModel::CreateMesh(const aiMesh* mesh, const aiScene* scene)
     return new Mesh(vertices, indices, mesh->mName.C_Str());
 }
 
-Material* ModuleModel::LoadMaterials(const aiScene* scene)
+Material* ModuleModel::LoadMaterials(const aiMaterial* material)
 {
     aiString file;
     string path;
     string pathSameFolder;
     string pathTexture;
 
-    /*unsigned int nDIFFUSE = material->GetTextureCount(aiTextureType_DIFFUSE);
-    unsigned int nSPECULAR = material->GetTextureCount(aiTextureType_SPECULAR);
-    unsigned int nHEIGHT = material->GetTextureCount(aiTextureType_HEIGHT);
-    unsigned int nAMBIENT = material->GetTextureCount(aiTextureType_AMBIENT);*/
-
-    bool textureFound = false;
     std::vector<unsigned int> newTextures;
     std::vector<std::string> newPath;
+    std::vector<std::string> newTypeId;
 
-    for (unsigned int i = 0; i < scene->mNumMaterials; i++)
-    {
-        if (scene->mMaterials[i]->GetTexture(aiTextureType_DIFFUSE, i, &file) == AI_SUCCESS)
-            textureFound = true;
-        else if (scene->mMaterials[i]->GetTexture(aiTextureType_SPECULAR, i, &file) == AI_SUCCESS)
-            textureFound = true;
-        else if (scene->mMaterials[i]->GetTexture(aiTextureType_HEIGHT, i, &file) == AI_SUCCESS)
-            textureFound = true;
-        else if (scene->mMaterials[i]->GetTexture(aiTextureType_AMBIENT, i, &file) == AI_SUCCESS)
-            textureFound = true;
-        else
-            textureFound = false;
+    aiMaterialProperty** matPro = material->mProperties;
 
-        if (textureFound)
+    for each (aiTextureType type in textureTypesList)
+    {        
+        for (unsigned int i = 0; i < material->GetTextureCount(type); i++)
         {
+            material->GetTexture(type, i, &file);
+
             path = file.data;
             pathSameFolder = (directory + file.data).c_str();
             pathTexture = (directoryTexture + file.data).c_str();
@@ -199,6 +189,8 @@ Material* ModuleModel::LoadMaterials(const aiScene* scene)
                 {
                     newTextures.push_back(texturesList[j]);
                     newPath.push_back(pathList[j]);
+                    newTypeId.push_back(typeIdList[j]);
+
                     skip = true;
                     break;
                 }
@@ -228,12 +220,20 @@ Material* ModuleModel::LoadMaterials(const aiScene* scene)
                 texturesList.push_back(texture);
                 newPath.push_back(path);
                 pathList.push_back(path);
+                newTypeId.push_back(GetTypeId(type));
+                typeIdList.push_back(GetTypeId(type));
             }
             path.clear();
-        }        
+        }
+    }
+    
+
+    if (newTextures.size() == 0)
+    {
+        LOG("[error] No texture");
     }
 
-    return new Material(newTextures, newPath);
+    return new Material(newTextures, newPath, newTypeId);
 }
 
 void ModuleModel::DrawMeshes(const unsigned program)
@@ -297,4 +297,22 @@ void ModuleModel::CalculateVolumeCenter()
 
     //App->editorCamera->SetTarget(center);
     //App->editorCamera->AdaptSizeGeometry(volume);
+}
+
+std::string ModuleModel::GetTypeId(aiTextureType textureType)
+{
+    std::string typeId = "";
+    switch (textureType)
+    {
+    case aiTextureType_DIFFUSE:
+        typeId = "diffuse_map";
+        break;
+    case aiTextureType_SPECULAR:
+        typeId = "specular_map";
+        break;
+    default:
+        typeId = "NullType";
+        break;
+    }
+    return typeId;
 }

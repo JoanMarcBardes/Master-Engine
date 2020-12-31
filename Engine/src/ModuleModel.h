@@ -24,9 +24,11 @@ public:
 	void SetTexture(unsigned int textureId);
 
 private:
+	std::vector<aiTextureType> textureTypesList;
 	std::vector<unsigned int> texturesList;
 	std::vector<Mesh*> meshesList;
 	std::vector<std::string> pathList;
+	std::vector<std::string> typeIdList;
 	std::string directory;
 	std::string directoryTexture = "Textures/";
 	float3 min;
@@ -41,7 +43,9 @@ private:
 	void processNode(aiNode* node, const aiScene* scene, GameObject* parent = nullptr);
 
 	Mesh* CreateMesh(const aiMesh* mesh, const aiScene* scene);
-	Material* LoadMaterials(const aiScene* scene);
+	Material* LoadMaterials(const aiMaterial* material);
+
 	void CalculateVolumeCenter();
+	std::string GetTypeId(aiTextureType textureType);
 };
 

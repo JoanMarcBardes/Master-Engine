@@ -247,25 +247,37 @@ void ModuleEditor::WindowConfiguration(bool* p_open)
 		ImGui::DragFloat3("Light Direction", lightDir.ptr(), 0.1f);
 		App->renderExercise->SetLightDir(lightDir);
 
-		float4 lightColor = App->renderExercise->GetLightColor();
+		float3 lightColor = App->renderExercise->GetLightColor();
 		ImGui::ColorEdit3("Light Color", lightColor.ptr());
 		App->renderExercise->SetLightColor(lightColor);
 
-		float4 ambientColor = App->renderExercise->GetAmbientColor();
+		float3 ambientColor = App->renderExercise->GetAmbientColor();
 		ImGui::ColorEdit3("Ambient Color", ambientColor.ptr());
 		App->renderExercise->SetAmbientColor(ambientColor);
-
-		float Ks = App->renderExercise->GetKs();
-		ImGui::DragFloat("Ks", &Ks, 0.01f);
-		App->renderExercise->SetKs(Ks);
-
-		float Kd = App->renderExercise->GetKd();
-		ImGui::DragFloat("Kd", &Kd, 0.01f);
-		App->renderExercise->SetKd(Kd);
 
 		int shininess = App->renderExercise->GetShininess();
 		ImGui::DragInt("Shininess", &shininess, 1);
 		App->renderExercise->SetShininess(shininess);
+
+		float3 diffuseColor = App->renderExercise->GetDiffuseColor();
+		ImGui::ColorEdit3("Diffuse Color", diffuseColor.ptr());
+		App->renderExercise->SetDiffuseColor(diffuseColor);
+
+		float3 specularColor = App->renderExercise->GetSpecularColor();
+		ImGui::ColorEdit3("Specular Color", specularColor.ptr());
+		App->renderExercise->SetSpecularColor(specularColor);
+
+		int hasDiffuseMap = App->renderExercise->GetHasDiffuseMap();
+		ImGui::DragInt("Has Diffuse Map", &hasDiffuseMap, 1, 0, 1);
+		App->renderExercise->SetHasDiffuseMap(hasDiffuseMap);
+
+		int hasSpecularMap = App->renderExercise->GetHasSpecularMap();
+		ImGui::DragInt("Has Specular Map", &hasSpecularMap, 1, 0, 1);
+		App->renderExercise->SetHasSpecularMap(hasSpecularMap);
+
+		int shininessApha = App->renderExercise->GetShininessApha();
+		ImGui::DragInt("shininess Apha", &shininessApha, 1, 0, 1);
+		App->renderExercise->SetShininessApha(shininessApha);
 	}
 
 	if (ImGui::CollapsingHeader("Window"))

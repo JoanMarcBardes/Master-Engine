@@ -919,5 +919,11 @@
     <None Include="src\Libraries\MathGeoLib\Math\Matrix.inl">
       <Filter>Libraries\MathGeoLib\Math</Filter>
     </None>
+    <None Include="Game\Shaders\Phong_BRDF_PS.glsl">
+      <Filter>src\Shader</Filter>
+    </None>
+    <None Include="Game\Shaders\Phong_BRDF_VS.glsl">
+      <Filter>src\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

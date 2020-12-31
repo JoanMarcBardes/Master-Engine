@@ -403,6 +403,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\Shaders\fragmentShader.glsl" />
+    <None Include="Game\Shaders\Phong_BRDF_PS.glsl" />
+    <None Include="Game\Shaders\Phong_BRDF_VS.glsl" />
     <None Include="Game\Shaders\Phong_FragmentShader.glsl" />
     <None Include="Game\Shaders\Phong_VertexShader.glsl" />
     <None Include="Game\Shaders\vertexShader.glsl" />
