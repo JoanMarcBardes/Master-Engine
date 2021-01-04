@@ -22,12 +22,9 @@ void EditorViewport::Draw(int w, int h)
 
 	ImGui::Image((ImTextureID)App->renderExercise->GetRenderText(), { sizeView.x * 0.985f, sizeView.y * 0.95f }, { 0,1 }, { 1,0 });
 
-<<<<<<< Updated upstream
-=======
 	if (ImGui::IsWindowFocused()) viewportFocused = true;
 	else viewportFocused = false;
 
->>>>>>> Stashed changes
 	ImGui::SetWindowSize(sizeView);
 	ImGui::End();
 }

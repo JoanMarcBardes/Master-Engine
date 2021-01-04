@@ -24,17 +24,6 @@ void EditorMainMenu::Draw(int w, int h)
 		{
 			quit = true;
 		}
-<<<<<<< Updated upstream
-
-		mod->SetActiveWindows(0, activeConfig);
-		mod->SetActiveWindows(1, activeConsole);
-		mod->SetActiveWindows(2, activeAbout);
-		mod->SetActiveWindows(3, activeHierarchy);
-		mod->SetActiveWindows(4, activeInspector);
-		mod->SetActiveWindows(5, activePlay);
-
-=======
->>>>>>> Stashed changes
 		ImGui::EndMenu();
 	}
 	menuSize = ImGui::GetWindowSize().y;

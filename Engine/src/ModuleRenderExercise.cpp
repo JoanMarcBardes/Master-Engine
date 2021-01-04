@@ -17,33 +17,10 @@
 #include "DebugLeaks.h"
 #include "ModuleScene.h"
 #include <string>
-#include <direct.h>
 #include <crtdbg.h>
 #include <direct.h>
 
 using namespace std;
-
-std::string get_current_dir() {
-	char buff[FILENAME_MAX]; //create string buffer to hold path
-	_getcwd(buff, FILENAME_MAX);
-	string current_dir(buff);
-	return current_dir;
-}
-
-void ReplaceSlash(string& str)
-{
-	string oldStr = "\\";
-	string newStr = "/";
-	size_t index = 0;
-	while (true) {
-		index = str.find(oldStr, index);
-		if (index == string::npos) break;
-
-		str.replace(index, oldStr.length(), newStr);
-
-		index += 3; //Advance index forward so the next iteration doesn't pick it up as well.
-	}
-}
 
 void __stdcall OurOpenGLErrorFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
@@ -107,6 +84,9 @@ bool ModuleRenderExercise::Init()
 	_context = SDL_GL_CreateContext(App->window->window);
 	GLenum err = glewInit();
 
+	if (SDL_GL_SetSwapInterval(VSYNC) < 0)
+		LOG("Warning: Unable to set VSync! SDL Error: %s", SDL_GetError());
+
 #ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -114,14 +94,12 @@ bool ModuleRenderExercise::Init()
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
 #endif
 
-	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
-
 	CreateTriangleVBO();
 	CreateQuadVBO();
 	LoadMeshes();
 
-	char* sourceVertex = App->program->LoadShaderSource("Shaders/Phong_VertexShader.glsl"); //vertexShader //Phong_VertexShader
-	char* sourceFragment = App->program->LoadShaderSource("Shaders/Phong_FragmentShader.glsl"); //fragmentShader //Phong_FragmentShader
+	char* sourceVertex = App->program->LoadShaderSource("Shaders/Phong_BRDF_VS.glsl"); //Phong_BRDF_VS //Phong_VertexShader
+	char* sourceFragment = App->program->LoadShaderSource("Shaders/Phong_BRDF_PS.glsl"); //Phong_BRDF_PS //Phong_FragmentShader
 	unsigned idVertex = App->program->CompileShader (GL_VERTEX_SHADER, sourceVertex);
 	unsigned idFragment = App->program->CompileShader(GL_FRAGMENT_SHADER, sourceFragment);
 	free(sourceVertex);
@@ -133,30 +111,25 @@ bool ModuleRenderExercise::Init()
 	SetGlEnable(enableCullFace, GL_CULL_FACE);
 	SetGlEnable(enableAlphaTest, GL_ALPHA_TEST);
 	glFrontFace(GL_CCW); // Front faces will be counter clockwise
-
-	// Current directory
-	_currentDir = get_current_dir() + "\\";
-	ReplaceSlash(_currentDir);
-
+	
 	return true;
 }
 
 update_status ModuleRenderExercise::PreUpdate()
 {
-	//int w, h;
-	//SDL_GetWindowSize(App->window->window, &w, &h);
-	//glViewport(0, 0, w, h);
-	//glClearColor(background.x, background.y, background.z, background.w);
-	//
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	int w, h;
+	SDL_GetWindowSize(App->window->window, &w, &h);
+	glViewport(0, 0, w, h);
+	glClearColor(background.x, background.y, background.z, background.w);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	return UPDATE_CONTINUE;
 }
 
 // Called every draw update
 update_status ModuleRenderExercise::Update()
 {
-	//DropFile();
-	//Draw();
+	Draw();
 
 	return UPDATE_CONTINUE;
 }
@@ -247,7 +220,13 @@ void ModuleRenderExercise::Draw()
 	int height = App->window->GetHeight();
 	int width = App->window->GetWidth();
 
-	App->debugDraw->Draw(view, proj, width, height); //draww axisTriad andxzSquareGrid(-10, 10, 0.0f, 1.0f, dd::colors::Gray);
+	std::vector<Camera*> allCameras = App->editorCamera->GetAllCameras();
+	for each (Camera* cam in allCameras)
+	{
+		App->debugDraw->DrawCamera(cam->frustum.ViewProjMatrix().Inverted());
+	}
+	App->debugDraw->Draw(view, proj, width, height); //draw axisTriad and xzSquareGrid
+
 
 	glUseProgram(_program);
 	//DrawQuad(proj, view);
@@ -314,44 +293,19 @@ void ModuleRenderExercise::DrawMesh(const float4x4& proj, const float4x4& view, 
 
 	glUniform3f(glGetUniformLocation(_program, "camera_pos"), camera_pos.x, camera_pos.y, camera_pos.z);
 	glUniform3f(glGetUniformLocation(_program, "light_dir"), light_dir.x, light_dir.y, light_dir.z);
-	glUniform4f(glGetUniformLocation(_program, "light_color"), light_color.x, light_color.y, light_color.z, light_color.w);
-	glUniform4f(glGetUniformLocation(_program, "ambient_color"), ambient_color.x, ambient_color.y, ambient_color.z, ambient_color.w);
-	glUniform1f(glGetUniformLocation(_program, "Ks"), Ks);
-	glUniform1f(glGetUniformLocation(_program, "Kd"), Kd);
+	glUniform3f(glGetUniformLocation(_program, "light_color"), light_color.x, light_color.y, light_color.z);
+
+	glUniform3f(glGetUniformLocation(_program, "ambient_color"), ambient_color.x, ambient_color.y, ambient_color.z);
 	glUniform1i(glGetUniformLocation(_program, "shininess"), shininess);
+	glUniform3f(glGetUniformLocation(_program, "diffuse_color"), diffuse_color.x, diffuse_color.y, diffuse_color.z);
+	glUniform3f(glGetUniformLocation(_program, "specular_color"), specular_color.x, specular_color.y, specular_color.z);
+
+	glUniform1i(glGetUniformLocation(_program, "has_diffuse_map"), has_diffuse_map);
+	glUniform1i(glGetUniformLocation(_program, "has_specular_map"), has_specular_map);
+	glUniform1i(glGetUniformLocation(_program, "shininess_alpha"), shininess_alpha);
 
 	//App->model->DrawMeshes(_program);
 	App->scene->Draw(_program);
-}
-
-void ModuleRenderExercise::DropFile()
-{
-	SDL_Event sdlEvent;
-	while (SDL_PollEvent(&sdlEvent) != 0)
-	{
-		switch (sdlEvent.type) {
-			case (SDL_DROPFILE):      // In case if dropped file
-				char* dropped_filedir = sdlEvent.drop.file;
-				string s(dropped_filedir);
-				ReplaceSlash(s);
-				if (s.find(".fbx") < s.length() || s.find(".FBX") < s.length())
-				{
-					LOG( ("Loading model " + s).c_str());
-					App->model->Load(s.c_str());
-				}
-				else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length() || s.find(".tga") < s.length())
-				{
-					LOG(("Loading texture " + s).c_str());
-					App->model->SetTexture( App->texture->Load(s.c_str()) );
-				}
-				else
-				{
-					LOG( (s +" its not a file .fbx, .png, .jpg, .dds or .tga").c_str() );
-				}
-				SDL_free(dropped_filedir);    // Free dropped_filedir memory
-				break;		
-		}
-	}
 }
 
 void ModuleRenderExercise::SetGlEnable(const bool enable, const GLenum type)
@@ -362,9 +316,6 @@ void ModuleRenderExercise::SetGlEnable(const bool enable, const GLenum type)
 		glDisable(type);
 }
 
-<<<<<<< Updated upstream
-
-=======
 void ModuleRenderExercise::DropFile()
 {
 	SDL_Event sdlEvent;
@@ -394,7 +345,6 @@ void ModuleRenderExercise::DropFile()
 		}
 	}
 }
->>>>>>> Stashed changes
 void ModuleRenderExercise::RenderToTexture() {
 
 	int w = 0;
@@ -442,9 +392,5 @@ void ModuleRenderExercise::RenderToTexture() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-<<<<<<< Updated upstream
-}
-=======
 }
 
->>>>>>> Stashed changes

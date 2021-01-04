@@ -12,9 +12,5 @@ public:
 
 private:
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     void ClearLog();
 };

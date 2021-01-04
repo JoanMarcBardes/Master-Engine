@@ -8,16 +8,17 @@
 ModuleScene::ModuleScene()
 {
 	root = new GameObject(nullptr, "Root");
+	mainCamera = new GameObject(root, "MainCamera");
+	mainCamera->AddComponent(new Camera(nullptr));
 }
 
 bool ModuleScene::Init()
 {
-	char* sourceVertex = App->program->LoadShaderSource("Shaders/Phong_VertexShader.glsl"); //vertexShader //Phong_VertexShader
-	char* sourceFragment = App->program->LoadShaderSource("Shaders/Phong_FragmentShader.glsl"); //fragmentShader //Phong_FragmentShader
-	idVertex = App->program->CompileShader(GL_VERTEX_SHADER, sourceVertex);
-	idFragment = App->program->CompileShader(GL_FRAGMENT_SHADER, sourceFragment);
-	free(sourceVertex);
-	free(sourceFragment);
+	GameObject* cullingCamera = new GameObject(root, "CullingCamera");
+	cullingCamera->AddComponent(new Camera(nullptr));
+
+	App->editorCamera->AddCamera(mainCamera->GetComponent<Camera>(), true);
+	App->editorCamera->AddCamera(cullingCamera->GetComponent<Camera>());
 
 	return true;
 }
@@ -30,9 +31,7 @@ update_status ModuleScene::Update()
 
 GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent)
 {
-	unsigned program = App->program->CreateProgram(idVertex, idFragment);
-	GameObject* newGameObject = new GameObject(parent ? parent : root, name);	
-	newGameObject->SetProgram(program);
+	GameObject* newGameObject = new GameObject(parent ? parent : root, name);
 	return newGameObject;
 }
 

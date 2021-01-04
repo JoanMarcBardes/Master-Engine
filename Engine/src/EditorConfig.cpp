@@ -35,11 +35,7 @@ void EditorConfig::Draw(int w, int h)
 	ImVec2 pos(0.0f, menuSize);
 	ImGui::SetNextWindowPos(pos);
 
-<<<<<<< Updated upstream
-	if (!ImGui::Begin("Configuration", active, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoMove))
-=======
 	if (!ImGui::Begin("Configuration", active, ImGuiWindowFlags_AlwaysUseWindowPadding))
->>>>>>> Stashed changes
 	{
 		ImGui::End();
 		return;
@@ -59,11 +55,7 @@ void EditorConfig::Draw(int w, int h)
 			App->SetOrganizatio(organization);
 
 		int fpsMax = App->GetFpsMax();
-<<<<<<< Updated upstream
-		if (ImGui::SliderInt("fps Max", &fpsMax, 1, 60))
-=======
 		if (ImGui::SliderInt("fps Max", &fpsMax, 1, 120))
->>>>>>> Stashed changes
 			App->SetFpsMax(fpsMax);
 		ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
 
@@ -121,27 +113,6 @@ void EditorConfig::Draw(int w, int h)
 		ImGui::DragFloat3("Light Direction", lightDir.ptr(), 0.1f);
 		App->renderExercise->SetLightDir(lightDir);
 
-<<<<<<< Updated upstream
-		float4 lightColor = App->renderExercise->GetLightColor();
-		ImGui::ColorEdit3("Light Color", lightColor.ptr());
-		App->renderExercise->SetLightColor(lightColor);
-
-		float4 ambientColor = App->renderExercise->GetAmbientColor();
-		ImGui::ColorEdit3("Ambient Color", ambientColor.ptr());
-		App->renderExercise->SetAmbientColor(ambientColor);
-
-		float Ks = App->renderExercise->GetKs();
-		ImGui::DragFloat("Ks", &Ks, 0.01f);
-		App->renderExercise->SetKs(Ks);
-
-		float Kd = App->renderExercise->GetKd();
-		ImGui::DragFloat("Kd", &Kd, 0.01f);
-		App->renderExercise->SetKd(Kd);
-
-		int shininess = App->renderExercise->GetShininess();
-		ImGui::DragInt("Shininess", &shininess, 1);
-		App->renderExercise->SetShininess(shininess);
-=======
 		float3 lightColor = App->renderExercise->GetLightColor();
 		ImGui::ColorEdit3("Light Color", lightColor.ptr());
 		App->renderExercise->SetLightColor(lightColor);
@@ -173,7 +144,6 @@ void EditorConfig::Draw(int w, int h)
 		int shininessApha = App->renderExercise->GetShininessApha();
 		ImGui::DragInt("shininess Apha", &shininessApha, 1, 0, 1);
 		App->renderExercise->SetShininessApha(shininessApha);
->>>>>>> Stashed changes
 	}
 
 	if (ImGui::CollapsingHeader("Window"))
@@ -219,98 +189,6 @@ void EditorConfig::Draw(int w, int h)
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "(x: %i, y: %i)", pos.x, pos.y);
 	}
 
-<<<<<<< Updated upstream
-	if (ImGui::CollapsingHeader("Camera"))
-	{
-		float3 front = App->editorCamera->GetFront();
-		ImGui::DragFloat3("Front", front.ptr());
-		App->editorCamera->SetFront(front);
-
-		float3 up = App->editorCamera->GetUp();
-		ImGui::DragFloat3("Up", up.ptr());
-		App->editorCamera->SetUp(up);
-
-		float3 pos = App->editorCamera->GetPosition();
-		ImGui::DragFloat3("Position", pos.ptr());
-		App->editorCamera->SetPosition(pos);
-
-		ImGui::Separator();
-
-		float nearPlane = App->editorCamera->GetNearPlane();
-		ImGui::DragFloat("Near Plane", &nearPlane, 0.1f);
-		App->editorCamera->SetNearPlane(nearPlane);
-
-		float farPlane = App->editorCamera->GetFarPlane();
-		ImGui::DragFloat("Far Plane", &farPlane, 1.0f);
-		App->editorCamera->SetFarPlane(farPlane);
-
-		float fov = App->editorCamera->GetFOV();
-		ImGui::DragFloat("Field of View", &fov, 1.0f);
-		App->editorCamera->SetFOV(fov);
-
-		float ascpectRatio = App->editorCamera->GetAspectRatio();
-		ImGui::DragFloat("Aspect Ratio", &ascpectRatio, 0.01f);
-		App->editorCamera->SetAspectRatio(ascpectRatio);
-
-		float speed = App->editorCamera->GetSpeed();
-		ImGui::DragFloat("Movement Speed", &speed, 0.01f);
-		App->editorCamera->SetSpeed(speed);
-	}
-
-	if (ImGui::CollapsingHeader("Models info"))
-	{
-		std::vector<Mesh*> meshes = App->model->GetMeshes();
-		int i = 0;
-		for (std::vector<Mesh*>::iterator it = meshes.begin(); it != meshes.end(); ++it)
-		{
-			if (ImGui::TreeNode((void*)(intptr_t)i, "Mesh %i", i))
-			{
-				ImGui::Text("Name: %s", (*it)->GetName());
-				ImGui::Separator();
-
-				ImGui::Text("Transformation");
-				float4x4 model = (*it)->GetModel();
-				float3 translate;
-				float4x4 rotate;
-				float3 sacale;
-				model.Decompose(translate, rotate, sacale);
-
-				ImGui::InputFloat3("Position", translate.ptr());
-				ImGui::InputFloat3("Rotate", rotate.ToEulerXYZ().ptr());
-				ImGui::InputFloat3("Scale", sacale.ptr());
-				ImGui::Separator();
-
-				ImGui::Text("Geometry");
-				ImGui::Text("Num vertices: "); ImGui::SameLine();
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", (*it)->GetNumVertices());
-
-				ImGui::Text("Num indices: "); ImGui::SameLine();
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", (*it)->GetNumIndices());
-				ImGui::Separator();
-
-				ImGui::Text("Texture");
-				std::vector<unsigned int> texturesIds = App->model->GetTexturesIds();
-				float my_tex_w = 150;
-				float my_tex_h = 150;
-				for (int j = 0; j < texturesIds.size(); ++j)
-				{
-					if (j != 0) ImGui::SameLine();
-					ImVec2 pos = ImGui::GetCursorScreenPos();
-					ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
-					ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
-					ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
-					ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
-					ImGui::Image((ImTextureID)texturesIds[j], ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
-				}
-
-				ImGui::TreePop();
-			}
-			++i;
-		}
-	}
-
-=======
->>>>>>> Stashed changes
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
 		SDL_version linked;
@@ -335,9 +213,6 @@ void EditorConfig::Draw(int w, int h)
 
 	ImGui::SetWindowSize(size);
 	ImGui::End();
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 }
 

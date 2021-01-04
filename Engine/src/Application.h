@@ -28,9 +28,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-	unsigned int GetFPS() { return fps; }
-
-	unsigned int GetFpsMax() { return fpsMax; }
+	const unsigned int GetFPS() { return fps; }
+	const unsigned int GetFpsMax() { return fpsMax; }
 	void SetFpsMax(unsigned int FpsMax);
 
 	const char* GetTitle() const { return title.c_str(); }

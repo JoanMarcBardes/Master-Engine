@@ -9,13 +9,6 @@
 #include "Mesh.h"
 #include "ModuleScene.h"
 #include "Material.h"
-#include "EditorComponent.h"
-#include "EditorConsole.h"
-#include "EditorMainMenu.h"
-#include "EditorConfig.h"
-#include "EditorAbout.h"
-#include "EditorPlay.h"
-#include "EditorViewport.h"
 #include "Time.h"
 #include "SDL.h"
 #include "GL/glew.h"
@@ -27,12 +20,21 @@
 #include <vector>
 #include <string>
 
-ModuleEditor::ModuleEditor()
-<<<<<<< Updated upstream
+
+static void HelpMarker(const char* desc)
 {
-	EditorConsole* console = new EditorConsole();
-	EditorMainMenu* mainMenu = new EditorMainMenu(this);
-=======
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}
+
+ModuleEditor::ModuleEditor()
 {/*
 	fpsLog.resize(fpsLogSize);
 	msLog.resize(fpsLogSize);*/
@@ -40,7 +42,6 @@ ModuleEditor::ModuleEditor()
 
 	EditorConsole* console = new EditorConsole();
 	EditorMainMenu* mainMenu = new EditorMainMenu();
->>>>>>> Stashed changes
 	EditorConfig* config = new EditorConfig();
 	EditorAbout* about = new EditorAbout();
 	EditorViewport* viewport = new EditorViewport();
@@ -56,13 +57,9 @@ ModuleEditor::ModuleEditor()
 // Destructor
 ModuleEditor::~ModuleEditor()
 {
-<<<<<<< Updated upstream
-	ClearLog();
-=======
 	ClearLog();/*
 	fpsLog.clear();
 	msLog.clear();*/
->>>>>>> Stashed changes
 }
 
 // Called before render is available
@@ -96,69 +93,6 @@ update_status ModuleEditor::PreUpdate()
 // Called every draw update
 update_status ModuleEditor::Update()
 {
-<<<<<<< Updated upstream
-	SDL_GetWindowSize(App->window->window, &w, &h);
-
-	bool quit = false;
-
-	update_status status = UPDATE_CONTINUE;
-
-	std::vector<EditorComponent*>::iterator it;
-	for (it = components.begin(); it != components.end(); ++it)
-	{
-		switch ((*it)->GetType()) 
-		{
-		case 1:
-			(*it)->Draw(w, h);
-			quit = (*it)->IsQuitting();
-			if (quit) status = UPDATE_STOP;
-			menuSize = (*it)->GetMenuSize();
-			break;
-		case 2:
-			if (showWindowConsole) 
-			{
-				(*it)->SetMenuSize(menuSize);
-				(*it)->SetActive(&showWindowConsole);
-				(*it)->SetItems(Items);
-				SDL_GetWindowSize(App->window->window, &w, &h);
-
-				(*it)->Draw(w, h);
-			}
-			break;
-		case 3:
-			if (showWindowConfiguration)
-			{
-				(*it)->SetMenuSize(menuSize);
-				(*it)->Draw(w, h);
-			}
-			break;
-		case 4:
-			if (showAbout)
-			{
-				(*it)->SetMenuSize(menuSize);
-				(*it)->Draw(w, h);
-			}
-			break;
-		case 5:
-			if (showWindowViewport)
-			{
-				(*it)->SetMenuSize(menuSize);
-				(*it)->Draw(w, h);
-			}
-			break;
-		case 6:
-			if (showWindowPlayStopStep)
-			{
-				(*it)->SetMenuSize(menuSize);
-				(*it)->Draw(w, h);
-			}
-			break;
-		}
-	}
-
-	if (showWindowGameObjectHierarchy) WindowGameObjectHierarchy(&showWindowGameObjectHierarchy);
-	if (showWindowInspector) WindowInspector(&showWindowInspector);
-=======
 	//ImGui::ShowDemoWindow();
     //bool show = true;
 	//update_status status = MainMenuBar();
@@ -246,7 +180,6 @@ update_status ModuleEditor::Update()
 	if (showWindowGameObjectHierarchy) WindowGameObjectHierarchy(&showWindowGameObjectHierarchy);
 	if (showWindowInspector) WindowInspector(&showWindowInspector);
 	//if (showWindowPlayStopStep) WindowPlayStopStep(&showWindowPlayStopStep);
->>>>>>> Stashed changes
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -264,8 +197,6 @@ bool ModuleEditor::CleanUp()
 	return true;
 }
 
-<<<<<<< Updated upstream
-=======
 //void ModuleEditor::WindowConsole(bool* p_open)
 //{
 //	ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
@@ -308,7 +239,6 @@ bool ModuleEditor::CleanUp()
 //	ImGui::End();
 //}
 
->>>>>>> Stashed changes
 void ModuleEditor::ClearLog()
 {
 	for (int i = 0; i < Items.Size; i++)
@@ -328,8 +258,6 @@ void ModuleEditor::AddLog(const char* fmt, ...)// IM_FMTARGS(2)
 	Items.push_back(Strdup(buf));
 }
 
-<<<<<<< Updated upstream
-=======
 //void ModuleEditor::WindowConfiguration(bool* p_open)
 //{
 //	if (!ImGui::Begin("Configuration", p_open, ImGuiWindowFlags_AlwaysUseWindowPadding))
@@ -593,13 +521,11 @@ void ModuleEditor::AddLog(const char* fmt, ...)// IM_FMTARGS(2)
 //}
 
 
->>>>>>> Stashed changes
 void ModuleEditor::WindowGameObjectHierarchy(bool* p_open)
 {
 	SDL_GetWindowSize(App->window->window, &w, &h);
 	float fW = (float)w;
 	float fH = (float)h;
-<<<<<<< Updated upstream
 
 	fH = (float)h / 2 + menuSize;
 
@@ -609,27 +535,12 @@ void ModuleEditor::WindowGameObjectHierarchy(bool* p_open)
 	ImVec2 pos2(fW, fH);
 	ImGui::SetNextWindowPos(pos2);
 
-=======
-
-	fH = (float)h / 2 + menuSize;
-
-	fW = (float)w;
-	fW = fW - (fW / 5);
-
-	ImVec2 pos2(fW, fH);
-	ImGui::SetNextWindowPos(pos2);
-
->>>>>>> Stashed changes
 	fW = (float)w;
 	fH = (float)h;
 
 	fW = fW / 5;
 	fH = fH / 2 - menuSize;
 	ImVec2 size(fW, fH);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 	if (!ImGui::Begin("GameObjectHierarchy", p_open/*, ImGuiWindowFlags_AlwaysUseWindowPadding*/))
 	{
 		ImGui::End();
@@ -721,13 +632,8 @@ void ModuleEditor::WindowInspector(bool* p_open)
 	fW = fW - (fW / 5);
 
 	ImVec2 pos2(fW, menuSize);
-<<<<<<< Updated upstream
-	ImGui::SetNextWindowPos(pos2); 
-	
-=======
 	ImGui::SetNextWindowPos(pos2);
 
->>>>>>> Stashed changes
 	fW = (float)w;
 	fH = (float)h;
 
@@ -774,7 +680,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 
 		ImGui::Separator();
 
-		Transform* transform = (Transform*)selected->GetComponent(Component::Type::Transform);
+		Transform* transform = selected->GetComponent<Transform>();
 		if (ImGui::CollapsingHeader("Transform"))
 		{
 			float3 position = transform->GetPosition();
@@ -803,7 +709,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 				transform->SetScale(scale);
 		}
 		
-		Mesh* mesh = (Mesh*)selected->GetComponent(Component::Type::Mesh);
+		Mesh* mesh = selected->GetComponent<Mesh>();
 		if (mesh && ImGui::CollapsingHeader("Mesh"))
 		{
 			ImGui::Text("Num vertices: "); ImGui::SameLine();
@@ -813,7 +719,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", mesh->GetNumIndices());
 		}
 
-		Material* material = (Material*)selected->GetComponent(Component::Type::Material);
+		Material* material = selected->GetComponent<Material>();
 		if (material && ImGui::CollapsingHeader("Material"))
 		{
 			ImGui::Text("Texture");
@@ -837,6 +743,48 @@ void ModuleEditor::WindowInspector(bool* p_open)
 				ImGui::Image((ImTextureID)textures[j], ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
 			}
 		}
+
+		Camera* camera = selected->GetComponent<Camera>();
+		if (camera && ImGui::CollapsingHeader("Camera"))
+		{
+			bool activeC = camera->IsActive();
+			if (ImGui::Checkbox("Current Camera", &activeC))
+				App->editorCamera->SetActiveCamera(camera, activeC);
+
+			float3 front = camera->frustum.Front();
+			if (ImGui::DragFloat3("Front", front.ptr()))
+				camera->frustum.SetFront(front);
+
+			float3 up = camera->frustum.Up();
+			if (ImGui::DragFloat3("Up", up.ptr()))
+				camera->frustum.SetUp(up);
+
+			float3 pos = camera->frustum.Pos();
+			if (ImGui::DragFloat3("Position", pos.ptr()))
+				camera->frustum.SetPos(pos);
+
+			ImGui::Separator();
+
+			float nearPlane = camera->nearPlane;
+			if (ImGui::DragFloat("Near Plane", &nearPlane, 0.1f))
+				camera->nearPlane = nearPlane;
+
+			float farPlane = camera->farPlane;
+			if (ImGui::DragFloat("Far Plane", &farPlane, 1.0f))
+				camera->farPlane = farPlane;
+
+			float fov = camera->fov;
+			if (ImGui::DragFloat("Field of View", &fov, 1.0f))
+				camera->fov = fov;
+
+			float ascpectRatio = camera->aspectRatio;
+			if (ImGui::DragFloat("Aspect Ratio", &ascpectRatio, 0.01f))
+				camera->aspectRatio = ascpectRatio;
+
+			float speed = App->editorCamera->GetSpeed();
+			if (ImGui::DragFloat("Movement Speed", &speed, 0.01f))
+				App->editorCamera->SetSpeed(speed);
+		}
 	}
 	else
 	{
@@ -844,8 +792,6 @@ void ModuleEditor::WindowInspector(bool* p_open)
 	}
 
 	ImGui::SetWindowSize(size);
-<<<<<<< Updated upstream
-=======
 	ImGui::End();
 }
 
@@ -875,6 +821,5 @@ void ModuleEditor::WindowPlayStopStep(bool* p_open)
 		Time::DoStep();
 	}
 
->>>>>>> Stashed changes
 	ImGui::End();
 }

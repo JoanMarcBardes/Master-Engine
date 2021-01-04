@@ -11,7 +11,8 @@ public:
 		None,
 		Transform,
 		Mesh,
-		Material
+		Material,
+		Camera
 	};
 
 public:
@@ -23,7 +24,7 @@ public:
 
 	void SetActive(bool isActive) { active = isActive; }
 	bool IsActive() const { return active; };
-	Type GetType() const { return type; };
+	virtual Type GetType() { return type; };
 
 public:
 	GameObject* gameObject = nullptr;

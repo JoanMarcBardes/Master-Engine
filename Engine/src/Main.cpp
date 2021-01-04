@@ -6,6 +6,7 @@
 #pragma comment( lib, "SDL2.lib" )
 #pragma comment( lib, "SDL2main.lib" )
 #include "DebugLeaks.h"
+#include "Brofiler.h"
 
 enum main_states
 {
@@ -32,7 +33,9 @@ int main(int argc, char ** argv)
 
 	while (state != MAIN_EXIT)
 	{
-		switch (state)
+		BROFILER_FRAME("YourThreadName");
+
+		switch (state)	
 		{
 		case MAIN_CREATION:
 

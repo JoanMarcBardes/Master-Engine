@@ -4,15 +4,12 @@
 #include "Libraries/ImGui/imgui.h"
 #include "ModuleScene.h"
 #include "EditorComponent.h"
-<<<<<<< Updated upstream
-=======
 #include "EditorConsole.h"
 #include "EditorMainMenu.h"
 #include "EditorConfig.h"
 #include "EditorAbout.h"
 #include "EditorPlay.h"
 #include "EditorViewport.h"
->>>>>>> Stashed changes
 #include <vector>
 
 class ModuleEditor : public Module
@@ -28,43 +25,12 @@ public:
 
 	void AddLog(const char* fmt, ...);	
 
-	void SetActiveWindows(int index, bool active) {
-		switch (index)
-		{
-		case 0:
-			showWindowConfiguration = active;
-			break;
-		case 1:
-			showWindowConsole = active;
-			break;
-		case 2:
-			showAbout = active;
-			break;
-		case 3:
-			showWindowGameObjectHierarchy = active;
-			break;
-		case 4:
-			showWindowInspector = active;
-			break;
-		case 5:
-			showWindowPlayStopStep = active;
-			break;
-		}
-	}
-
 private:
 	ImVector<char*> Items;
-<<<<<<< Updated upstream
-	//std::vector<int> fpsLog;
-	//std::vector<float> msLog;
-	std::vector<EditorComponent*> components;
-	//int fpsLogSize = 100;
-=======
 	/*std::vector<int> fpsLog;
 	std::vector<float> msLog;
 	int fpsLogSize = 100;*/
 	std::vector<EditorComponent*> components;
->>>>>>> Stashed changes
 	int w = 0, h = 0;
 	float menuSize = 0.0f;
 
@@ -89,8 +55,9 @@ private:
 	void TreeChilds(GameObject* parent);
 
 	GameObject* selected = nullptr;
-
 	void WindowInspector(bool* p_open);
+
+	void WindowPlayStopStep(bool* p_open);
 
 };
 
