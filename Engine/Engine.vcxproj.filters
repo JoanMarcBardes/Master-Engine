@@ -205,6 +205,24 @@
     <ClCompile Include="src\Time.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\EditorConsole.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorMainMenu.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorConfig.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorAbout.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorPlay.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorViewport.cpp">
+      <Filter>src\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -777,6 +795,27 @@
     <ClInclude Include="src\Time.h">
       <Filter>src\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\EditorComponent.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorConsole.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorMainMenu.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorConfig.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorAbout.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorPlay.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorViewport.h">
+      <Filter>src\Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -841,6 +880,9 @@
     </Filter>
     <Filter Include="src\GameObject\Component">
       <UniqueIdentifier>{59a019b3-aab7-4039-bbf7-c3c0cb994f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor">
+      <UniqueIdentifier>{a242afa0-d973-40a3-b887-767311bbf86a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

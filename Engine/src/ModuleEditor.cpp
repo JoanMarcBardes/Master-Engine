@@ -9,6 +9,13 @@
 #include "Mesh.h"
 #include "ModuleScene.h"
 #include "Material.h"
+#include "EditorComponent.h"
+#include "EditorConsole.h"
+#include "EditorMainMenu.h"
+#include "EditorConfig.h"
+#include "EditorAbout.h"
+#include "EditorPlay.h"
+#include "EditorViewport.h"
 #include "Time.h"
 #include "SDL.h"
 #include "GL/glew.h"
@@ -20,32 +27,26 @@
 #include <vector>
 #include <string>
 
-
-static void HelpMarker(const char* desc)
-{
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted(desc);
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
-}
-
 ModuleEditor::ModuleEditor()
 {
-	fpsLog.resize(fpsLogSize);
-	msLog.resize(fpsLogSize);
+	EditorConsole* console = new EditorConsole();
+	EditorMainMenu* mainMenu = new EditorMainMenu(this);
+	EditorConfig* config = new EditorConfig();
+	EditorAbout* about = new EditorAbout();
+	EditorViewport* viewport = new EditorViewport();
+	EditorPlay* play = new EditorPlay();
+	components.push_back(mainMenu);
+	components.push_back(console);
+	components.push_back(config);
+	components.push_back(about);
+	components.push_back(viewport);
+	components.push_back(play);
 }
 
 // Destructor
 ModuleEditor::~ModuleEditor()
 {
 	ClearLog();
-	fpsLog.clear();
-	msLog.clear();
 }
 
 // Called before render is available
@@ -79,38 +80,67 @@ update_status ModuleEditor::PreUpdate()
 // Called every draw update
 update_status ModuleEditor::Update()
 {
-	//ImGui::ShowDemoWindow();
-    bool show = true;
-	update_status status = MainMenuBar();
+	SDL_GetWindowSize(App->window->window, &w, &h);
 
-	if (showWindowConsole) WindowConsole(&showWindowConsole);
-	if (showWindowConfiguration) WindowConfiguration(&showWindowConfiguration);
-	if (showAbout) WindowAbout(&showAbout);
+	bool quit = false;
+
+	update_status status = UPDATE_CONTINUE;
+
+	std::vector<EditorComponent*>::iterator it;
+	for (it = components.begin(); it != components.end(); ++it)
+	{
+		switch ((*it)->GetType()) 
+		{
+		case 1:
+			(*it)->Draw(w, h);
+			quit = (*it)->IsQuitting();
+			if (quit) status = UPDATE_STOP;
+			menuSize = (*it)->GetMenuSize();
+			break;
+		case 2:
+			if (showWindowConsole) 
+			{
+				(*it)->SetMenuSize(menuSize);
+				(*it)->SetActive(&showWindowConsole);
+				(*it)->SetItems(Items);
+				SDL_GetWindowSize(App->window->window, &w, &h);
+
+				(*it)->Draw(w, h);
+			}
+			break;
+		case 3:
+			if (showWindowConfiguration)
+			{
+				(*it)->SetMenuSize(menuSize);
+				(*it)->Draw(w, h);
+			}
+			break;
+		case 4:
+			if (showAbout)
+			{
+				(*it)->SetMenuSize(menuSize);
+				(*it)->Draw(w, h);
+			}
+			break;
+		case 5:
+			if (showWindowViewport)
+			{
+				(*it)->SetMenuSize(menuSize);
+				(*it)->Draw(w, h);
+			}
+			break;
+		case 6:
+			if (showWindowPlayStopStep)
+			{
+				(*it)->SetMenuSize(menuSize);
+				(*it)->Draw(w, h);
+			}
+			break;
+		}
+	}
+
 	if (showWindowGameObjectHierarchy) WindowGameObjectHierarchy(&showWindowGameObjectHierarchy);
 	if (showWindowInspector) WindowInspector(&showWindowInspector);
-	if (showWindowPlayStopStep) WindowPlayStopStep(&showWindowPlayStopStep);
-
-	SDL_GetWindowSize(App->window->window, &w, &h);
-	float fW = (float)w;
-	float fH = (float)h;
-
-	fW = fW / 5;
-	fH = fH - (fH / 4);
-	ImVec2 size(fW, fH);
-
-	fW = (float)w;
-	fW = fW / 5;
-
-	ImVec2 pos0(fW, menuSize);
-	ImVec2 sizeView(fW * 3, size.y);
-
-	ImGui::SetNextWindowPos(pos0);
-	ImGui::Begin("Viewport", 0, ImGuiWindowFlags_NoMove);
-
-	ImGui::Image((ImTextureID)App->renderExercise->GetRenderText(), { sizeView.x * 0.985f, sizeView.y * 0.95f }, { 0,1 }, { 1,0 });
-
-	ImGui::SetWindowSize(sizeView);
-	ImGui::End();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -126,64 +156,6 @@ bool ModuleEditor::CleanUp()
 	ImGui::DestroyContext();
 
 	return true;
-}
-
-void ModuleEditor::WindowConsole(bool* p_open)
-{
-	SDL_GetWindowSize(App->window->window, &w, &h);
-	float fW = (float)w;
-	float fH = (float)h;
-
-	fH = fH - (fH / 4);
-
-	ImVec2 pos3(0.0f, fH + menuSize);
-	ImGui::SetNextWindowPos(pos3);
-
-	fW = fW - (fW / 5);
-	fH = (float)h;
-	fH = fH / 4;
-
-	ImVec2 size = { fW,fH - menuSize };
-	//ImGui::SetNextWindowSize(size, ImGuiCond_FirstUseEver);
-
-	if (!ImGui::Begin("Console", p_open, ImGuiWindowFlags_NoMove))
-	{
-		ImGui::End();
-		return;
-	}
-
-	if (ImGui::SmallButton("Clear")) { ClearLog(); }
-
-	ImGui::Separator();
-
-	// Reserve enough left-over height for 1 separator + 1 input text
-	const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y;
-	ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), false, ImGuiWindowFlags_HorizontalScrollbar);
-
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
-	for (int i = 0; i < Items.Size; i++)
-	{
-		const char* item = Items[i];
-
-		ImVec4 color;
-		bool has_color = false;
-		if (strstr(item, "[error]")) { color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f); has_color = true; }
-		else if (strstr(item, "[warning]")) { color = ImVec4(1.0f, 1.0f, 0.4f, 1.0f); has_color = true; }
-		else if (strncmp(item, "# ", 2) == 0) { color = ImVec4(1.0f, 0.8f, 0.6f, 1.0f); has_color = true; }
-		if (has_color)
-			ImGui::PushStyleColor(ImGuiCol_Text, color);
-		ImGui::TextUnformatted(item);
-		if (has_color)
-			ImGui::PopStyleColor();
-	}
-
-	if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
-		ImGui::SetScrollHereY(1.0f);
-
-	ImGui::PopStyleVar();
-	ImGui::EndChild();
-	ImGui::SetWindowSize(size);
-	ImGui::End();
 }
 
 void ModuleEditor::ClearLog()
@@ -203,358 +175,6 @@ void ModuleEditor::AddLog(const char* fmt, ...)// IM_FMTARGS(2)
 	buf[IM_ARRAYSIZE(buf) - 1] = 0;
 	va_end(args);
 	Items.push_back(Strdup(buf));
-}
-
-void ModuleEditor::WindowConfiguration(bool* p_open)
-{
-	SDL_GetWindowSize(App->window->window, &w, &h);
-	float fW = (float)w;
-	float fH = (float)h;
-
-	fW = fW / 5;
-	fH = fH - (fH / 4);
-	ImVec2 size(fW, fH);
-
-	ImVec2 pos(0.0f, menuSize);
-	ImGui::SetNextWindowPos(pos);
-
-	if (!ImGui::Begin("Configuration", p_open, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoMove))
-	{
-		ImGui::End();
-		return;
-	}
-	ImGui::Text("Options");
-
-	if (ImGui::CollapsingHeader("Application"))
-	{
-		char appName[50];
-		strcpy_s(appName, 50, App->GetTitle());
-		if (ImGui::InputText("Project Name", appName, IM_ARRAYSIZE(appName), ImGuiInputTextFlags_EnterReturnsTrue))
-			App->SetTitle(appName);
-
-		char organization[50];
-		strcpy_s(organization, 50, App->GetOrganizatio());
-		if (ImGui::InputText("Organization Name", organization, IM_ARRAYSIZE(organization), ImGuiInputTextFlags_EnterReturnsTrue))
-			App->SetOrganizatio(organization);
-
-		int fpsMax = App->GetFpsMax();
-		if(ImGui::SliderInt("fps Max", &fpsMax, 1, 60))
-			App->SetFpsMax(fpsMax);
-		ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
-
-		unsigned int fps = App->GetFPS();
-		ImGui::Text("FPS: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", fps);
-
-		fpsLog.erase(fpsLog.begin());
-		fpsLog.push_back(fps);
-		fpsLog.size();
-
-		msLog.erase(msLog.begin());
-		msLog.push_back(1000.0f / fps);
-		msLog.size();
-
-		char title1[25];
-		sprintf_s(title1, 25, "Framerate %i", fps);
-		float arr1[100];
-		std::copy(fpsLog.begin(), fpsLog.end(), arr1);
-		ImGui::PlotHistogram("##framerate", arr1, IM_ARRAYSIZE(arr1), 0, title1, 0.0f, 100.0f, ImVec2(310, 100));
-
-		char title2[25];
-		sprintf_s(title2, 25, "Milliseconds %.3f", 1000.0f / fps);
-		float arr2[100];
-		std::copy(msLog.begin(), msLog.end(), arr2);
-		ImGui::PlotHistogram("##milliseconds", arr2, IM_ARRAYSIZE(arr2), 0, title2, 0.0f, 100.0f, ImVec2(310, 100));
-	}
-
-	if (ImGui::CollapsingHeader("Render"))
-	{
-		bool aplhaTest = App->renderExercise->GetEnableAlphaTest();
-		ImGui::Checkbox("AlphaTest", &aplhaTest);
-		App->renderExercise->SetEnableAlphaTest(aplhaTest);
-
-		bool cullFace = App->renderExercise->GetEnableCullFace();
-		ImGui::Checkbox("CullFace", &cullFace);
-		App->renderExercise->SetEnableCullFace(cullFace);
-
-		bool depthTest = App->renderExercise->GetEnableDepthTest();
-		ImGui::Checkbox("DepthTest", &depthTest);
-		App->renderExercise->SetEnableDepthTest(depthTest);
-
-		ImGui::Separator();
-
-		float4 background = App->renderExercise->GetBackground();
-		ImGui::ColorEdit3("Background", background.ptr());
-		ImGui::SameLine(); HelpMarker(
-			"Click on the color square to open a color picker.\n"
-			"Click and hold to use drag and drop.\n"
-			"Right-click on the color square to show options.\n"
-			"CTRL+click on individual component to input value.\n");
-		App->renderExercise->SetBackground(background);
-
-		float3 lightDir = App->renderExercise->GetLightDir();
-		ImGui::DragFloat3("Light Direction", lightDir.ptr(), 0.1f);
-		App->renderExercise->SetLightDir(lightDir);
-
-		float4 lightColor = App->renderExercise->GetLightColor();
-		ImGui::ColorEdit3("Light Color", lightColor.ptr());
-		App->renderExercise->SetLightColor(lightColor);
-
-		float4 ambientColor = App->renderExercise->GetAmbientColor();
-		ImGui::ColorEdit3("Ambient Color", ambientColor.ptr());
-		App->renderExercise->SetAmbientColor(ambientColor);
-
-		float Ks = App->renderExercise->GetKs();
-		ImGui::DragFloat("Ks", &Ks, 0.01f);
-		App->renderExercise->SetKs(Ks);
-
-		float Kd = App->renderExercise->GetKd();
-		ImGui::DragFloat("Kd", &Kd, 0.01f);
-		App->renderExercise->SetKd(Kd);
-
-		int shininess = App->renderExercise->GetShininess();
-		ImGui::DragInt("Shininess", &shininess, 1);
-		App->renderExercise->SetShininess(shininess);
-	}
-
-	if (ImGui::CollapsingHeader("Window"))
-	{
-		static float brightness = App->window->GetBrightness();
-		ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f, "%0.1f");
-		App->window->SetBrightness(brightness);
-
-		int width, height;
-		SDL_GetWindowSize(App->window->window, &width, &height);
-		ImGui::SliderInt("Width", &width, 0, 1920);
-		ImGui::SliderInt("Height", &height, 0, 1080);
-		App->window->SetWidthHeight(width,height);
-
-		static bool fullScreen = App->window->GetWindowFull();
-		static bool resizable = App->window->GetResizable();
-		static bool borderless = App->window->GetBorderless();
-		static bool fullDesktop = App->window->GetWindowFull();
-		if (ImGui::Checkbox("FullScreen", &fullScreen)) {
-			App->window->SetFullScreen(fullScreen);
-			fullDesktop = false;
-		}
-
-		ImGui::SameLine(); 
-		if(ImGui::Checkbox("Resizable", &resizable))
-			App->window->SetResizable(resizable);
-
-
-		if(ImGui::Checkbox("Borderless", &borderless))
-			App->window->SetBorderless(borderless);
-
-		ImGui::SameLine(); 
-		if (ImGui::Checkbox("Full Desktop", &fullDesktop)) {
-			App->window->SetFullDesktop(fullDesktop);
-			fullScreen = false;
-		}
-	}
-	
-	if (ImGui::CollapsingHeader("Input"))
-	{
-		iPoint pos = App->input->GetMousePosition();
-		ImGui::Text("Mouse Position "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "(x: %i, y: %i)", pos.x, pos.y);
-	}
-
-	if (ImGui::CollapsingHeader("Camera"))
-	{
-		float3 front = App->editorCamera->GetFront();
-		ImGui::DragFloat3("Front", front.ptr());
-		App->editorCamera->SetFront(front);
-
-		float3 up = App->editorCamera->GetUp();
-		ImGui::DragFloat3("Up", up.ptr());
-		App->editorCamera->SetUp(up);
-
-		float3 pos = App->editorCamera->GetPosition();
-		ImGui::DragFloat3("Position", pos.ptr());
-		App->editorCamera->SetPosition(pos);
-
-		ImGui::Separator();
-
-		float nearPlane = App->editorCamera->GetNearPlane();
-		ImGui::DragFloat("Near Plane", &nearPlane, 0.1f);
-		App->editorCamera->SetNearPlane(nearPlane);
-
-		float farPlane = App->editorCamera->GetFarPlane();
-		ImGui::DragFloat("Far Plane", &farPlane, 1.0f);
-		App->editorCamera->SetFarPlane(farPlane);
-
-		float fov = App->editorCamera->GetFOV();
-		ImGui::DragFloat("Field of View", &fov, 1.0f);
-		App->editorCamera->SetFOV(fov);
-
-		float ascpectRatio = App->editorCamera->GetAspectRatio();
-		ImGui::DragFloat("Aspect Ratio", &ascpectRatio, 0.01f);
-		App->editorCamera->SetAspectRatio(ascpectRatio);
-
-		float speed = App->editorCamera->GetSpeed();
-		ImGui::DragFloat("Movement Speed", &speed, 0.01f);
-		App->editorCamera->SetSpeed(speed);
-	}
-
-	if (ImGui::CollapsingHeader("Models info"))
-	{
-		std::vector<Mesh*> meshes = App->model->GetMeshes();
-		int i = 0;
-		for (std::vector<Mesh*>::iterator it = meshes.begin(); it != meshes.end(); ++it)
-		{
-			if (ImGui::TreeNode((void*)(intptr_t)i, "Mesh %i", i))
-			{
-				ImGui::Text("Name: %s", (*it)->GetName());
-				ImGui::Separator();
-
-				ImGui::Text("Transformation");
-				float4x4 model = (*it)->GetModel();
-				float3 translate;
-				float4x4 rotate;
-				float3 sacale;
-				model.Decompose(translate, rotate, sacale);
-
-				ImGui::InputFloat3("Position", translate.ptr());
-				ImGui::InputFloat3("Rotate", rotate.ToEulerXYZ().ptr());
-				ImGui::InputFloat3("Scale", sacale.ptr());
-				ImGui::Separator();
-
-				ImGui::Text("Geometry");
-				ImGui::Text("Num vertices: "); ImGui::SameLine();
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", (*it)->GetNumVertices());
-
-				ImGui::Text("Num indices: "); ImGui::SameLine();
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", (*it)->GetNumIndices());
-				ImGui::Separator();
-
-				ImGui::Text("Texture");
-				std::vector<unsigned int> texturesIds = App->model->GetTexturesIds();
-				float my_tex_w = 150;
-				float my_tex_h = 150;
-				for (int j = 0; j < texturesIds.size(); ++j)
-				{
-					if (j != 0) ImGui::SameLine();
-					ImVec2 pos = ImGui::GetCursorScreenPos();
-					ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
-					ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
-					ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
-					ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
-					ImGui::Image((ImTextureID)texturesIds[j], ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
-				}
-
-				ImGui::TreePop();
-			}
-			++i;
-		}
-	}
-
-	if (ImGui::CollapsingHeader("Hardware"))
-	{
-		SDL_version linked;
-		SDL_GetVersion(&linked);
-		ImGui::Text("SDL Version: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i.%i.%i", linked.major, linked.minor, linked.patch);
-
-		ImGui::Separator();
-		ImGui::Text("CPUs: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i (cache: %ikb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
-
-		ImGui::Text("System RAM: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", SDL_GetSystemRAM());
-
-		ImGui::Separator();
-		ImGui::Text("GPU: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", glGetString(GL_VENDOR));
-
-		ImGui::Text("Brand: "); ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %s", glGetString(GL_RENDERER));
-	}
-
-	ImGui::SetWindowSize(size);
-	ImGui::End();	
-}
-
-//10. There must be a general menu with option to quit, visit the github page, and get info about the
-//		engine(“About”).It should also be able to turn on / off editor windows
-update_status ModuleEditor::MainMenuBar()
-{
-	update_status status = UPDATE_CONTINUE;
-	ImGui::BeginMainMenuBar();
-	if (ImGui::BeginMenu("Help"))
-	{		
-		if (ImGui::MenuItem("Github repository"))
-		{
-			RequestBrowser("https://github.com/JoanMarcBardes/Master-Engine");
-		}
-		ImGui::MenuItem("About", NULL, &showAbout);
-
-		if (ImGui::BeginMenu("Windows"))
-		{
-			ImGui::MenuItem("bWindowConsole", "", &showWindowConsole);
-			ImGui::MenuItem("WindowConfiguration", "", &showWindowConfiguration);
-			ImGui::MenuItem("WindowGameObjectHierarchy", "", &showWindowGameObjectHierarchy);
-			ImGui::MenuItem("WindowInspector", "", &showWindowInspector);
-			ImGui::MenuItem("WindowPlayStopStep", "", &showWindowPlayStopStep);
-			ImGui::EndMenu();
-		}
-		if (ImGui::MenuItem("Quit", "Alt+F4"))
-		{
-			status = UPDATE_STOP;
-		}
-		ImGui::EndMenu();
-	}
-	menuSize = ImGui::GetWindowSize().y;
-	ImGui::EndMainMenuBar();
-	return status;
-}
-
-void ModuleEditor::WindowAbout(bool* p_open)
-{
-	if (!ImGui::Begin("About", p_open, ImGuiWindowFlags_AlwaysAutoResize))
-	{
-		ImGui::End();
-		return;
-	}
-
-	ImGui::Text(
-		"Joan-Marc-Engine\n"
-		"Joan Marc Engine it's an engine developed during the Master in Advanced Programming for AAA Video Games.\n"
-		"You can found the poryect on : https://github.com/JoanMarcBardes/Master-Engine \n\n"
-
-		"Authors\n"
-		"Joan Marc Bardés Vera, guithub account : https://github.com/JoanMarcBardes \n\n"
-
-		"License\n"
-		"This project is under the MIT License - see the[LICENSE.md] file for details\n\n"
-
-		"Guide how to use the engine\n\n"
-
-		"Camera controls:\n"
-		" * Q / E go up / down.\n"
-		" * W / S move forward and backward.\n"
-		" * A / D move left and right.\n"
-		" * Up / Down and Left / Right arrows for eotate the camera.\n"
-		" * Right mouse click movement.\n"
-		" * Alt + Right free look around.\n"
-		" * Mouse wheel for zoom inand out.\n"
-		" * Alt + Left click for orbit the object.\n"
-		" * F for focus the camera around the geometry.\n"
-		" * Holding SHIFT duplicates movement speed.\n"
-		" * O for enable / disable orbit the object with the movement.\n\n"
-
-		"Drag to window engine a.fbx file for replace the model.\n"
-		"Drag to window engine a.png / jpg / dds file for replace the texture.\n\n"
-
-		"In configuration window, can configureand visualise several options of the engine.\n"
-	);
-
-	ImGui::End();
-}
-
-void ModuleEditor::RequestBrowser(const char* url)
-{
-	ShellExecute(NULL, "open", url, NULL, NULL, SW_SHOWDEFAULT);
 }
 
 void ModuleEditor::WindowGameObjectHierarchy(bool* p_open)
@@ -787,34 +407,5 @@ void ModuleEditor::WindowInspector(bool* p_open)
 	}
 
 	ImGui::SetWindowSize(size);
-	ImGui::End();
-}
-
-void ModuleEditor::WindowPlayStopStep(bool* p_open)
-{
-	if (!ImGui::Begin("PlayStopStep", p_open)) 
-	{
-		ImGui::End();
-		return;
-	}
-
-	std::string name = Time::running ? "Stop" : "Play";
-	if (ImGui::Button(name.c_str()))
-	{
-		Time::running ? Time::Stop() : Time::Play();
-	}
-	ImGui::SameLine();
-	std::string name2 = Time::paused ? "Continue" : "Pause";
-	if (ImGui::Button(name2.c_str()))
-	{
-		Time::paused ? Time::Continue() : Time::Pause();
-	}
-	ImGui::SameLine();
-	//ImGuiButtonFlags flag = Time::paused ? 1 << 15 : 1 << 14; // ImGuiButtonFlags_AlignTextBaseLine or ImGuiButtonFlags_Disabled
-	if (ImGui::Button("Step"))
-	{
-		Time::DoStep();
-	}
-
 	ImGui::End();
 }

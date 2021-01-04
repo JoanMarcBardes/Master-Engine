@@ -247,7 +247,7 @@ void ModuleEditorCamera::Orbit() {
 		speedOrbit *= 3;
 	}
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) && App->input->GetKey(SDL_SCANCODE_LALT)) {
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_LALT)) {
 		iPoint mouse = App->input->GetMouseMotion();
 
 		frustum.Translate(frustum.WorldRight() * -mouse.x * speedOrbit * deltaTime);
