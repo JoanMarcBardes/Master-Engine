@@ -28,9 +28,19 @@
 #include <string>
 
 ModuleEditor::ModuleEditor()
+<<<<<<< Updated upstream
 {
 	EditorConsole* console = new EditorConsole();
 	EditorMainMenu* mainMenu = new EditorMainMenu(this);
+=======
+{/*
+	fpsLog.resize(fpsLogSize);
+	msLog.resize(fpsLogSize);*/
+
+
+	EditorConsole* console = new EditorConsole();
+	EditorMainMenu* mainMenu = new EditorMainMenu();
+>>>>>>> Stashed changes
 	EditorConfig* config = new EditorConfig();
 	EditorAbout* about = new EditorAbout();
 	EditorViewport* viewport = new EditorViewport();
@@ -46,7 +56,13 @@ ModuleEditor::ModuleEditor()
 // Destructor
 ModuleEditor::~ModuleEditor()
 {
+<<<<<<< Updated upstream
 	ClearLog();
+=======
+	ClearLog();/*
+	fpsLog.clear();
+	msLog.clear();*/
+>>>>>>> Stashed changes
 }
 
 // Called before render is available
@@ -80,6 +96,7 @@ update_status ModuleEditor::PreUpdate()
 // Called every draw update
 update_status ModuleEditor::Update()
 {
+<<<<<<< Updated upstream
 	SDL_GetWindowSize(App->window->window, &w, &h);
 
 	bool quit = false;
@@ -141,6 +158,95 @@ update_status ModuleEditor::Update()
 
 	if (showWindowGameObjectHierarchy) WindowGameObjectHierarchy(&showWindowGameObjectHierarchy);
 	if (showWindowInspector) WindowInspector(&showWindowInspector);
+=======
+	//ImGui::ShowDemoWindow();
+    //bool show = true;
+	//update_status status = MainMenuBar();
+
+
+	SDL_GetWindowSize(App->window->window, &w, &h);
+
+	bool quit = false;
+
+	update_status status = UPDATE_CONTINUE;
+
+	std::vector<EditorComponent*>::iterator it;
+	for (it = components.begin(); it != components.end(); ++it)
+	{
+		switch ((*it)->GetType())
+		{
+		case 1:
+			(*it)->Draw(w, h);
+			quit = (*it)->IsQuitting();
+			if (quit) status = UPDATE_STOP;
+			menuSize = (*it)->GetMenuSize();
+			
+			showWindowConfiguration = (*it)->GetConfig();
+			showWindowConsole = (*it)->GetConsole();
+			showAbout = (*it)->GetAbout();
+			showWindowGameObjectHierarchy = (*it)->GetHierarchy();
+			showWindowInspector = (*it)->GetInspector();
+			showWindowPlayStopStep = (*it)->GetPlay();
+
+			break;
+		case 2:
+			if (showWindowConsole)
+			{
+				(*it)->SetMenuSize(menuSize);
+				(*it)->SetActive(&showWindowConsole);
+				(*it)->SetItems(Items);
+				SDL_GetWindowSize(App->window->window, &w, &h);
+
+				(*it)->Draw(w, h);
+			}
+			break;
+		case 3:
+			if (showWindowConfiguration)
+			{
+				(*it)->SetMenuSize(menuSize);
+				(*it)->Draw(w, h);
+			}
+			break;
+		case 4:
+			if (showAbout)
+			{
+				(*it)->SetMenuSize(menuSize);
+				(*it)->Draw(w, h);
+			}
+			break;
+		case 5:
+			if (showWindowViewport)
+			{
+				(*it)->SetMenuSize(menuSize);
+				(*it)->Draw(w, h);
+				if ((*it)->GetViewportFocus())
+				{
+					App->input->SetImGuiOn(false);
+				}
+			}
+			break;
+		case 6:
+			if (showWindowPlayStopStep)
+			{
+				(*it)->SetMenuSize(menuSize);
+				(*it)->Draw(w, h);
+			}
+			break;
+		}
+	}
+
+
+
+
+
+
+	//if (showWindowConsole) WindowConsole(&showWindowConsole);
+	//if (showWindowConfiguration) WindowConfiguration(&showWindowConfiguration);
+	//if (showAbout) WindowAbout(&showAbout);
+	if (showWindowGameObjectHierarchy) WindowGameObjectHierarchy(&showWindowGameObjectHierarchy);
+	if (showWindowInspector) WindowInspector(&showWindowInspector);
+	//if (showWindowPlayStopStep) WindowPlayStopStep(&showWindowPlayStopStep);
+>>>>>>> Stashed changes
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -158,6 +264,51 @@ bool ModuleEditor::CleanUp()
 	return true;
 }
 
+<<<<<<< Updated upstream
+=======
+//void ModuleEditor::WindowConsole(bool* p_open)
+//{
+//	ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
+//	if (!ImGui::Begin("Console", p_open))
+//	{
+//		ImGui::End();
+//		return;
+//	}
+//
+//	if (ImGui::SmallButton("Clear")) { ClearLog(); }
+//
+//	ImGui::Separator();
+//
+//	// Reserve enough left-over height for 1 separator + 1 input text
+//	const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y;
+//	ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), false, ImGuiWindowFlags_HorizontalScrollbar);
+//
+//	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
+//	for (int i = 0; i < Items.Size; i++)
+//	{
+//		const char* item = Items[i];
+//
+//		ImVec4 color;
+//		bool has_color = false;
+//		if (strstr(item, "[error]")) { color = ImVec4(1.0f, 0.4f, 0.4f, 1.0f); has_color = true; }
+//		else if (strstr(item, "[warning]")) { color = ImVec4(1.0f, 1.0f, 0.4f, 1.0f); has_color = true; }
+//		else if (strncmp(item, "# ", 2) == 0) { color = ImVec4(1.0f, 0.8f, 0.6f, 1.0f); has_color = true; }
+//		if (has_color)
+//			ImGui::PushStyleColor(ImGuiCol_Text, color);
+//		ImGui::TextUnformatted(item);
+//		if (has_color)
+//			ImGui::PopStyleColor();
+//	}
+//
+//	if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+//		ImGui::SetScrollHereY(1.0f);
+//
+//	ImGui::PopStyleVar();
+//	ImGui::EndChild();
+//	ImGui::End();
+//}
+
+>>>>>>> Stashed changes
 void ModuleEditor::ClearLog()
 {
 	for (int i = 0; i < Items.Size; i++)
@@ -177,11 +328,278 @@ void ModuleEditor::AddLog(const char* fmt, ...)// IM_FMTARGS(2)
 	Items.push_back(Strdup(buf));
 }
 
+<<<<<<< Updated upstream
+=======
+//void ModuleEditor::WindowConfiguration(bool* p_open)
+//{
+//	if (!ImGui::Begin("Configuration", p_open, ImGuiWindowFlags_AlwaysUseWindowPadding))
+//	{
+//		ImGui::End();
+//		return;
+//	}
+//	ImGui::Text("Options");
+//
+//	if (ImGui::CollapsingHeader("Application"))
+//	{
+//		char appName[50];
+//		strcpy_s(appName, 50, App->GetTitle());
+//		if (ImGui::InputText("Project Name", appName, IM_ARRAYSIZE(appName), ImGuiInputTextFlags_EnterReturnsTrue))
+//			App->SetTitle(appName);
+//
+//		char organization[50];
+//		strcpy_s(organization, 50, App->GetOrganizatio());
+//		if (ImGui::InputText("Organization Name", organization, IM_ARRAYSIZE(organization), ImGuiInputTextFlags_EnterReturnsTrue))
+//			App->SetOrganizatio(organization);
+//
+//		int fpsMax = App->GetFpsMax();
+//		if(ImGui::SliderInt("fps Max", &fpsMax, 1, 120))
+//			App->SetFpsMax(fpsMax);
+//		ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
+//
+//		unsigned int fps = App->GetFPS();
+//		ImGui::Text("FPS: "); ImGui::SameLine();
+//		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", fps);
+//
+//		fpsLog.erase(fpsLog.begin());
+//		fpsLog.push_back(fps);
+//		fpsLog.size();
+//
+//		msLog.erase(msLog.begin());
+//		msLog.push_back(1000.0f / fps);
+//		msLog.size();
+//
+//		char title1[25];
+//		sprintf_s(title1, 25, "Framerate %i", fps);
+//		float arr1[100];
+//		std::copy(fpsLog.begin(), fpsLog.end(), arr1);
+//		ImGui::PlotHistogram("##framerate", arr1, IM_ARRAYSIZE(arr1), 0, title1, 0.0f, 100.0f, ImVec2(310, 100));
+//
+//		char title2[25];
+//		sprintf_s(title2, 25, "Milliseconds %.3f", 1000.0f / fps);
+//		float arr2[100];
+//		std::copy(msLog.begin(), msLog.end(), arr2);
+//		ImGui::PlotHistogram("##milliseconds", arr2, IM_ARRAYSIZE(arr2), 0, title2, 0.0f, 100.0f, ImVec2(310, 100));
+//	}
+//
+//	if (ImGui::CollapsingHeader("Render"))
+//	{
+//		bool aplhaTest = App->renderExercise->GetEnableAlphaTest();
+//		ImGui::Checkbox("AlphaTest", &aplhaTest);
+//		App->renderExercise->SetEnableAlphaTest(aplhaTest);
+//
+//		bool cullFace = App->renderExercise->GetEnableCullFace();
+//		ImGui::Checkbox("CullFace", &cullFace);
+//		App->renderExercise->SetEnableCullFace(cullFace);
+//
+//		bool depthTest = App->renderExercise->GetEnableDepthTest();
+//		ImGui::Checkbox("DepthTest", &depthTest);
+//		App->renderExercise->SetEnableDepthTest(depthTest);
+//
+//		ImGui::Separator();
+//
+//		float4 background = App->renderExercise->GetBackground();
+//		ImGui::ColorEdit3("Background", background.ptr());
+//		ImGui::SameLine(); HelpMarker(
+//			"Click on the color square to open a color picker.\n"
+//			"Click and hold to use drag and drop.\n"
+//			"Right-click on the color square to show options.\n"
+//			"CTRL+click on individual component to input value.\n");
+//		App->renderExercise->SetBackground(background);
+//
+//		float3 lightDir = App->renderExercise->GetLightDir();
+//		ImGui::DragFloat3("Light Direction", lightDir.ptr(), 0.1f);
+//		App->renderExercise->SetLightDir(lightDir);
+//
+//		float3 lightColor = App->renderExercise->GetLightColor();
+//		ImGui::ColorEdit3("Light Color", lightColor.ptr());
+//		App->renderExercise->SetLightColor(lightColor);
+//
+//		float3 ambientColor = App->renderExercise->GetAmbientColor();
+//		ImGui::ColorEdit3("Ambient Color", ambientColor.ptr());
+//		App->renderExercise->SetAmbientColor(ambientColor);
+//
+//		int shininess = App->renderExercise->GetShininess();
+//		ImGui::DragInt("Shininess", &shininess, 1);
+//		App->renderExercise->SetShininess(shininess);
+//
+//		float3 diffuseColor = App->renderExercise->GetDiffuseColor();
+//		ImGui::ColorEdit3("Diffuse Color", diffuseColor.ptr());
+//		App->renderExercise->SetDiffuseColor(diffuseColor);
+//
+//		float3 specularColor = App->renderExercise->GetSpecularColor();
+//		ImGui::ColorEdit3("Specular Color", specularColor.ptr());
+//		App->renderExercise->SetSpecularColor(specularColor);
+//
+//		int hasDiffuseMap = App->renderExercise->GetHasDiffuseMap();
+//		ImGui::DragInt("Has Diffuse Map", &hasDiffuseMap, 1, 0, 1);
+//		App->renderExercise->SetHasDiffuseMap(hasDiffuseMap);
+//
+//		int hasSpecularMap = App->renderExercise->GetHasSpecularMap();
+//		ImGui::DragInt("Has Specular Map", &hasSpecularMap, 1, 0, 1);
+//		App->renderExercise->SetHasSpecularMap(hasSpecularMap);
+//
+//		int shininessApha = App->renderExercise->GetShininessApha();
+//		ImGui::DragInt("shininess Apha", &shininessApha, 1, 0, 1);
+//		App->renderExercise->SetShininessApha(shininessApha);
+//	}
+//
+//	if (ImGui::CollapsingHeader("Window"))
+//	{
+//		static float brightness = App->window->GetBrightness();
+//		ImGui::SliderFloat("Brightness", &brightness, 0.0f, 1.0f, "%0.1f");
+//		App->window->SetBrightness(brightness);
+//
+//		int width, height;
+//		SDL_GetWindowSize(App->window->window, &width, &height);
+//		ImGui::SliderInt("Width", &width, 0, 1920);
+//		ImGui::SliderInt("Height", &height, 0, 1080);
+//		App->window->SetWidthHeight(width,height);
+//
+//		static bool fullScreen = App->window->GetWindowFull();
+//		static bool resizable = App->window->GetResizable();
+//		static bool borderless = App->window->GetBorderless();
+//		static bool fullDesktop = App->window->GetWindowFull();
+//		if (ImGui::Checkbox("FullScreen", &fullScreen)) {
+//			App->window->SetFullScreen(fullScreen);
+//			fullDesktop = false;
+//		}
+//
+//		ImGui::SameLine(); 
+//		if(ImGui::Checkbox("Resizable", &resizable))
+//			App->window->SetResizable(resizable);
+//
+//
+//		if(ImGui::Checkbox("Borderless", &borderless))
+//			App->window->SetBorderless(borderless);
+//
+//		ImGui::SameLine(); 
+//		if (ImGui::Checkbox("Full Desktop", &fullDesktop)) {
+//			App->window->SetFullDesktop(fullDesktop);
+//			fullScreen = false;
+//		}
+//	}
+//	
+//	if (ImGui::CollapsingHeader("Input"))
+//	{
+//		iPoint pos = App->input->GetMousePosition();
+//		ImGui::Text("Mouse Position "); ImGui::SameLine();
+//		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "(x: %i, y: %i)", pos.x, pos.y);
+//	}
+//
+//	if (ImGui::CollapsingHeader("Hardware"))
+//	{
+//		SDL_version linked;
+//		SDL_GetVersion(&linked);
+//		ImGui::Text("SDL Version: "); ImGui::SameLine();
+//		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i.%i.%i", linked.major, linked.minor, linked.patch);
+//
+//		ImGui::Separator();
+//		ImGui::Text("CPUs: "); ImGui::SameLine();
+//		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i (cache: %ikb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+//
+//		ImGui::Text("System RAM: "); ImGui::SameLine();
+//		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%i", SDL_GetSystemRAM());
+//
+//		ImGui::Separator();
+//		ImGui::Text("GPU: "); ImGui::SameLine();
+//		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", glGetString(GL_VENDOR));
+//
+//		ImGui::Text("Brand: "); ImGui::SameLine();
+//		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %s", glGetString(GL_RENDERER));
+//	}
+//
+//	ImGui::End();	
+//}
+
+//10. There must be a general menu with option to quit, visit the github page, and get info about the
+//		engine(“About”).It should also be able to turn on / off editor windows
+//update_status ModuleEditor::MainMenuBar()
+//{
+//	update_status status = UPDATE_CONTINUE;
+//	ImGui::BeginMainMenuBar();
+//	if (ImGui::BeginMenu("Help"))
+//	{		
+//		if (ImGui::MenuItem("Github repository"))
+//		{
+//			RequestBrowser("https://github.com/JoanMarcBardes/Master-Engine");
+//		}
+//		ImGui::MenuItem("About", NULL, &showAbout);
+//
+//		if (ImGui::BeginMenu("Windows"))
+//		{
+//			ImGui::MenuItem("bWindowConsole", "", &showWindowConsole);
+//			ImGui::MenuItem("WindowConfiguration", "", &showWindowConfiguration);
+//			ImGui::MenuItem("WindowGameObjectHierarchy", "", &showWindowGameObjectHierarchy);
+//			ImGui::MenuItem("WindowInspector", "", &showWindowInspector);
+//			ImGui::MenuItem("WindowPlayStopStep", "", &showWindowPlayStopStep);
+//			ImGui::EndMenu();
+//		}
+//		if (ImGui::MenuItem("Quit", "Alt+F4"))
+//		{
+//			status = UPDATE_STOP;
+//		}
+//		ImGui::EndMenu();
+//	}
+//	ImGui::EndMainMenuBar();
+//	return status;
+//}
+
+//void ModuleEditor::WindowAbout(bool* p_open)
+//{
+//	if (!ImGui::Begin("About", p_open, ImGuiWindowFlags_AlwaysAutoResize))
+//	{
+//		ImGui::End();
+//		return;
+//	}
+//
+//	ImGui::Text(
+//		"Joan-Marc-Engine\n"
+//		"Joan Marc Engine it's an engine developed during the Master in Advanced Programming for AAA Video Games.\n"
+//		"You can found the poryect on : https://github.com/JoanMarcBardes/Master-Engine \n\n"
+//
+//		"Authors\n"
+//		"Joan Marc Bardés Vera, guithub account : https://github.com/JoanMarcBardes \n\n"
+//
+//		"License\n"
+//		"This project is under the MIT License - see the[LICENSE.md] file for details\n\n"
+//
+//		"Guide how to use the engine\n\n"
+//
+//		"Camera controls:\n"
+//		" * Q / E go up / down.\n"
+//		" * W / S move forward and backward.\n"
+//		" * A / D move left and right.\n"
+//		" * Up / Down and Left / Right arrows for eotate the camera.\n"
+//		" * Right mouse click movement.\n"
+//		" * Alt + Right free look around.\n"
+//		" * Mouse wheel for zoom inand out.\n"
+//		" * Alt + Left click for orbit the object.\n"
+//		" * F for focus the camera around the geometry.\n"
+//		" * Holding SHIFT duplicates movement speed.\n"
+//		" * O for enable / disable orbit the object with the movement.\n\n"
+//
+//		"Drag to window engine a.fbx file for replace the model.\n"
+//		"Drag to window engine a.png / jpg / dds file for replace the texture.\n\n"
+//
+//		"In configuration window, can configureand visualise several options of the engine.\n"
+//	);
+//
+//	ImGui::End();
+//}
+
+//void ModuleEditor::RequestBrowser(const char* url)
+//{
+//	ShellExecute(NULL, "open", url, NULL, NULL, SW_SHOWDEFAULT);
+//}
+
+
+>>>>>>> Stashed changes
 void ModuleEditor::WindowGameObjectHierarchy(bool* p_open)
 {
 	SDL_GetWindowSize(App->window->window, &w, &h);
 	float fW = (float)w;
 	float fH = (float)h;
+<<<<<<< Updated upstream
 
 	fH = (float)h / 2 + menuSize;
 
@@ -191,13 +609,27 @@ void ModuleEditor::WindowGameObjectHierarchy(bool* p_open)
 	ImVec2 pos2(fW, fH);
 	ImGui::SetNextWindowPos(pos2);
 
+=======
+
+	fH = (float)h / 2 + menuSize;
+
+	fW = (float)w;
+	fW = fW - (fW / 5);
+
+	ImVec2 pos2(fW, fH);
+	ImGui::SetNextWindowPos(pos2);
+
+>>>>>>> Stashed changes
 	fW = (float)w;
 	fH = (float)h;
 
 	fW = fW / 5;
 	fH = fH / 2 - menuSize;
 	ImVec2 size(fW, fH);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 	if (!ImGui::Begin("GameObjectHierarchy", p_open/*, ImGuiWindowFlags_AlwaysUseWindowPadding*/))
 	{
 		ImGui::End();
@@ -289,8 +721,13 @@ void ModuleEditor::WindowInspector(bool* p_open)
 	fW = fW - (fW / 5);
 
 	ImVec2 pos2(fW, menuSize);
+<<<<<<< Updated upstream
 	ImGui::SetNextWindowPos(pos2); 
 	
+=======
+	ImGui::SetNextWindowPos(pos2);
+
+>>>>>>> Stashed changes
 	fW = (float)w;
 	fH = (float)h;
 
@@ -407,5 +844,37 @@ void ModuleEditor::WindowInspector(bool* p_open)
 	}
 
 	ImGui::SetWindowSize(size);
+<<<<<<< Updated upstream
+=======
+	ImGui::End();
+}
+
+void ModuleEditor::WindowPlayStopStep(bool* p_open)
+{
+	if (!ImGui::Begin("PlayStopStep", p_open)) 
+	{
+		ImGui::End();
+		return;
+	}
+
+	std::string name = Time::running ? "Stop" : "Play";
+	if (ImGui::Button(name.c_str()))
+	{
+		Time::running ? Time::Stop() : Time::Play();
+	}
+	ImGui::SameLine();
+	std::string name2 = Time::paused ? "Continue" : "Pause";
+	if (ImGui::Button(name2.c_str()))
+	{
+		Time::paused ? Time::Continue() : Time::Pause();
+	}
+	ImGui::SameLine();
+	//ImGuiButtonFlags flag = Time::paused ? 1 << 15 : 1 << 14; // ImGuiButtonFlags_AlignTextBaseLine or ImGuiButtonFlags_Disabled
+	if (ImGui::Button("Step"))
+	{
+		Time::DoStep();
+	}
+
+>>>>>>> Stashed changes
 	ImGui::End();
 }

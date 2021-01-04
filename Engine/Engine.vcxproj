@@ -140,6 +140,10 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Component.h" />
     <ClInclude Include="src\DebugLeaks.h" />
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="src\Editor.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="src\EditorAbout.h" />
     <ClInclude Include="src\EditorComponent.h" />
     <ClInclude Include="src\EditorConfig.h" />

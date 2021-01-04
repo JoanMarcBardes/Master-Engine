@@ -5,13 +5,18 @@
 class EditorMainMenu : public EditorComponent
 {
 public:
+<<<<<<< Updated upstream
     EditorMainMenu(ModuleEditor* modE) { type = MainMenu; 
     SetModule(modE);
     };
+=======
+    EditorMainMenu() { type = MainMenu;};
+>>>>>>> Stashed changes
     ~EditorMainMenu() {};
 
     void Draw(int w, int h);
 
+<<<<<<< Updated upstream
     void SetModule(ModuleEditor* modE) { mod = modE; };
 
 private:
@@ -23,6 +28,9 @@ private:
     bool activeHierarchy = true;
     bool activeInspector = true;
     bool activePlay = true;
+=======
+private:
+>>>>>>> Stashed changes
 
     void RequestBrowser(const char* url);
 };

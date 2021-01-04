@@ -32,6 +32,14 @@ public:
 	float GetKs() { return Ks; }
 	float GetKd() { return Kd; }
 	int GetShininess() { return shininess; }
+<<<<<<< Updated upstream
+=======
+	float3 GetDiffuseColor() { return diffuse_color; }
+	float3 GetSpecularColor() { return specular_color; }
+	int GetHasDiffuseMap() { return has_diffuse_map; }
+	int GetHasSpecularMap() { return has_specular_map; }
+	int GetShininessApha() { return shininess_alpha; }
+>>>>>>> Stashed changes
 	unsigned int GetRenderText() {
 		RenderToTexture();
 		return renderedTexture;
@@ -68,8 +76,19 @@ private:
 	float Ks = 0.7f;
 	float Kd = 0.6f;
 	int shininess = 70;
+<<<<<<< Updated upstream
 	unsigned int renderedTexture;
 	unsigned int depthrenderbuffer;
+=======
+	float3 diffuse_color = float3(1.0f, 0.1f, 0.1f);
+	float3 specular_color = float3(0.08f, 0.08f, 0.08f);
+	int has_diffuse_map = 1;
+	int has_specular_map = 1;
+	int shininess_alpha = 1;
+	unsigned int renderedTexture;
+	unsigned int depthrenderbuffer;
+
+>>>>>>> Stashed changes
 
 	void CreateTriangleVBO();
 	void CreateQuadVBO();

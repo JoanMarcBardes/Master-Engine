@@ -34,6 +34,17 @@ public:
 	Type GetType() const { return type; };
 	int GetMenuSize() const { return menuSize; };
 
+<<<<<<< Updated upstream
+=======
+
+	bool GetAbout() const { return activeAbout; };
+	bool GetConsole() const { return activeConsole; };
+	bool GetConfig() const { return activeConfig; };
+	bool GetHierarchy() const { return activeHierarchy; };
+	bool GetInspector() const { return activeInspector; };
+	bool GetPlay() const { return activePlay; };
+	bool GetViewportFocus() const { return viewportFocused; };
+>>>>>>> Stashed changes
 	bool IsActive() const { return &active; };
 	bool IsQuitting() const { return quit; };
 
@@ -44,4 +55,15 @@ protected:
 	Type type = None;
 	int menuSize = 0;
 	bool quit = false;
+<<<<<<< Updated upstream
+=======
+
+	bool activeAbout = false;
+	bool activeConsole = true;
+	bool activeConfig = true;
+	bool activeHierarchy = true;
+	bool activeInspector = true;
+	bool activePlay = true;
+	bool viewportFocused = false;
+>>>>>>> Stashed changes
 };

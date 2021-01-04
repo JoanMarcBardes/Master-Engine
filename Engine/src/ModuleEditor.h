@@ -4,6 +4,15 @@
 #include "Libraries/ImGui/imgui.h"
 #include "ModuleScene.h"
 #include "EditorComponent.h"
+<<<<<<< Updated upstream
+=======
+#include "EditorConsole.h"
+#include "EditorMainMenu.h"
+#include "EditorConfig.h"
+#include "EditorAbout.h"
+#include "EditorPlay.h"
+#include "EditorViewport.h"
+>>>>>>> Stashed changes
 #include <vector>
 
 class ModuleEditor : public Module
@@ -45,10 +54,17 @@ public:
 
 private:
 	ImVector<char*> Items;
+<<<<<<< Updated upstream
 	//std::vector<int> fpsLog;
 	//std::vector<float> msLog;
 	std::vector<EditorComponent*> components;
 	//int fpsLogSize = 100;
+=======
+	/*std::vector<int> fpsLog;
+	std::vector<float> msLog;
+	int fpsLogSize = 100;*/
+	std::vector<EditorComponent*> components;
+>>>>>>> Stashed changes
 	int w = 0, h = 0;
 	float menuSize = 0.0f;
 

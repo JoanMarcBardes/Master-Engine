@@ -35,7 +35,11 @@ void EditorConfig::Draw(int w, int h)
 	ImVec2 pos(0.0f, menuSize);
 	ImGui::SetNextWindowPos(pos);
 
+<<<<<<< Updated upstream
 	if (!ImGui::Begin("Configuration", active, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoMove))
+=======
+	if (!ImGui::Begin("Configuration", active, ImGuiWindowFlags_AlwaysUseWindowPadding))
+>>>>>>> Stashed changes
 	{
 		ImGui::End();
 		return;
@@ -55,7 +59,11 @@ void EditorConfig::Draw(int w, int h)
 			App->SetOrganizatio(organization);
 
 		int fpsMax = App->GetFpsMax();
+<<<<<<< Updated upstream
 		if (ImGui::SliderInt("fps Max", &fpsMax, 1, 60))
+=======
+		if (ImGui::SliderInt("fps Max", &fpsMax, 1, 120))
+>>>>>>> Stashed changes
 			App->SetFpsMax(fpsMax);
 		ImGui::SameLine(); HelpMarker("CTRL+click to input value.");
 
@@ -113,6 +121,7 @@ void EditorConfig::Draw(int w, int h)
 		ImGui::DragFloat3("Light Direction", lightDir.ptr(), 0.1f);
 		App->renderExercise->SetLightDir(lightDir);
 
+<<<<<<< Updated upstream
 		float4 lightColor = App->renderExercise->GetLightColor();
 		ImGui::ColorEdit3("Light Color", lightColor.ptr());
 		App->renderExercise->SetLightColor(lightColor);
@@ -132,6 +141,39 @@ void EditorConfig::Draw(int w, int h)
 		int shininess = App->renderExercise->GetShininess();
 		ImGui::DragInt("Shininess", &shininess, 1);
 		App->renderExercise->SetShininess(shininess);
+=======
+		float3 lightColor = App->renderExercise->GetLightColor();
+		ImGui::ColorEdit3("Light Color", lightColor.ptr());
+		App->renderExercise->SetLightColor(lightColor);
+
+		float3 ambientColor = App->renderExercise->GetAmbientColor();
+		ImGui::ColorEdit3("Ambient Color", ambientColor.ptr());
+		App->renderExercise->SetAmbientColor(ambientColor);
+
+		int shininess = App->renderExercise->GetShininess();
+		ImGui::DragInt("Shininess", &shininess, 1);
+		App->renderExercise->SetShininess(shininess);
+
+		float3 diffuseColor = App->renderExercise->GetDiffuseColor();
+		ImGui::ColorEdit3("Diffuse Color", diffuseColor.ptr());
+		App->renderExercise->SetDiffuseColor(diffuseColor);
+
+		float3 specularColor = App->renderExercise->GetSpecularColor();
+		ImGui::ColorEdit3("Specular Color", specularColor.ptr());
+		App->renderExercise->SetSpecularColor(specularColor);
+
+		int hasDiffuseMap = App->renderExercise->GetHasDiffuseMap();
+		ImGui::DragInt("Has Diffuse Map", &hasDiffuseMap, 1, 0, 1);
+		App->renderExercise->SetHasDiffuseMap(hasDiffuseMap);
+
+		int hasSpecularMap = App->renderExercise->GetHasSpecularMap();
+		ImGui::DragInt("Has Specular Map", &hasSpecularMap, 1, 0, 1);
+		App->renderExercise->SetHasSpecularMap(hasSpecularMap);
+
+		int shininessApha = App->renderExercise->GetShininessApha();
+		ImGui::DragInt("shininess Apha", &shininessApha, 1, 0, 1);
+		App->renderExercise->SetShininessApha(shininessApha);
+>>>>>>> Stashed changes
 	}
 
 	if (ImGui::CollapsingHeader("Window"))
@@ -177,6 +219,7 @@ void EditorConfig::Draw(int w, int h)
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "(x: %i, y: %i)", pos.x, pos.y);
 	}
 
+<<<<<<< Updated upstream
 	if (ImGui::CollapsingHeader("Camera"))
 	{
 		float3 front = App->editorCamera->GetFront();
@@ -266,6 +309,8 @@ void EditorConfig::Draw(int w, int h)
 		}
 	}
 
+=======
+>>>>>>> Stashed changes
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
 		SDL_version linked;
@@ -290,5 +335,9 @@ void EditorConfig::Draw(int w, int h)
 
 	ImGui::SetWindowSize(size);
 	ImGui::End();
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 }
 
