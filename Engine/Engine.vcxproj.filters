@@ -208,6 +208,9 @@
     <ClCompile Include="src\Camera.cpp">
       <Filter>src\GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="src\ModuleFilesystem.cpp">
+      <Filter>src\Module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -785,6 +788,9 @@
     </ClInclude>
     <ClInclude Include="src\Camera.h">
       <Filter>src\GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ModuleFilesystem.h">
+      <Filter>src\Module</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

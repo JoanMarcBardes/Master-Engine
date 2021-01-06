@@ -10,6 +10,7 @@
 #include "ModuleTexture.h"
 #include "ModuleModel.h"
 #include "ModuleScene.h"
+#include "ModuleFilesystem.h"
 #include "Time.h"
 #include "DebugLeaks.h"
 #include "Brofiler.h"
@@ -19,7 +20,7 @@ using namespace std;
 Application::Application()
 {
 	// Order matters: they will Init/start/update in this order
-	modules.reserve(10);
+	modules.reserve(11);
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(texture = new ModuleTexture());
 	modules.push_back(model = new ModuleModel());
@@ -30,6 +31,7 @@ Application::Application()
 	modules.push_back(debugDraw = new ModuleDebugDraw());
 	modules.push_back(editorCamera = new ModuleEditorCamera());
 	modules.push_back(scene = new ModuleScene());
+	modules.push_back(filesystem = new ModuleFilesystem());
 }
 
 Application::~Application()
