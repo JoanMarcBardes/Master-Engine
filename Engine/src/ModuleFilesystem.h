@@ -21,11 +21,10 @@ public:
 
 private:
 	void CreateLibraryDirectories();
-	bool CreateDir(const char* dir);
-	char* Concat(const char* a, const char* b);
+	bool MakeDirectory(const char* dir);
 	void GetAllFilesWithExtension(const char* myPath, const char* extension, std::vector<std::string>& fileList, std::vector<std::string>& dirList);
 
-	char* basePath;
+	std::string basePath;
 
 };
 

@@ -12,8 +12,10 @@ public:
 
 	void Draw(const unsigned program);
 
-	std::vector<unsigned int> GetTextures() { return textures; }
-	std::vector<std::string> GetPaths() { return paths; }
+	const std::vector<unsigned int> GetTextures() { return textures; }
+	const std::vector<std::string> GetPaths() { return paths; }
+	const std::vector<std::string> GetTypeId() { return typeId; }
+	const unsigned int GetNunTextures() const { return textures.size(); }
 	static Type GetType() { return Type::Material; };
 
 private:

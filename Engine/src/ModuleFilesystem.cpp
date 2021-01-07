@@ -17,37 +17,22 @@ bool ModuleFilesystem::Init()
 {
     std::vector<std::string> fileList;
     std::vector<std::string> dirList;
-    GetAllFilesWithExtension(Concat(basePath, "Models\\"), ".fbx", fileList, dirList);
+    GetAllFilesWithExtension((basePath + "Models\\").c_str(), ".fbx", fileList, dirList);
 
     return true;
 }
 
 void ModuleFilesystem::CreateLibraryDirectories()
 {
-	CreateDir("Library/");
-	CreateDir("Library/Meshes/");
-	CreateDir("Library/Materials/");
+	MakeDirectory("Library/");
+	MakeDirectory("Library/Meshes/");
+	MakeDirectory("Library/Materials/");
 }
 
-bool ModuleFilesystem::CreateDir(const char* dir)
+bool ModuleFilesystem::MakeDirectory(const char* dir)
 {
-	int stat = _mkdir( Concat(basePath, dir) );
+	int stat = _mkdir( (basePath + dir).c_str() );
     return !stat;
-}
-
-char* ModuleFilesystem::Concat(const char* a, const char* b)
-{
-    // Determine new size
-    int newSize = strlen(a) + strlen(b) + 1;
-
-    // Allocate new buffer
-    char* newBuffer = (char*)malloc(newSize);
-
-    // do the copy and concat
-    strcpy(newBuffer, a);
-    strcat(newBuffer, b); // or strncat
-
-    return newBuffer;
 }
 
 void ModuleFilesystem::GetAllFilesWithExtension(const char* myPath, const char* extension, std::vector<std::string>& fileList, std::vector<std::string>& dirList)
