@@ -211,6 +211,9 @@
     <ClCompile Include="src\ModuleFilesystem.cpp">
       <Filter>src\Module</Filter>
     </ClCompile>
+    <ClCompile Include="src\ImporterMaterial.cpp">
+      <Filter>src\Importers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -792,6 +795,9 @@
     <ClInclude Include="src\ModuleFilesystem.h">
       <Filter>src\Module</Filter>
     </ClInclude>
+    <ClInclude Include="src\ImporterMaterial.h">
+      <Filter>src\Importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -859,6 +865,9 @@
     </Filter>
     <Filter Include="Libraries\Brofiler">
       <UniqueIdentifier>{a6a12504-071c-45cc-a951-8706ac44a88f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Importers">
+      <UniqueIdentifier>{9095edd0-5dd4-4634-a6ed-3926f4005561}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

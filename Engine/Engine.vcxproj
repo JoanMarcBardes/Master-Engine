@@ -145,6 +145,7 @@
     <ClInclude Include="src\DebugLeaks.h" />
     <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Globals.h" />
+    <ClInclude Include="src\ImporterMaterial.h" />
     <ClInclude Include="src\Libraries\Assimp\include\assimp\aabb.h" />
     <ClInclude Include="src\Libraries\Assimp\include\assimp\ai_assert.h" />
     <ClInclude Include="src\Libraries\Assimp\include\assimp\anim.h" />
@@ -338,6 +339,7 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\ImporterMaterial.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui_demo.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui_draw.cpp" />
