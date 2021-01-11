@@ -38,6 +38,8 @@ public:
 	const bool RightMouseOn() const { return right_mouse; }
 	const bool LeftMouseOn() const { return left_mouse; }
 
+	void SetImGuiOn(bool b) { imgUiOn = b; };
+
 private:
 	KeyState* keyboard;
 	KeyState  mouse_buttons[NUM_MOUSE_BUTTONS];

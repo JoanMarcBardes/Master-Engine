@@ -208,6 +208,24 @@
     <ClCompile Include="src\Camera.cpp">
       <Filter>src\GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="src\EditorAbout.cpp">
+      <Filter>src\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorConfig.cpp">
+      <Filter>src\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorConsole.cpp">
+      <Filter>src\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorMainMenu.cpp">
+      <Filter>src\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorPlay.cpp">
+      <Filter>src\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorViewport.cpp">
+      <Filter>src\EditorUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -786,6 +804,30 @@
     <ClInclude Include="src\Camera.h">
       <Filter>src\GameObject\Component</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor.h">
+      <Filter>src\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorAbout.h">
+      <Filter>src\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorComponent.h">
+      <Filter>src\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorConfig.h">
+      <Filter>src\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorConsole.h">
+      <Filter>src\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorMainMenu.h">
+      <Filter>src\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorPlay.h">
+      <Filter>src\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorViewport.h">
+      <Filter>src\EditorUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -853,6 +895,9 @@
     </Filter>
     <Filter Include="Libraries\Brofiler">
       <UniqueIdentifier>{a6a12504-071c-45cc-a951-8706ac44a88f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\EditorUI">
+      <UniqueIdentifier>{84e0500a-fe1a-4d6a-adc0-2dd708740e7d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
