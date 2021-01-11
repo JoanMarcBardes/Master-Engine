@@ -35,6 +35,7 @@ public:
 	int GetHasDiffuseMap() { return has_diffuse_map; }
 	int GetHasSpecularMap() { return has_specular_map; }
 	int GetShininessApha() { return shininess_alpha; }
+  
 	unsigned int GetRenderText() {
 		RenderToTexture();
 		return renderedTexture;
@@ -76,6 +77,7 @@ private:
 	int has_diffuse_map = 1;
 	int has_specular_map = 1;
 	int shininess_alpha = 1;
+  
 	unsigned int renderedTexture;
 	unsigned int depthrenderbuffer;
 

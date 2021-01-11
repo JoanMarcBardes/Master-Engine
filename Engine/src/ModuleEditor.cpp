@@ -440,7 +440,7 @@ void ModuleEditor::AddLog(const char* fmt, ...)// IM_FMTARGS(2)
 //}
 
 //10. There must be a general menu with option to quit, visit the github page, and get info about the
-//		engine(“About”).It should also be able to turn on / off editor windows
+//		engine(Â“AboutÂ”).It should also be able to turn on / off editor windows
 //update_status ModuleEditor::MainMenuBar()
 //{
 //	update_status status = UPDATE_CONTINUE;
@@ -486,7 +486,7 @@ void ModuleEditor::AddLog(const char* fmt, ...)// IM_FMTARGS(2)
 //		"You can found the poryect on : https://github.com/JoanMarcBardes/Master-Engine \n\n"
 //
 //		"Authors\n"
-//		"Joan Marc Bardés Vera, guithub account : https://github.com/JoanMarcBardes \n\n"
+//		"Joan Marc BardÃ©s Vera, guithub account : https://github.com/JoanMarcBardes \n\n"
 //
 //		"License\n"
 //		"This project is under the MIT License - see the[LICENSE.md] file for details\n\n"
