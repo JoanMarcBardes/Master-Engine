@@ -34,7 +34,9 @@ private:
     unsigned int vao, vbo, ebo;
     unsigned int numVertices, numIndices;
     const char* name;
-    float4x4 model = float4x4::identity;;
+    float4x4 model = float4x4::identity;
+
+    AABB boundigbox;
 
     float3 min;
     float3 max;
