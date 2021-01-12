@@ -9,19 +9,16 @@
 
 using namespace std;
 
-std::string GetTypeId(aiTextureType textureType)
+unsigned int GetTypeId(aiTextureType textureType)
 {
-    std::string typeId = "";
+    unsigned int typeId = -1;
     switch (textureType)
     {
     case aiTextureType_DIFFUSE:
-        typeId = "diffuse_map";
+        typeId = 0;
         break;
     case aiTextureType_SPECULAR:
-        typeId = "specular_map";
-        break;
-    default:
-        typeId = "NullType";
+        typeId = 1;
         break;
     }
     return typeId;
@@ -71,26 +68,41 @@ void ImporterMaterial::Import(const aiMaterial* material, Material* ourMaterial)
 unsigned int ImporterMaterial::Save(const Material* ourMaterial, char** fileBuffer)
 {
     const unsigned int numTextures = ourMaterial->GetNunTextures();
-    //numTextures + textures, paths, typeId * numTextures
-    unsigned int size = sizeof(unsigned int) + (sizeof(unsigned int) + sizeof(std::string) + sizeof(std::string)) * numTextures;
+
+    unsigned int sizeBody = 0;
+    for (unsigned int i = 0; i < numTextures; ++i)
+    {
+        sizeBody += sizeof(unsigned int);
+        sizeBody += ourMaterial->GetPaths()[i].length() * sizeof(char);
+        sizeBody += sizeof(unsigned int);
+    }
+    // Head + body
+    unsigned int size = sizeof(unsigned int) + sizeBody;
 
     *fileBuffer = new char[size];
     char* cursor = *fileBuffer;
 
+    //Head
+    unsigned int bytes = sizeof(unsigned int);
+    memcpy(cursor, &numTextures, bytes);
+    cursor += bytes;
+
+    //Body
     for (unsigned int i = 0; i < numTextures; ++i)
     {
-        unsigned int texture = ourMaterial->GetTextures()[i];
-        unsigned int bytes = sizeof(unsigned int);
-        memcpy(cursor, &texture, bytes);
+        unsigned int sizePath = ourMaterial->GetPaths()[i].length();
+        bytes = sizeof(unsigned int);
+        memcpy(cursor, &sizePath, bytes);
         cursor += bytes;
 
-        std::string path = ourMaterial->GetPaths()[i];
-        bytes = sizeof(std::string);
-        memcpy(cursor, &path, bytes);
+        string s = ourMaterial->GetPaths()[i];
+        const char* path = s.c_str();
+        bytes = sizeof(const char) * sizePath;
+        memcpy(cursor, &ourMaterial->GetPaths()[i], bytes);
         cursor += bytes;
 
-        std::string typeId = ourMaterial->GetTypeId()[i];
-        bytes = sizeof(std::string);
+        unsigned int typeId = 12;// ourMaterial->GetTypeId()[i];
+        bytes = sizeof(unsigned int);
         memcpy(cursor, &typeId, bytes);
         cursor += bytes;
     }
@@ -109,20 +121,25 @@ void ImporterMaterial::Load(const char* fileBuffer, Material* ourMaterial)
 
     for (unsigned int i = 0; i < numTextures; ++i)
     {
-        unsigned int texture = 0;
-        unsigned int bytes = sizeof(unsigned int);
-        memcpy(&texture, cursor, bytes);
+        unsigned int sizePath;
+        bytes = sizeof(unsigned int);
+        memcpy(&sizePath, cursor, bytes);
         cursor += bytes;
 
-        std::string path = 0;
-        bytes = sizeof(std::string);
+        char* path;
+        bytes = sizeof(char) * sizePath;
         memcpy(&path, cursor, bytes);
         cursor += bytes;
 
-        std::string typeId = 0;
-        bytes = sizeof(std::string);
+        unsigned int typeId;
+        bytes = sizeof(unsigned int);
         memcpy(&typeId, cursor, bytes);
         cursor += bytes;
+
+        string s = "Load sizePath: " + std::to_string(sizePath) + " path: " + path + " typeID: " + std::to_string(typeId);
+        LOG(s.c_str());
+
+        unsigned int texture = 0;// App->texture->Load(path);
 
         ourMaterial->AddTexturePath(texture, path, typeId);
     }

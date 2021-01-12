@@ -11,9 +11,11 @@ public:
 
 	bool Init() override;
 
-	/*unsigned int Load(const char* path, const char* file, char** buffer) const;
-	unsigned int Save(const char* file, const void* buffer, unsigned int size, bool append = false) const;
-	bool Remove(const char* file);
+	unsigned int Save() const;
+	unsigned int Load() const;
+	unsigned int Save(const char* file, const char* buffer, unsigned int size, bool append = false) const;
+	unsigned int Load(const char* path, const char* file, char** buffer) const;
+	/*bool Remove(const char* file);
 	bool Exists(const char* file) const;
 	bool MakeDirectory(const char* directory);
 	bool IsDirectory(const char* file) const;

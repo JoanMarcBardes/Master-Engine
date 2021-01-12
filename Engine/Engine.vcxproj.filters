@@ -214,6 +214,9 @@
     <ClCompile Include="src\ImporterMaterial.cpp">
       <Filter>src\Importers</Filter>
     </ClCompile>
+    <ClCompile Include="src\ImporterMesh.cpp">
+      <Filter>src\Importers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -796,6 +799,9 @@
       <Filter>src\Module</Filter>
     </ClInclude>
     <ClInclude Include="src\ImporterMaterial.h">
+      <Filter>src\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImporterMesh.h">
       <Filter>src\Importers</Filter>
     </ClInclude>
   </ItemGroup>

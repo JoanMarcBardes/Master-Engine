@@ -8,6 +8,11 @@
 #include "Libraries/Assimp/include/assimp/postprocess.h"
 #include "Mesh.h"
 #include "DebugLeaks.h"
+
+#include "ModuleFilesystem.h"
+#include "ImporterMaterial.h"
+#include "ImporterMesh.h"
+
 #include <vector>
 #include <string>
 
@@ -168,7 +173,7 @@ Material* ModuleModel::LoadMaterials(const aiMaterial* material)
 
     std::vector<unsigned int> newTextures;
     std::vector<std::string> newPath;
-    std::vector<std::string> newTypeId;
+    std::vector<unsigned int> newTypeId;
 
     aiMaterialProperty** matPro = material->mProperties;
 
@@ -299,20 +304,103 @@ void ModuleModel::CalculateVolumeCenter()
     //App->editorCamera->AdaptSizeGeometry(volume);
 }
 
-std::string ModuleModel::GetTypeId(aiTextureType textureType)
+unsigned int ModuleModel::GetTypeId(aiTextureType textureType)
 {
-    std::string typeId = "";
+    unsigned int typeId = -1;
     switch (textureType)
     {
     case aiTextureType_DIFFUSE:
-        typeId = "diffuse_map";
+        typeId = 0;
         break;
     case aiTextureType_SPECULAR:
-        typeId = "specular_map";
-        break;
-    default:
-        typeId = "NullType";
+        typeId = 1;
         break;
     }
     return typeId;
+}
+
+
+//
+
+void ModuleModel::Import(const char* dir, const char* name)
+{
+    const aiScene* scene = aiImportFile(dir, aiProcessPreset_TargetRealtime_MaxQuality);
+    if (scene)
+    {
+        string path = string(dir);
+        directory = path.substr(0, path.find_last_of('\\'));
+        directory += "\\";
+        ImportNode(scene->mRootNode, scene, name);
+    }
+    else
+    {
+        LOG("[error] Error loading %s: %s", dir, aiGetErrorString());
+    }
+}
+
+void ModuleModel::ImportNode(aiNode* node, const aiScene* scene, string name)
+{
+    GameObject* child = nullptr;
+    // process each mesh located at the current node
+    for (unsigned int i = 0; i < node->mNumMeshes; i++)
+    {
+        // the node object only contains indices to index the actual objects in the scene. 
+        // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
+        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+        //GameObject* child = App->scene->CreateGameObject(mesh->mName.C_Str(), parent);
+
+        /*Mesh* newMesh = CreateMesh(mesh, scene);
+        child->AddComponent(newMesh);
+        meshesList.push_back(newMesh);*/
+        Mesh* newMesh = new Mesh();
+        ImporterMesh* importMesh = new ImporterMesh();
+        importMesh->Import(mesh, newMesh);
+
+        char* buffer;
+        unsigned int size = importMesh->Save(newMesh, &buffer);
+        App->filesystem->Save((name + std::to_string(i)).c_str(), buffer, size);
+
+
+        //Material* material = LoadMaterials(scene->mMaterials[mesh->mMaterialIndex]);
+
+        Material* material = new Material();
+        ImporterMaterial* importMat = new ImporterMaterial();
+        importMat->Import(scene->mMaterials[mesh->mMaterialIndex], material);
+
+        char* buffer;
+        unsigned int size = importMat->Save(material, &buffer);
+        App->filesystem->Save((name + std::to_string(i)).c_str(), buffer, size);
+    }
+    // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
+    for (unsigned int i = 0; i < node->mNumChildren; i++)
+    {
+        ImportNode(node->mChildren[i], scene, name + "_child" + std::to_string(i));
+    }
+
+}
+
+void ModuleModel::Load(const char* dir, const char* name, unsigned int type)
+{
+    char* buffer;
+    App->filesystem->Load(dir, name, &buffer);
+
+    switch (type)
+    {
+    case 0:
+        Mesh* mesh = new Mesh();
+        ImporterMesh* importMesh = new ImporterMesh();
+        importMesh->Load(buffer, mesh);
+        break;
+    case 1:
+        Material * material = new Material();
+        ImporterMaterial* importMat = new ImporterMaterial();
+        importMat->Load(buffer, material);
+        break;
+    }
+
+    Material* material = new Material();
+    ImporterMaterial* importMat = new ImporterMaterial();
+    importMat->Load(buffer, material);
+
+    LOG( (string("LOAD ") + name).c_str() );
 }

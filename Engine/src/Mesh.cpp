@@ -6,6 +6,12 @@
 #include <vector>
 #include <string>
 
+Mesh::Mesh() :
+    Component(Component::Type::Mesh, gameObject), Vertices(), Indices(), name()
+{
+   
+}
+
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const char* name) : 
     Component(Component::Type::Mesh, gameObject), Vertices(vertices), Indices(indices), name(name)
 {
@@ -29,6 +35,23 @@ Mesh::~Mesh()
     Vertices.clear();
     Indices.clear();
 }
+
+void Mesh::InitMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const char* name)
+{
+    Vertices = vertices;
+    Indices = indices;
+    this->name = name;
+
+    vao = vbo = ebo = 0;
+
+    numVertices = vertices.size();
+    numIndices = indices.size();
+    model = float4x4::identity;
+
+    setupMesh();
+    CalculateMinMax();
+}
+
 
 void Mesh::setupMesh()
 {

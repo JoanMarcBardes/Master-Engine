@@ -19,6 +19,11 @@ public:
 	void Load(const char* file_name);	
 	void DrawMeshes(const unsigned program);
 
+	void Import(const char* dir, const char* name);
+	void ImportNode(aiNode* node, const aiScene* scene, std::string name);
+	void Load(const char* dir, const char* name, unsigned int type);
+
+
 	const std::vector<Mesh*> GetMeshes() { return meshesList; }
 	const std::vector<unsigned int> GetTexturesIds() { return texturesList; };
 	void SetTexture(unsigned int textureId);
@@ -28,7 +33,7 @@ private:
 	std::vector<unsigned int> texturesList;
 	std::vector<Mesh*> meshesList;
 	std::vector<std::string> pathList;
-	std::vector<std::string> typeIdList;
+	std::vector<unsigned int> typeIdList;
 	std::string directory;
 	std::string directoryTexture = "Textures/";
 	float3 min;
@@ -46,6 +51,6 @@ private:
 	Material* LoadMaterials(const aiMaterial* material);
 
 	void CalculateVolumeCenter();
-	std::string GetTypeId(aiTextureType textureType);
+	unsigned int GetTypeId(aiTextureType textureType);
 };
 
