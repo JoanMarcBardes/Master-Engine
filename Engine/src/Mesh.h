@@ -26,6 +26,7 @@ public:
     const float4x4 GetModel() { return model; }
     const float3 GetMin() { return min; }
     const float3 GetMax() { return max; }
+    const AABB GetBoundingBox() { return boundingbox; };
     static Type GetType() { return Type::Mesh; };
 
 private:
@@ -36,7 +37,7 @@ private:
     const char* name;
     float4x4 model = float4x4::identity;
 
-    AABB boundigbox;
+    AABB boundingbox;
 
     float3 min;
     float3 max;
