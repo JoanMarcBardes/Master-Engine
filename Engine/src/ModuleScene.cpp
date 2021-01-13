@@ -32,6 +32,7 @@ update_status ModuleScene::Update()
 GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent)
 {
 	GameObject* newGameObject = new GameObject(parent ? parent : root, name);
+	newGameObject->UpdateBoundingBox();
 	return newGameObject;
 }
 

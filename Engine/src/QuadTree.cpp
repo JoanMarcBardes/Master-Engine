@@ -20,19 +20,9 @@ QuadtreeNode::~QuadtreeNode()
 
 void QuadtreeNode::Insert(GameObject* go)
 {
-	Component* meshComp = go->GetComponent(Component::Type::Mesh);
-	Mesh* mesh = nullptr;
-
-	if (meshComp != nullptr) {
-		mesh = (Mesh*)meshComp;
-	}
-	else
-		return;
-
 	if (IsLeaf()) {
-		if (mesh->GetBoundingBox().Intersects(boundingbox)) {
+		if (go->bounding_box.Intersects(boundingbox)) {
 			if (objects.size() < MAX_ITEMS) {
-
 				objects.push_back(go);
 
 			}
@@ -42,8 +32,9 @@ void QuadtreeNode::Insert(GameObject* go)
 
 				unsigned int boxes_intersection = 0;
 				for (int i = 0; i < 4; ++i) {
-					if (childs[i]->boundingbox.Intersects(mesh->GetBoundingBox()))
+					if (childs[i]->boundingbox.Intersects(go->bounding_box)) {
 						boxes_intersection++;
+					}
 				}
 
 				if (boxes_intersection > 1) {
@@ -56,7 +47,7 @@ void QuadtreeNode::Insert(GameObject* go)
 			}
 		}
 	}
-	else if (mesh != nullptr){
+	else {
 		for (int i = 0; i < 4; ++i)
 			childs[i]->Insert(go);
 	}
@@ -107,19 +98,10 @@ void QuadtreeNode::RedistributeChildren()
 
 		GameObject* go = *it;
 
-		Component* meshComp = go->GetComponent(Component::Type::Mesh);
-		Mesh* mesh = nullptr;
-
-		if (meshComp != nullptr) {
-			mesh = (Mesh*)meshComp;
-		}
-		else
-			return;
-
 		unsigned int boxes_intersection = 0;
 		bool intersects[4];
 		for (int i = 0; i < 4; ++i) {
-			intersects[i] = childs[i]-> boundingbox.Intersects(mesh->GetBoundingBox());
+			intersects[i] = childs[i]-> boundingbox.Intersects((*it)->bounding_box);
 			if (intersects[i])
 				boxes_intersection++;
 		}

@@ -47,12 +47,17 @@ public:
 
 	void OnUpdateTransform();
 
+	void UpdateBoundingBox();
+
+
 private:
 	bool ContainsType(Component::Type type); // GameObject only can contains one component of the same type
 
 public:
 	std::string name;
 	GameObject* parent = nullptr;
+	math::AABB bounding_box;
+	math::OBB obb;
 
 private:
 	unsigned id = 0;

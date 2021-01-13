@@ -231,8 +231,36 @@ void GameObject::OnUpdateTransform()
 		parentTransform = parent->transform->GetTransformGlobal();
 	transform->OnUpdateTransform(parentTransform);
 
+	UpdateBoundingBox();
+
 	for each (GameObject * child in childs)
 	{
 		child->OnUpdateTransform();
 	}
+}
+
+void GameObject::UpdateBoundingBox() {
+
+	bounding_box.SetNegativeInfinity();
+
+	Mesh* mesh = (Mesh*)GetComponent(Component::Type::Mesh);
+
+	if (mesh) {
+		bounding_box.Enclose(mesh->GetMin(), mesh->GetMax());
+	}
+
+	if (transform && mesh) {
+
+		obb.SetFrom(bounding_box);
+		obb.Transform(transform->GetTransformGlobal());
+		if (obb.IsFinite()) {
+			bounding_box = obb.MinimalEnclosingAABB();
+		}
+	}
+
+	for (int i = 0; i < childs.size(); ++i) {
+
+		childs[i]->UpdateBoundingBox();
+	}
+
 }
