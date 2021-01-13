@@ -8,6 +8,7 @@
 #include "ModuleInput.h"
 #include "Mesh.h"
 #include "ModuleScene.h"
+#include "ModuleTexture.h"
 #include "Material.h"
 #include "Time.h"
 #include "SDL.h"
@@ -723,25 +724,56 @@ void ModuleEditor::WindowInspector(bool* p_open)
 		if (material && ImGui::CollapsingHeader("Material"))
 		{
 			ImGui::Text("Texture");
-			std::vector<std::string> paths = material->GetPaths();
-			for (int i = 0; i < paths.size(); ++i)
-			{
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", paths[i].c_str());
-			}
+			//std::vector<std::string> paths = material->GetPaths();
+			//std::vector<unsigned int> typesId = material->GetTypesId();
+			//std::vector<unsigned int> textures = material->GetTextures();
 
-			std::vector<unsigned int> textures = material->GetTextures();
+			char* nameType;
 			float my_tex_w = 150;
 			float my_tex_h = 150;
-			for (int j = 0; j < textures.size(); ++j)
+			std::string basePath = App->input->GetBasePath() + "Textures\\";
+
+			for (int i = 0; i < 2; ++i)
 			{
-				if (j != 0) ImGui::SameLine();
-				ImVec2 pos = ImGui::GetCursorScreenPos();
-				ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
-				ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
-				ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
-				ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
-				ImGui::Image((ImTextureID)textures[j], ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
+				switch (i)
+				{
+				case 0: nameType = "Diffuse"; break;
+				case 1: nameType = "Specular"; break;
+				}
+				unsigned int texture;
+				std::string paths;
+				bool exist = material->GetTexture(i, texture, paths);
+
+				//ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", nameType);
+				//ImGui::SameLine();
+				char path[150];
+				strcpy_s(path, 150, paths.c_str());
+				if(ImGui::InputText(nameType, path, IM_ARRAYSIZE(path), ImGuiInputTextFlags_EnterReturnsTrue))
+				{
+					paths = basePath + path;
+					unsigned int newTextureId = App->texture->Load(paths.c_str());
+					if(newTextureId != -1)
+						App->model->SetTexture(newTextureId, path);
+					else
+					{
+						std::string l = "[error] Don't find texture: " + std::string(path);
+						LOG(l.c_str());
+					}
+				}
+				ImGui::SameLine(); HelpMarker(basePath.c_str());
+
+
+				if (exist)
+				{
+					ImVec2 pos = ImGui::GetCursorScreenPos();
+					ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
+					ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
+					ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
+					ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
+					ImGui::Image((ImTextureID)texture, ImVec2(my_tex_w, my_tex_h), uv_min, uv_max, tint_col, border_col);
+				}				
 			}
+
 		}
 
 		Camera* camera = selected->GetComponent<Camera>();

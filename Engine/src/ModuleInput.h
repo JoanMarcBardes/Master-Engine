@@ -40,6 +40,8 @@ public:
 
 	void SetImGuiOn(bool b) { imgUiOn = b; };
 
+	const std::string GetBasePath() const { return basePath; }
+
 private:
 	KeyState* keyboard;
 	KeyState  mouse_buttons[NUM_MOUSE_BUTTONS];
@@ -51,4 +53,5 @@ private:
 	bool imgUiOn = false;
 
 	std::string _currentDir;
+	std::string basePath;
 };

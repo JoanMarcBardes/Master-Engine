@@ -25,6 +25,8 @@ public:
 
 	void AddLog(const char* fmt, ...);	
 
+	GameObject* GetSelectedGameObject() { return selected; }
+
 private:
 	ImVector<char*> Items;
 	/*std::vector<int> fpsLog;

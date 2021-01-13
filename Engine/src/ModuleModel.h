@@ -21,14 +21,15 @@ public:
 
 	const std::vector<Mesh*> GetMeshes() { return meshesList; }
 	const std::vector<unsigned int> GetTexturesIds() { return texturesList; };
-	void SetTexture(unsigned int textureId);
+	//void SetTexture(unsigned int textureId);
+	void SetTexture(unsigned int textureId, std::string path, unsigned int newtypeId = 0);
 
 private:
 	std::vector<aiTextureType> textureTypesList;
 	std::vector<unsigned int> texturesList;
 	std::vector<Mesh*> meshesList;
 	std::vector<std::string> pathList;
-	std::vector<std::string> typeIdList;
+	std::vector<unsigned int> typeIdList;
 	std::string directory;
 	std::string directoryTexture = "Textures/";
 	float3 min;
@@ -46,6 +47,6 @@ private:
 	Material* LoadMaterials(const aiMaterial* material);
 
 	void CalculateVolumeCenter();
-	std::string GetTypeId(aiTextureType textureType);
+	unsigned int GetTypeId(aiTextureType textureType);
 };
 

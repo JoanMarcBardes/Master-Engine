@@ -234,3 +234,14 @@ void GameObject::OnUpdateTransform()
 		child->OnUpdateTransform();
 	}
 }
+
+unsigned int  GameObject::SetTexture(unsigned int textureId, std::string path, unsigned int newtypeId)
+{
+	Material* material = GetComponent< Material>();
+	unsigned int toRemove = -1;
+
+	if (material)
+		toRemove = material->SetTexture(textureId, path, newtypeId);
+
+	return toRemove;
+}

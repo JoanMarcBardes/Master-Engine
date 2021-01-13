@@ -4,6 +4,7 @@
 #include "ModuleTexture.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleScene.h"
+#include "ModuleEditor.h"
 #include "Libraries/Assimp/include/assimp/cimport.h"
 #include "Libraries/Assimp/include/assimp/postprocess.h"
 #include "Mesh.h"
@@ -168,7 +169,7 @@ Material* ModuleModel::LoadMaterials(const aiMaterial* material)
 
     std::vector<unsigned int> newTextures;
     std::vector<std::string> newPath;
-    std::vector<std::string> newTypeId;
+    std::vector<unsigned int> newTypeId;
 
     aiMaterialProperty** matPro = material->mProperties;
 
@@ -251,13 +252,28 @@ void ModuleModel::DrawMeshes(const unsigned program)
 }
 
 
-void ModuleModel::SetTexture(unsigned int textureId)
+/*void ModuleModel::SetTexture(unsigned int textureId)
 {
     for (unsigned i = 0; i < texturesList.size(); ++i) {
         App->texture->DeleteTexture(texturesList[i]);
     }
     texturesList.clear();
     texturesList.push_back(textureId);
+}*/
+
+void ModuleModel::SetTexture(unsigned int textureId, std::string path, unsigned int newtypeId)
+{
+    GameObject* go = App->editor->GetSelectedGameObject();
+    if (go != nullptr)
+    {
+        LOG(go->name.c_str());
+        unsigned toRemove = go->SetTexture(textureId, path, newtypeId);
+        App->texture->DeleteTexture(toRemove);
+    }    
+    else
+    {
+        LOG("nullptr go");
+    }
 }
 
 void ModuleModel::CalculateVolumeCenter()
@@ -299,19 +315,16 @@ void ModuleModel::CalculateVolumeCenter()
     //App->editorCamera->AdaptSizeGeometry(volume);
 }
 
-std::string ModuleModel::GetTypeId(aiTextureType textureType)
+unsigned int ModuleModel::GetTypeId(aiTextureType textureType)
 {
-    std::string typeId = "";
+    unsigned int typeId = -1;
     switch (textureType)
     {
     case aiTextureType_DIFFUSE:
-        typeId = "diffuse_map";
+        typeId = 0;
         break;
     case aiTextureType_SPECULAR:
-        typeId = "specular_map";
-        break;
-    default:
-        typeId = "NullType";
+        typeId = 1;
         break;
     }
     return typeId;
