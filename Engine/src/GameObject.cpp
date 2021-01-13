@@ -205,15 +205,13 @@ void GameObject::Draw(unsigned program)
 	{		
 		transform->Draw(program);
 
-		Mesh* mesh = GetComponent<Mesh>();
-		if(mesh)
-			mesh->Draw();
-
 		Material* material = GetComponent< Material>();
 		if (material)
-		{
 			material->Draw(program);
-		}
+
+		Mesh* mesh = GetComponent<Mesh>();
+		if (mesh)
+			mesh->Draw();
 
 		// Draw the childs
 		std::vector<GameObject*> childs = GetChilds();

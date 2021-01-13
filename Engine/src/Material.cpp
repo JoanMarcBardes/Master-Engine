@@ -33,14 +33,14 @@ void Material::Draw(const unsigned program)
         }
         else LOG("[error] material draw unknown type");
 
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
         glActiveTexture(GL_TEXTURE0 + i);
         glUniform1i(glGetUniformLocation(program, typeId[i].c_str()), i);
-        glBindTexture(GL_TEXTURE_2D, textures[i]);
     }
     //glUniform1i(glGetUniformLocation(program, "has_diffuse_map"), has_diffuse);
     //glUniform1i(glGetUniformLocation(program, "has_specular_map"), has_specular);
     //glUniform1i(glGetUniformLocation(program, "shininess_alpha"), shininess_alpha);
 
-
     glActiveTexture(GL_TEXTURE0);
+
 }
