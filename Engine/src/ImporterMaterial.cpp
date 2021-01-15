@@ -112,7 +112,7 @@ unsigned int ImporterMaterial::Save(const Material* ourMaterial, char** fileBuff
 
 void ImporterMaterial::Load(const char* fileBuffer, Material* ourMaterial)
 {
-    const char* cursor = fileBuffer;
+    /*const char* cursor = fileBuffer;
 
     unsigned int numTextures = 0;
     unsigned int bytes = sizeof(unsigned int);
@@ -142,5 +142,5 @@ void ImporterMaterial::Load(const char* fileBuffer, Material* ourMaterial)
         unsigned int texture = 0;// App->texture->Load(path);
 
         ourMaterial->AddTexturePath(texture, path, typeId);
-    }
+    }*/
 }

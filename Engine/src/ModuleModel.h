@@ -26,7 +26,8 @@ public:
 
 	const std::vector<Mesh*> GetMeshes() { return meshesList; }
 	const std::vector<unsigned int> GetTexturesIds() { return texturesList; };
-	void SetTexture(unsigned int textureId);
+	//void SetTexture(unsigned int textureId);
+	void SetTexture(unsigned int textureId, std::string path, unsigned int newtypeId = 0);
 
 private:
 	std::vector<aiTextureType> textureTypesList;

@@ -46,6 +46,7 @@ public:
 	void Draw(unsigned program);
 
 	void OnUpdateTransform();
+	unsigned int  SetTexture(unsigned int textureId, std::string path, unsigned int newtypeId);
 
 private:
 	bool ContainsType(Component::Type type); // GameObject only can contains one component of the same type

@@ -6,7 +6,7 @@
 class ImporterMesh
 {
 public:
-	void Import(const aiMesh* mesh, Mesh* ourMesh);
+	Mesh* Import(const aiMesh* mesh);
 	unsigned int Save(const Mesh* ourMesh, char** fileBuffer);
 	void Load(const char* fileBuffer, Mesh* ourMesh);
 

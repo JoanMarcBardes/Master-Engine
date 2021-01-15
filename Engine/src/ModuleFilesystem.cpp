@@ -32,7 +32,7 @@ bool ModuleFilesystem::Init()
     GetAllFilesWithExtension((basePath + "Library\\").c_str(), ".meta", fileList, dirList);
     for (unsigned i = 0; i < dirList.size(); ++i)
     {
-        App->model->Load(dirList[i].c_str(), fileList[i].c_str());
+        App->model->Load(dirList[i].c_str(), fileList[i].c_str(), i);
     }
 
     //Save();

@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 
-void ImporterMesh::Import(const aiMesh* mesh, Mesh* ourMesh)
+Mesh* ImporterMesh::Import(const aiMesh* mesh)
 {
     //Vertices
     std::vector<Mesh::Vertex> vertices;
@@ -46,7 +46,7 @@ void ImporterMesh::Import(const aiMesh* mesh, Mesh* ourMesh)
             indices.push_back(face.mIndices[j]);
     }
 
-    ourMesh = new Mesh(vertices, indices, mesh->mName.C_Str());
+    return new Mesh(vertices, indices, mesh->mName.C_Str());
 }
 
 unsigned int ImporterMesh::Save(const Mesh* ourMesh, char** fileBuffer)

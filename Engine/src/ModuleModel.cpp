@@ -4,6 +4,7 @@
 #include "ModuleTexture.h"
 #include "ModuleEditorCamera.h"
 #include "ModuleScene.h"
+#include "ModuleEditor.h"
 #include "Libraries/Assimp/include/assimp/cimport.h"
 #include "Libraries/Assimp/include/assimp/postprocess.h"
 #include "Mesh.h"
@@ -256,13 +257,28 @@ void ModuleModel::DrawMeshes(const unsigned program)
 }
 
 
-void ModuleModel::SetTexture(unsigned int textureId)
+/*void ModuleModel::SetTexture(unsigned int textureId)
 {
     for (unsigned i = 0; i < texturesList.size(); ++i) {
         App->texture->DeleteTexture(texturesList[i]);
     }
     texturesList.clear();
     texturesList.push_back(textureId);
+}*/
+
+void ModuleModel::SetTexture(unsigned int textureId, std::string path, unsigned int newtypeId)
+{
+    GameObject* go = App->editor->GetSelectedGameObject();
+    if (go != nullptr)
+    {
+        LOG(go->name.c_str());
+        unsigned toRemove = go->SetTexture(textureId, path, newtypeId);
+        App->texture->DeleteTexture(toRemove);
+    }    
+    else
+    {
+        LOG("nullptr go");
+    }
 }
 
 void ModuleModel::CalculateVolumeCenter()
@@ -352,9 +368,8 @@ void ModuleModel::ImportNode(aiNode* node, const aiScene* scene, string name)
         /*Mesh* newMesh = CreateMesh(mesh, scene);
         child->AddComponent(newMesh);
         meshesList.push_back(newMesh);*/
-        Mesh* newMesh = new Mesh();
         ImporterMesh* importMesh = new ImporterMesh();
-        importMesh->Import(mesh, newMesh);
+        Mesh* newMesh = importMesh->Import(mesh);
 
         char* buffer;
         unsigned int size = importMesh->Save(newMesh, &buffer);
@@ -367,8 +382,7 @@ void ModuleModel::ImportNode(aiNode* node, const aiScene* scene, string name)
         ImporterMaterial* importMat = new ImporterMaterial();
         importMat->Import(scene->mMaterials[mesh->mMaterialIndex], material);
 
-        char* buffer;
-        unsigned int size = importMat->Save(material, &buffer);
+        size = importMat->Save(material, &buffer);
         App->filesystem->Save((name + std::to_string(i)).c_str(), buffer, size);
     }
     // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
@@ -383,24 +397,20 @@ void ModuleModel::Load(const char* dir, const char* name, unsigned int type)
 {
     char* buffer;
     App->filesystem->Load(dir, name, &buffer);
+    LOG((string("LOAD ") + name).c_str());
 
-    switch (type)
+    if (type == 0)
     {
-    case 0:
         Mesh* mesh = new Mesh();
         ImporterMesh* importMesh = new ImporterMesh();
         importMesh->Load(buffer, mesh);
-        break;
-    case 1:
+    }
+    else
+    {
         Material * material = new Material();
         ImporterMaterial* importMat = new ImporterMaterial();
-        importMat->Load(buffer, material);
-        break;
+        importMat->Load(buffer, material);    
     }
 
-    Material* material = new Material();
-    ImporterMaterial* importMat = new ImporterMaterial();
-    importMat->Load(buffer, material);
-
-    LOG( (string("LOAD ") + name).c_str() );
+    
 }

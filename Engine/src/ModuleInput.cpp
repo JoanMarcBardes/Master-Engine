@@ -64,6 +64,8 @@ bool ModuleInput::Init()
 	// Current directory
 	_currentDir = get_current_dir() + "\\";
 	ReplaceSlash(_currentDir);
+	basePath = SDL_GetBasePath();
+
 	return ret;
 }
 
@@ -153,7 +155,7 @@ update_status ModuleInput::PreUpdate()
 				else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length() || s.find(".tga") < s.length())
 				{
 					LOG(("Loading texture " + s).c_str());
-					App->model->SetTexture( App->texture->Load(s.c_str()) );
+					App->model->SetTexture( App->texture->Load(s.c_str()), s.c_str());
 				}
 				else
 				{

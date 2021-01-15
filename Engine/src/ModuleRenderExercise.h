@@ -35,6 +35,11 @@ public:
 	int GetHasDiffuseMap() { return has_diffuse_map; }
 	int GetHasSpecularMap() { return has_specular_map; }
 	int GetShininessApha() { return shininess_alpha; }
+  
+	unsigned int GetRenderText() {
+		RenderToTexture();
+		return renderedTexture;
+	}
 
 	// set
 	void SetEnableDepthTest(const bool EnableDepthTest) { enableDepthTest = EnableDepthTest; SetGlEnable(enableDepthTest, GL_DEPTH_TEST); }
@@ -72,6 +77,9 @@ private:
 	int has_diffuse_map = 1;
 	int has_specular_map = 1;
 	int shininess_alpha = 1;
+  
+	unsigned int renderedTexture;
+	unsigned int depthrenderbuffer;
 
 
 	void CreateTriangleVBO();
@@ -82,5 +90,7 @@ private:
 	void DrawTriangle(const float4x4& proj, const float4x4& view);
 	void DrawQuad(const float4x4& proj, const float4x4& view);
 	void DrawMesh(const float4x4& proj, const float4x4& view, const float4x4& model);
+	void DropFile();
+	void RenderToTexture();
 };
 
