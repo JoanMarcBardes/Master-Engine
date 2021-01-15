@@ -1,3 +1,5 @@
+#include "Application.h"
+#include "ModuleScene.h"
 #include "GameObject.h"
 #include "Mesh.h"
 #include "Material.h"
@@ -214,6 +216,7 @@ void GameObject::Draw(unsigned program)
 			mesh->Draw();
 
 		// Draw the childs
+
 		std::vector<GameObject*> childs = GetChilds();
 		for each (GameObject* child in childs)
 		{

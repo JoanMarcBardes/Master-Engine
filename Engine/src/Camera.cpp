@@ -1,5 +1,7 @@
 #include "Camera.h"
 #include "SDL.h"
+#include "Application.h"
+#include "ModuleScene.h"
 
 Camera::Camera(GameObject* ownerGameObject) :
 	Component(Component::Type::Camera, ownerGameObject)
@@ -35,6 +37,7 @@ void Camera::UpadateCamera()
 {
 	frustum.SetViewPlaneDistances(nearPlane, farPlane);
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
+
 }
 
 void Camera::Rotate(const float3x3& rotationMatrix)

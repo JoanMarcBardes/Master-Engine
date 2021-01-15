@@ -102,8 +102,9 @@ void QuadtreeNode::RedistributeChildren()
 		bool intersects[4];
 		for (int i = 0; i < 4; ++i) {
 			intersects[i] = childs[i]-> boundingbox.Intersects((*it)->bounding_box);
-			if (intersects[i])
+			if (intersects[i]) {
 				boxes_intersection++;
+			}
 		}
 
 		if (boxes_intersection > 1) {
@@ -112,8 +113,9 @@ void QuadtreeNode::RedistributeChildren()
 		else {
 			it = objects.erase(it);
 			for (int i = 0; i < 4; ++i)
-				if (intersects[i])
+				if (intersects[i]) {
 					childs[i]->objects.push_back(go);
+				}
 		}
 	}
 }
