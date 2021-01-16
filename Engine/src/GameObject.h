@@ -47,6 +47,7 @@ public:
 	void DrawBoundingBox();
 
 	void OnUpdateTransform();
+	unsigned int  SetTexture(unsigned int textureId, std::string path, unsigned int newtypeId);
 
 	void UpdateBoundingBox();
 

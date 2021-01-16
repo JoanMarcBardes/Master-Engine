@@ -218,7 +218,6 @@ void GameObject::Draw(unsigned program)
 		if (mesh)
 			mesh->Draw();
 
-		
 		// Draw the childs
 
 		std::vector<GameObject*> childs = GetChilds();
@@ -301,4 +300,15 @@ void GameObject::UpdateBoundingBox() {
 		childs[i]->UpdateBoundingBox();
 	}
 
+}
+
+unsigned int  GameObject::SetTexture(unsigned int textureId, std::string path, unsigned int newtypeId)
+{
+	Material* material = GetComponent< Material>();
+	unsigned int toRemove = -1;
+
+	if (material)
+		toRemove = material->SetTexture(textureId, path, newtypeId);
+
+	return toRemove;
 }
