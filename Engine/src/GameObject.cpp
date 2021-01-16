@@ -1,7 +1,11 @@
+#include "Application.h"
+#include "ModuleScene.h"
 #include "GameObject.h"
+#include "Camera.h"
 #include "Mesh.h"
 #include "Material.h"
 #include "Globals.h"
+#include "GL/glew.h"
 
 LCG randomID;
 
@@ -95,6 +99,7 @@ void GameObject::AddComponent(Component* component)
 	{
 		transform = (Transform*)component;
 	}
+	UpdateBoundingBox();
 }
 
 Component* GameObject::GetComponent(Component::Type type)
@@ -214,12 +219,31 @@ void GameObject::Draw(unsigned program)
 			mesh->Draw();
 
 		// Draw the childs
+
 		std::vector<GameObject*> childs = GetChilds();
 		for each (GameObject* child in childs)
 		{
 			child->Draw(program);
 		}
 	}
+	DrawBoundingBox();
+}
+
+void GameObject::DrawBoundingBox()
+{
+	if (active) {
+		glBegin(GL_LINES);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+		for (int i = 0; i < bounding_box.NumEdges(); i++)
+		{
+			glVertex3f(bounding_box.Edge(i).a.x, bounding_box.Edge(i).a.y, bounding_box.Edge(i).a.z);
+			glVertex3f(bounding_box.Edge(i).b.x, bounding_box.Edge(i).b.y, bounding_box.Edge(i).b.z);
+		}
+		glEnd();
+		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+	}
+
 }
 
 void GameObject::OnUpdateTransform()
@@ -229,10 +253,53 @@ void GameObject::OnUpdateTransform()
 		parentTransform = parent->transform->GetTransformGlobal();
 	transform->OnUpdateTransform(parentTransform);
 
+	UpdateBoundingBox();
+
+	Camera* cullCam = (Camera*)this->GetComponent(Component::Type::Camera);
+	if (cullCam && cullCam->cullingCam) {
+		cullCam->CameraCulling();
+	}
+
 	for each (GameObject * child in childs)
 	{
 		child->OnUpdateTransform();
 	}
+}
+
+void GameObject::UpdateBoundingBox() {
+
+	bounding_box.SetNegativeInfinity();
+
+	Mesh* mesh = (Mesh*)GetComponent(Component::Type::Mesh);
+
+	if (mesh) {
+		bounding_box.Enclose(mesh->GetMin(), mesh->GetMax());
+	}
+	else {
+		for (int i = 0; i < childs.size(); ++i) {
+
+			mesh = (Mesh*)childs[i]->GetComponent(Component::Type::Mesh);
+			if (mesh) {
+				bounding_box.Enclose(mesh->GetMin(), mesh->GetMax());
+				break;
+			}
+		}
+	}
+
+	if (transform && mesh) {
+
+		obb.SetFrom(bounding_box);
+		obb.Transform(transform->GetTransformGlobal());
+		if (obb.IsFinite()) {
+			bounding_box = obb.MinimalEnclosingAABB();
+		}
+	}
+
+	for (int i = 0; i < childs.size(); ++i) {
+
+		childs[i]->UpdateBoundingBox();
+	}
+
 }
 
 unsigned int  GameObject::SetTexture(unsigned int textureId, std::string path, unsigned int newtypeId)

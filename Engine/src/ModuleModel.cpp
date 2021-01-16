@@ -109,7 +109,7 @@ void ModuleModel::processNode(aiNode* node, const aiScene* scene, GameObject* pa
     {
         processNode(node->mChildren[i], scene, parent);
     }
-
+    App->scene->BuildQuadtree();
 }
 
 Mesh* ModuleModel::CreateMesh(const aiMesh* mesh, const aiScene* scene)

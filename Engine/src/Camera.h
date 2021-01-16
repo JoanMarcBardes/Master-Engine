@@ -14,6 +14,8 @@ public:
 
 	void WindowResized(unsigned width, unsigned height);
 
+	void CameraCulling();
+
 	const float4x4 GetProjection() { return frustum.ProjectionMatrix(); }
 	const float4x4 GetViewMatrix() { return frustum.ViewMatrix(); }
 	const float3   GetPosition()   { return frustum.Pos(); }
@@ -28,6 +30,7 @@ public:
 	float farPlane = 200.0f;
 	float fov = 90;
 	float aspectRatio = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
+	bool cullingCam = false;
 
 private:
 	bool active = false;
