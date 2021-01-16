@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "GameObject.h"
+#include "Camera.h"
 #include "Mesh.h"
 #include "Material.h"
 #include "Globals.h"
@@ -231,16 +232,18 @@ void GameObject::Draw(unsigned program)
 
 void GameObject::DrawBoundingBox()
 {
-	glBegin(GL_LINES);
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+	if (active) {
+		glBegin(GL_LINES);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	for (int i = 0; i < bounding_box.NumEdges(); i++)
-	{
-		glVertex3f(bounding_box.Edge(i).a.x, bounding_box.Edge(i).a.y, bounding_box.Edge(i).a.z);
-		glVertex3f(bounding_box.Edge(i).b.x, bounding_box.Edge(i).b.y, bounding_box.Edge(i).b.z);
+		for (int i = 0; i < bounding_box.NumEdges(); i++)
+		{
+			glVertex3f(bounding_box.Edge(i).a.x, bounding_box.Edge(i).a.y, bounding_box.Edge(i).a.z);
+			glVertex3f(bounding_box.Edge(i).b.x, bounding_box.Edge(i).b.y, bounding_box.Edge(i).b.z);
+		}
+		glEnd();
+		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 	}
-	glEnd();
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 
 }
 
@@ -252,6 +255,11 @@ void GameObject::OnUpdateTransform()
 	transform->OnUpdateTransform(parentTransform);
 
 	UpdateBoundingBox();
+
+	Camera* cullCam = (Camera*)this->GetComponent(Component::Type::Camera);
+	if (cullCam && cullCam->cullingCam) {
+		cullCam->CameraCulling();
+	}
 
 	for each (GameObject * child in childs)
 	{
@@ -267,6 +275,16 @@ void GameObject::UpdateBoundingBox() {
 
 	if (mesh) {
 		bounding_box.Enclose(mesh->GetMin(), mesh->GetMax());
+	}
+	else {
+		for (int i = 0; i < childs.size(); ++i) {
+
+			mesh = (Mesh*)childs[i]->GetComponent(Component::Type::Mesh);
+			if (mesh) {
+				bounding_box.Enclose(mesh->GetMin(), mesh->GetMax());
+				break;
+			}
+		}
 	}
 
 	if (transform && mesh) {

@@ -16,6 +16,8 @@ bool ModuleScene::Init()
 {
 	GameObject* cullingCamera = new GameObject(root, "CullingCamera");
 	cullingCamera->AddComponent(new Camera(nullptr));
+	Camera* cullCam = (Camera*)cullingCamera->GetComponent(Component::Type::Camera);
+	cullCam->cullingCam = true;
 
 	App->editorCamera->AddCamera(mainCamera->GetComponent<Camera>(), true);
 	App->editorCamera->AddCamera(cullingCamera->GetComponent<Camera>());

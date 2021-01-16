@@ -76,7 +76,9 @@ inline void QuadtreeNode::Intersects(std::vector<GameObject*>& objects, const TY
 
 		}
 		for (int i = 0; i < 4; ++i) {
-			if (childs[i] != nullptr) childs[i]->Intersect(objects, primitive);
+			if (childs[i] != nullptr) {
+				childs[i]->Intersects(objects, primitive);
+			}
 		}
 
 	}

@@ -2,6 +2,8 @@
 #include "SDL.h"
 #include "Application.h"
 #include "ModuleScene.h"
+#include "GameObject.h"
+#include <vector>
 
 Camera::Camera(GameObject* ownerGameObject) :
 	Component(Component::Type::Camera, ownerGameObject)
@@ -24,6 +26,22 @@ void Camera::WindowResized(unsigned width, unsigned height)
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
 }
 
+void Camera::CameraCulling()
+{
+	std::vector<GameObject*> obj_to_cull;
+	std::vector<GameObject*> st_obj = App->scene->GetGameObjects();
+
+	//All static objects not culling
+	for (int i = 0; i < st_obj.size(); ++i)
+		st_obj[i]->SetActive(false);
+
+	App->scene->quadtree->Intersects(obj_to_cull, frustum);
+
+	//Only cull objects provided by the quadtree
+	for (int i = 0; i < obj_to_cull.size(); ++i)
+		obj_to_cull[i]->SetActive(true);
+
+}
 
 void Camera::ConstrainFOV()
 {
@@ -37,7 +55,6 @@ void Camera::UpadateCamera()
 {
 	frustum.SetViewPlaneDistances(nearPlane, farPlane);
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
-
 }
 
 void Camera::Rotate(const float3x3& rotationMatrix)

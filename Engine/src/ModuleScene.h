@@ -12,7 +12,6 @@ public:
 	bool Init() override;
 	update_status Update()override;
 
-
 	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr);
 
 	GameObject* GetRoot() { return root; }
@@ -22,6 +21,8 @@ public:
 	void Draw(unsigned program);
 
 	GameObject* FindGameObjectId(unsigned int id);
+
+	std::vector<GameObject*> GetGameObjects() { return gameObjects;};
 
 public:
 	QdTree* quadtree = nullptr;
