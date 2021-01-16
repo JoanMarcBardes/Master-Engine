@@ -10,7 +10,4 @@ public:
     void Draw(int w, int h);
 
 
-private:
-
-    void ClearLog();
 };

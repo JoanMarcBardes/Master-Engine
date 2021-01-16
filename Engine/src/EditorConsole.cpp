@@ -1,4 +1,7 @@
 #include "EditorConsole.h"
+#include "Application.h"
+#include "ModuleEditor.h"
+
 
 void EditorConsole::Draw(int w, int h)
 {
@@ -23,7 +26,7 @@ void EditorConsole::Draw(int w, int h)
 		return;
 	}
 
-	if (ImGui::SmallButton("Clear")) { ClearLog(); }
+	if (ImGui::SmallButton("Clear")) { App->editor->ClearLog(); };
 
 	ImGui::Separator();
 
@@ -55,11 +58,4 @@ void EditorConsole::Draw(int w, int h)
 	ImGui::EndChild();
 	ImGui::SetWindowSize(size);
 	ImGui::End();
-}
-
-void EditorConsole::ClearLog()
-{
-	for (int i = 0; i < Items.Size; i++)
-		free(Items[i]);
-	Items.clear();
 }
