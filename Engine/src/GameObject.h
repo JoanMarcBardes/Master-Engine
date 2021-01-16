@@ -44,6 +44,7 @@ public:
 	void RemoveChild(GameObject* gameObject);
 
 	void Draw(unsigned program);
+	void DrawBoundingBox();
 
 	void OnUpdateTransform();
 

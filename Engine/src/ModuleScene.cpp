@@ -34,6 +34,7 @@ GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent)
 {
 	GameObject* newGameObject = new GameObject(parent ? parent : root, name);
 	newGameObject->UpdateBoundingBox();
+	gameObjects.push_back(newGameObject);
 	return newGameObject;
 }
 
