@@ -147,6 +147,7 @@ void QdTree::Clear()
 void QdTree::Insert(GameObject* go) // enclose
 {
 	if (root)
+		go->UpdateBoundingBox();
 		root->Insert(go);
 }
 

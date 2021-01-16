@@ -98,6 +98,7 @@ void GameObject::AddComponent(Component* component)
 	{
 		transform = (Transform*)component;
 	}
+	UpdateBoundingBox();
 }
 
 Component* GameObject::GetComponent(Component::Type type)
@@ -231,7 +232,7 @@ void GameObject::Draw(unsigned program)
 void GameObject::DrawBoundingBox()
 {
 	glBegin(GL_LINES);
-	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 
 	for (int i = 0; i < bounding_box.NumEdges(); i++)
 	{
