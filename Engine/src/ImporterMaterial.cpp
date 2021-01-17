@@ -172,7 +172,7 @@ void ImporterMaterial::Load(const char* fileBuffer, Material* ourMaterial)
         memcpy(&sizePath, cursor, bytes);
         cursor += bytes;
 
-        char* path = new char[sizePath];
+        char* path = new char[sizePath +1];
         bytes = sizeof(char) * (sizePath +1);
         memcpy(path, cursor, bytes);
         cursor += bytes;
