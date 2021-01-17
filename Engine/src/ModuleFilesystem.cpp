@@ -23,7 +23,7 @@ bool ModuleFilesystem::Init()
 
     /*std::vector<std::string> fileList;
     std::vector<std::string> dirList;
-    GetAllFilesWithExtension((basePath + "Assets\\").c_str(), ".fbx", fileList, dirList);
+    GetAllFilesWithExtension((basePath + "Models\\").c_str(), ".fbx", fileList, dirList);
     for (unsigned i = 0; i < dirList.size(); ++i)
     {
         std::string name = fileList[i].substr(0, fileList[i].find_last_of('.'));
@@ -44,7 +44,7 @@ bool ModuleFilesystem::Init()
     for (unsigned i = 0; i < dirList.size(); ++i)
     {
         App->model->Load(dirList[i].c_str(), fileList[i].c_str(), 1);
-    }   */
+    }*/
 
     return true;
 }
@@ -150,7 +150,7 @@ unsigned int ModuleFilesystem::Load() const
 std::string ModuleFilesystem::Save(const char* file, const char* buffer, unsigned int size, bool append) const
 {
     std::ofstream fout;
-    std::string path = basePath + "Library\\" + file + ".meta";
+    std::string path = basePath + std::string("Library\\") + file + ".meta";
     fout.open(path.c_str(), std::ios::binary | std::ios::out);
 
     fout.write(buffer, size);
@@ -166,7 +166,7 @@ std::string ModuleFilesystem::Save(const char* file, const char* buffer, unsigne
 unsigned int ModuleFilesystem::Load(const char* path, const char* file, char** buffer) const
 {
     //std::ifstream infile((basePath + "Library\\" + file + ".meta").c_str(), std::ios::binary);
-    std::string s = std::string(path) + file;
+    std::string s = basePath + std::string(path) + file;
     std::ifstream infile(s.c_str(), std::ios::binary);
 
     //get length of file

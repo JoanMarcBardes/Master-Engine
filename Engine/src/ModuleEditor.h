@@ -61,7 +61,7 @@ private:
 	void TreeChilds(GameObject* parent);
 
 	GameObject* selected = nullptr;
-	bool isAddSpecular = true;
+	bool isAddSpecular = false;
 	void WindowInspector(bool* p_open);
 
 	void WindowPlayStopStep(bool* p_open);

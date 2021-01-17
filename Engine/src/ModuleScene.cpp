@@ -41,7 +41,7 @@ update_status ModuleScene::Update()
 		LOG("Pres L, Load MainScene");
 		char* buffer = nullptr;
 		App->filesystem->basePath;
-		App->filesystem->Load(App->filesystem->basePath.c_str(), "Library\\MainScene.meta", &buffer);
+		App->filesystem->Load("", "Library\\MainScene.meta", &buffer);
 		delete(root);
 		App->editor->SetSelectedGameObject(nullptr);
 		ImporterScene::Load(buffer, root);

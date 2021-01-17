@@ -274,6 +274,7 @@ void ModuleModel::SetTexture(unsigned int textureId, std::string path, unsigned 
     {
         Material* material2 = go->GetComponent< Material>();
         LOG(go->name.c_str());
+        path.erase(0, App->filesystem->basePath.size());
         unsigned toRemove = go->SetTexture(textureId, path, newtypeId);
         App->texture->DeleteTexture(toRemove);
 
@@ -281,6 +282,7 @@ void ModuleModel::SetTexture(unsigned int textureId, std::string path, unsigned 
         Material* material = go->GetComponent< Material>();
         unsigned size = importMat->Save(material, &buffer);
         std::string customPath = App->filesystem->Save(("Materials\\" + go->name).c_str(), buffer, size);
+        customPath.erase(0, App->filesystem->basePath.size());
         material->SetCustomPath(customPath);
     }    
     else
@@ -385,6 +387,7 @@ void ModuleModel::ImportNode(aiNode* node, const aiScene* scene, string name, Ga
         char* buffer;
         unsigned int size = importMesh->Save(newMesh, &buffer);
         std::string customPath = App->filesystem->Save(("Meshes\\" + name + std::to_string(i)).c_str(), buffer, size);
+        customPath.erase(0, App->filesystem->basePath.size());
         newMesh->SetCustomPath(customPath);
 
 
@@ -395,6 +398,7 @@ void ModuleModel::ImportNode(aiNode* node, const aiScene* scene, string name, Ga
 
         size = importMat->Save(material, &buffer);
         customPath = App->filesystem->Save(("Materials\\" + name + std::to_string(i)).c_str(), buffer, size);
+        customPath.erase(0, App->filesystem->basePath.size());
         material->SetCustomPath(customPath);
 
     }
