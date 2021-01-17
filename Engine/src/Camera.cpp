@@ -1,5 +1,9 @@
 #include "Camera.h"
 #include "SDL.h"
+#include "Application.h"
+#include "ModuleScene.h"
+#include "GameObject.h"
+#include <vector>
 
 Camera::Camera(GameObject* ownerGameObject) :
 	Component(Component::Type::Camera, ownerGameObject)
@@ -22,6 +26,22 @@ void Camera::WindowResized(unsigned width, unsigned height)
 	frustum.SetHorizontalFovAndAspectRatio(DEGTORAD * fov, aspectRatio);
 }
 
+void Camera::CameraCulling()
+{
+	std::vector<GameObject*> obj_to_cull;
+	std::vector<GameObject*> st_obj = App->scene->GetGameObjects();
+
+	//All static objects not culling
+	for (int i = 0; i < st_obj.size(); ++i)
+		st_obj[i]->SetActive(false);
+
+	App->scene->quadtree->Intersects(obj_to_cull, frustum);
+
+	//Only cull objects provided by the quadtree
+	for (int i = 0; i < obj_to_cull.size(); ++i)
+		obj_to_cull[i]->SetActive(true);
+
+}
 
 void Camera::ConstrainFOV()
 {
@@ -106,14 +126,19 @@ void Camera::Focus()
 }
 
 void Camera::Orbit(float speedOrbit, iPoint mouse)
-{
+{/*
 	frustum.Translate(frustum.WorldRight() * -mouse.x * speedOrbit * deltaTime);
 	frustum.SetPos(frustum.Pos());
 
 	frustum.Translate(frustum.Front() * mouse.y * speedOrbit * deltaTime);
 	frustum.SetPos(frustum.Pos());
 		
-	frustum.SetPos(float3(frustum.Pos().x, frustum.Pos().y + mouse.y * speedOrbit * deltaTime, frustum.Pos().z));
+	frustum.SetPos(float3(frustum.Pos().x, frustum.Pos().y + mouse.y * speedOrbit * deltaTime, frustum.Pos().z));*/
+
+	double rotatedX = (math::Cos(speedOrbit * DEGTORAD) * frustum.Pos().x) - (math::Sin(speedOrbit * DEGTORAD) * frustum.Pos().z);
+	double rotatedZ = (math::Sin(speedOrbit * DEGTORAD) * frustum.Pos().x) + (math::Cos(speedOrbit * DEGTORAD) * frustum.Pos().z);
+
+	frustum.SetPos({ (float)rotatedX, frustum.Pos().y , (float)rotatedZ });
 
 	LookAt(float3::zero);
 }

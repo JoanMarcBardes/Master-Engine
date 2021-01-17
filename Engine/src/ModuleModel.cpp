@@ -85,7 +85,6 @@ void ModuleModel::ImportNode(aiNode* node, const aiScene* scene, string name, Ga
         customPath.erase(0, App->filesystem->basePath.size());
         newMesh->SetCustomPath(customPath);
 
-
         Material* material = new Material();        
         importMat->SetDirectory(directory);
         importMat->Import(scene->mMaterials[mesh->mMaterialIndex], material);

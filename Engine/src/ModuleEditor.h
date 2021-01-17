@@ -24,6 +24,7 @@ public:
 	bool CleanUp() override;
 
 	void AddLog(const char* fmt, ...);	
+	void ClearLog();
 
 	GameObject* GetSelectedGameObject() { return selected; }
 	void SetSelectedGameObject(GameObject* newSelected) { selected = newSelected; }
@@ -48,7 +49,6 @@ private:
 	bool showWindowPlayStopStep = true;
 	bool showWindowViewport = true;
 
-	void ClearLog();
 	static char* Strdup(const char* s) { size_t len = strlen(s) + 1; void* buf = malloc(len); IM_ASSERT(buf); return (char*)memcpy(buf, (const void*)s, len); }
 	//void WindowConsole(bool* p_open);
 	//void WindowConfiguration(bool* p_open);

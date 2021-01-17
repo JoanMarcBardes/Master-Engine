@@ -833,6 +833,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 		ImGui::Text("Select a GameObject");
 	}
 
+
 	ImGui::SetWindowSize(size);
 	ImGui::End();
 }
@@ -865,3 +866,5 @@ void ModuleEditor::WindowPlayStopStep(bool* p_open)
 
 	ImGui::End();
 }
+
+

@@ -57,14 +57,19 @@ public:
 	GameObject* GetChild(const char* name) const;
 	unsigned GetNumChilds() const { return childs.size(); }
 	GameObject* FindGameObjectId(unsigned int id);
+	GameObject* GetParent() { return parent; };
 
 	void SetParent(GameObject* gameObject);
 	void RemoveChild(GameObject* gameObject);
 
 	void Draw(unsigned program);
+	void DrawBoundingBox();
 
 	void OnUpdateTransform();
 	unsigned int  SetTexture(unsigned int textureId, std::string path, unsigned int newtypeId);
+
+	void UpdateBoundingBox();
+
 
 private:
 	bool ContainsType(Component::Type type); // GameObject only can contains one component of the same type
@@ -72,6 +77,8 @@ private:
 public:
 	std::string name;
 	GameObject* parent = nullptr;
+	math::AABB bounding_box;
+	math::OBB obb;
 
 private:
 	unsigned id = 0;
