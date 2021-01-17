@@ -59,8 +59,6 @@ public:
 	void SetShininessApha(const int shininessAlpha) { shininess_alpha = shininessAlpha; }
 
 private:
-	unsigned _vboQuad = 0;
-	unsigned _vboTriangle = 0;
 	void* _context = nullptr;
 	unsigned _program = 0;
 	bool enableDepthTest = true;
@@ -82,15 +80,10 @@ private:
 	unsigned int depthrenderbuffer;
 
 
-	void CreateTriangleVBO();
-	void CreateQuadVBO();
 	void LoadMeshes();
 	void DestroyVBO(unsigned vbo);
 	void Draw();
-	void DrawTriangle(const float4x4& proj, const float4x4& view);
-	void DrawQuad(const float4x4& proj, const float4x4& view);
 	void DrawMesh(const float4x4& proj, const float4x4& view, const float4x4& model);
-	void DropFile();
 	void RenderToTexture();
 };
 

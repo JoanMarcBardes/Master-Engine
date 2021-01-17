@@ -32,7 +32,7 @@ void EditorViewport::Draw(int w, int h)
 
 	GameObject* selected = App->editor->GetSelectedGameObject();
 	if (selected) {
-		DrawGuizmo((Camera*)App->scene->GetMainCamera()->GetComponent(Component::Type::Camera), selected);
+		//DrawGuizmo((Camera*)App->scene->GetMainCamera()->GetComponent(Component::Type::Camera), selected);
 	}
 
 	ImGui::SetWindowSize(sizeView);

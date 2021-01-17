@@ -2,6 +2,10 @@
 #include "GL/glew.h"
 #include "Globals.h"
 
+Material::Material() : Component(Component::Type::Material, gameObject), textures(), paths(), typeId()
+{
+}
+
 Material::Material(std::vector<unsigned int> textures, std::vector<std::string> paths, std::vector<unsigned int> typeIdList) :
 	Component(Component::Type::Material, gameObject), textures(textures), paths(paths), typeId(typeIdList)
 {
@@ -85,9 +89,9 @@ void Material::Draw(const unsigned program)
         }
         else LOG("[error] material draw unknown type");
 
-        glBindTexture(GL_TEXTURE_2D, textures[i]);
         glActiveTexture(GL_TEXTURE0 + i);
         glUniform1i(glGetUniformLocation(program, nameType), i);
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
     }
     //glUniform1i(glGetUniformLocation(program, "has_diffuse_map"), has_diffuse);
     //glUniform1i(glGetUniformLocation(program, "has_specular_map"), has_specular);

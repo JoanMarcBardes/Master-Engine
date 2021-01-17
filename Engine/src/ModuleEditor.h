@@ -27,6 +27,10 @@ public:
 	void ClearLog();
 
 	GameObject* GetSelectedGameObject() { return selected; }
+	void SetSelectedGameObject(GameObject* newSelected) { selected = newSelected; }
+
+	bool GetIsAddSpecular() { return isAddSpecular; }
+
 
 private:
 	ImVector<char*> Items;
@@ -57,6 +61,7 @@ private:
 	void TreeChilds(GameObject* parent);
 
 	GameObject* selected = nullptr;
+	bool isAddSpecular = false;
 	void WindowInspector(bool* p_open);
 
 	void WindowPlayStopStep(bool* p_open);

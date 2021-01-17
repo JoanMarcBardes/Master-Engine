@@ -16,13 +16,19 @@ public:
     };
 
 public:
+    Mesh();
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const char* name);
     ~Mesh();
+
+    void InitMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, const char* name);
+
     void Draw();
 
-    const unsigned int GetNumVertices() { return numVertices; };
-    const unsigned int GetNumIndices() { return numIndices; };
-    const char* GetName() { return name; }
+    const unsigned int GetNumVertices() const { return numVertices; };
+    const unsigned int GetNumIndices() const { return numIndices; };
+    const std::vector<Vertex> GetVertices() const { return Vertices; }
+    const std::vector<unsigned int> GetIndices() const { return Indices; }
+    const char* GetName() const { return name; }
     const float4x4 GetModel() { return model; }
     const float3 GetMin() { return min; }
     const float3 GetMax() { return max; }
@@ -40,7 +46,6 @@ private:
     float3 max;
 
     void setupMesh();
-    void CalculateMinMax();
 
 };
 

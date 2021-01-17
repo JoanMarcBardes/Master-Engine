@@ -19,6 +19,7 @@ public:
 	Component* CreateComponent(Component::Type type);
 	void AddComponent(Component* component);
 	Component* GetComponent(Component::Type type);
+
 	template<typename AuxComponent>
 	AuxComponent* GetComponent()
 	{
@@ -31,11 +32,28 @@ public:
 		return nullptr;
 	}
 
+	template<typename AuxComponent>
+	AuxComponent* GetComponent() const
+	{
+		Component::Type type = AuxComponent::GetType();
+		for each (Component * component in components)
+		{
+			if (component->GetType() == type)
+				return (AuxComponent*)component;
+		}
+		return nullptr;
+	}
+
+	const std::vector<Component*>& GetAllComponents() const { return components; }
+
+
 	void SetActive(bool isActive) { active = isActive; }
 	bool IsActive() const { return active; };
+	void SetID(unsigned newId) { id = newId; }
 	unsigned GetID() const { return id; }
 
 	std::vector<GameObject*>& GameObject::GetChilds();
+	void GameObject::GetChilds(std::vector<const GameObject*>& vector) const;
 	GameObject* GetChild(const char* name) const;
 	unsigned GetNumChilds() const { return childs.size(); }
 	GameObject* FindGameObjectId(unsigned int id);

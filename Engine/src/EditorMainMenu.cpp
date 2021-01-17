@@ -1,4 +1,6 @@
 #include "EditorMainMenu.h"
+#include "Application.h"
+#include "ModuleScene.h"
 
 void EditorMainMenu::Draw(int w, int h)
 {
@@ -26,6 +28,20 @@ void EditorMainMenu::Draw(int w, int h)
 		}
 		ImGui::EndMenu();
 	}
+
+	if (ImGui::BeginMenu("File"))
+	{
+		if (ImGui::MenuItem("Save Scene"))
+		{
+			App->scene->Save();
+		}
+		if (ImGui::MenuItem("Load Scene"))
+		{
+			App->scene->Load();
+		}
+		ImGui::EndMenu();
+	}
+
 	menuSize = ImGui::GetWindowSize().y;
 	ImGui::EndMainMenuBar();
 }

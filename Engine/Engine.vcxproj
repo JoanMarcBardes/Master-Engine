@@ -74,7 +74,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./src/Libraries/Brofiler/Brofiler;./src/Libraries/Assimp/include/assimp;./src/Libraries/DevIL-SDK/include/IL;./imgui-docking;./src/Libraries/glew-2.1.0/include;./src/Libraries/SDL/include;./src/Libraries/ImGui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src/Libraries/Brofiler/Brofiler;./src/Libraries/Assimp/include/assimp;./src/Libraries/DevIL-SDK/include/IL;./imgui-docking;./src/Libraries/glew-2.1.0/include;./src/Libraries/SDL/include;./src/Libraries/ImGui;./src/Libraries/ImGui</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -106,7 +107,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./src/Libraries/Brofiler/Brofiler; ./src/Libraries/Assimp/include/assimp; ./src/Libraries/DevIL-SDK/include/IL; ./imgui-docking; ./src/Libraries/glew-2.1.0/include; ./src/Libraries/SDL/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src/Libraries/Brofiler/Brofiler;./src/Libraries/Assimp/include/assimp;./src/Libraries/DevIL-SDK/include/IL;./imgui-docking;./src/Libraries/glew-2.1.0/include;./src/Libraries/SDL/include;./src/Libraries/ImGui;lude;</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -140,6 +142,7 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Component.h" />
+    <ClInclude Include="src\Config.h" />
     <ClInclude Include="src\DebugLeaks.h" />
     <ClInclude Include="src\Editor.h" />
     <ClInclude Include="src\EditorAbout.h" />
@@ -151,6 +154,9 @@
     <ClInclude Include="src\EditorViewport.h" />
     <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Globals.h" />
+    <ClInclude Include="src\ImporterMaterial.h" />
+    <ClInclude Include="src\ImporterMesh.h" />
+    <ClInclude Include="src\ImporterScene.h" />
     <ClInclude Include="src\Libraries\Assimp\include\assimp\aabb.h" />
     <ClInclude Include="src\Libraries\Assimp\include\assimp\ai_assert.h" />
     <ClInclude Include="src\Libraries\Assimp\include\assimp\anim.h" />
@@ -325,12 +331,14 @@
     <ClInclude Include="src\Libraries\MathGeoLib\Math\TransformOps.h" />
     <ClInclude Include="src\Libraries\MathGeoLib\Math\vec2d.h" />
     <ClInclude Include="src\Libraries\MathGeoLib\Time\Clock.h" />
+    <ClInclude Include="src\Libraries\parson\parson.h" />
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Module.h" />
     <ClInclude Include="src\ModuleDebugDraw.h" />
     <ClInclude Include="src\ModuleEditor.h" />
     <ClInclude Include="src\ModuleEditorCamera.h" />
+    <ClInclude Include="src\ModuleFilesystem.h" />
     <ClInclude Include="src\ModuleInput.h" />
     <ClInclude Include="src\ModuleModel.h" />
     <ClInclude Include="src\ModuleProgram.h" />
@@ -348,6 +356,7 @@
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\Config.cpp" />
     <ClCompile Include="src\EditorAbout.cpp" />
     <ClCompile Include="src\EditorConfig.cpp" />
     <ClCompile Include="src\EditorConsole.cpp" />
@@ -355,6 +364,9 @@
     <ClCompile Include="src\EditorPlay.cpp" />
     <ClCompile Include="src\EditorViewport.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\ImporterMaterial.cpp" />
+    <ClCompile Include="src\ImporterMesh.cpp" />
+    <ClCompile Include="src\ImporterScene.cpp" />
     <ClCompile Include="src\Libraries\ImGui\ImCurveEdit.cpp" />
     <ClCompile Include="src\Libraries\ImGui\ImGradient.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui.cpp" />
@@ -407,6 +419,7 @@
     <ClCompile Include="src\Libraries\MathGeoLib\Math\SSEMath.cpp" />
     <ClCompile Include="src\Libraries\MathGeoLib\Math\TransformOps.cpp" />
     <ClCompile Include="src\Libraries\MathGeoLib\Time\Clock.cpp" />
+    <ClCompile Include="src\Libraries\parson\parson.c" />
     <ClCompile Include="src\log.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Material.cpp" />
@@ -414,6 +427,7 @@
     <ClCompile Include="src\ModuleDebugDraw.cpp" />
     <ClCompile Include="src\ModuleEditor.cpp" />
     <ClCompile Include="src\ModuleEditorCamera.cpp" />
+    <ClCompile Include="src\ModuleFilesystem.cpp" />
     <ClCompile Include="src\ModuleInput.cpp" />
     <ClCompile Include="src\ModuleModel.cpp" />
     <ClCompile Include="src\ModuleProgram.cpp" />

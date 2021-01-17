@@ -12,6 +12,9 @@ public:
 	bool Init() override;
 	update_status Update()override;
 
+	void Save();
+	void Load();
+
 	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr);
 
 	GameObject* GetRoot() { return root; }

@@ -2,6 +2,11 @@
 #include "Application.h"
 #include "ModuleProgram.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleInput.h"
+#include "ImporterScene.h"
+#include "ModuleFilesystem.h"
+#include "ModuleEditor.h"
+#include "ModuleModel.h"
 #include "GL/glew.h"
 #include <vector>
 
@@ -28,9 +33,56 @@ bool ModuleScene::Init()
 
 update_status ModuleScene::Update()
 {
+	if (App->input->GetKey(SDL_SCANCODE_M))
+	{
+		LOG("Pres M, Save MainScene");
+		Save();
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_L))
+	{
+		LOG("Pres L, Load MainScene");
+		//Load();
+		char* buffer = nullptr;
+		App->filesystem->basePath;
+		App->filesystem->Load("", "Library\\MainScene.meta", &buffer);
+		delete(root);
+		App->editorCamera->RemoveAllCameras();
+		App->editor->SetSelectedGameObject(nullptr);
+		ImporterScene::Load(buffer, root);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_K))
+	{
+		LOG("Pres K, Save MainScene");
+	}
+
 	root->Update();
 	return UPDATE_CONTINUE;
 }
+
+void ModuleScene::Save()
+{
+	char* buffer = nullptr;
+	unsigned size = ImporterScene::Save(root, &buffer);
+	App->filesystem->Save("MainScene", buffer, size);
+	LOG("Scene Saved");
+}
+
+void ModuleScene::Load()
+{
+	char* buffer = nullptr;
+	App->filesystem->basePath;
+	unsigned size = App->filesystem->Load("", "Library\\MainScene.meta", &buffer);
+	delete(root);
+	gameObjects.clear();
+	App->editorCamera->RemoveAllCameras();
+	App->editor->SetSelectedGameObject(nullptr);
+	App->model->Clean();
+	ImporterScene::Load(buffer, root);
+	gameObjects.push_back(root);
+	BuildQuadtree();
+	LOG("Scene Loaded");
+}
+
 
 GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent)
 {

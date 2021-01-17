@@ -94,8 +94,6 @@ bool ModuleRenderExercise::Init()
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, true);
 #endif
 
-	CreateTriangleVBO();
-	CreateQuadVBO();
 	LoadMeshes();
 
 	char* sourceVertex = App->program->LoadShaderSource("Shaders/Phong_BRDF_VS.glsl"); //Phong_BRDF_VS //Phong_VertexShader
@@ -145,8 +143,6 @@ bool ModuleRenderExercise::CleanUp()
 {
 	LOG("Destroying ModuleRenderExercise");
 
-	DestroyVBO(_vboTriangle);
-	DestroyVBO(_vboQuad);
 	SDL_GL_DeleteContext(_context);
 	glDeleteProgram(_program);
 
@@ -159,49 +155,9 @@ void ModuleRenderExercise::WindowResized(unsigned width, unsigned height)
 	SDL_SetWindowSize(App->window->window, width, height);
 }
 
-
-// This function must be called one time at creation of vertex buffer
-void ModuleRenderExercise::CreateTriangleVBO()
-{
-	float buffer_data[] = {
-		2.0f, 0.0f, 0.0f, // ← v0 pos
-		4.0f, 0.0f, 0.0f, // ← v1 pos
-		3.0f, 2.0f, 0.0f, // ← v2 pos
-	};
-
-	glGenBuffers(1, &_vboTriangle);
-	glBindBuffer(GL_ARRAY_BUFFER, _vboTriangle); // set vbo active
-	glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data, GL_STATIC_DRAW);
-}
-
-void ModuleRenderExercise::CreateQuadVBO()
-{
-	float buffer_data[] = {
-		-1.0f, -1.0f, 0.0f, // ← v0 pos
-		1.0f, -1.0f, 0.0f, // ← v1 pos
-		-1.0f, 1.0f, 0.0f, // ← v2 pos
-
-		-1.0f, 1.0f, 0.0f, // ← v2 pos
-		1.0f, -1.0f, 0.0f, // ← v1 pos
-		1.0f, 1.0f, 0.0f, // ← v3 pos
-
-		0.0f, 0.0f, // ← v0 texcoord
-		1.0f, 0.0f, // ← v1 texcoord
-		0.0f, 1.0f, // ← v2 texcoord
-
-		0.0f, 1.0f, // ← v2 texcoord
-		1.0f, 0.0f, // ← v1 texcoord
-		1.0f, 1.0f // ← v3 texcoord
-	};
-
-	glGenBuffers(1, &_vboQuad);
-	glBindBuffer(GL_ARRAY_BUFFER, _vboQuad); // set vbo active
-	glBufferData(GL_ARRAY_BUFFER, sizeof(buffer_data), buffer_data, GL_STATIC_DRAW);
-}
-
 void ModuleRenderExercise::LoadMeshes()
 {
-	App->model->Load("Models/BakerHouse/BakerHouse.fbx");
+	App->model->Import("Models/BakerHouse/BakerHouse.fbx");
 }
 
 
@@ -229,58 +185,7 @@ void ModuleRenderExercise::Draw()
 
 
 	glUseProgram(_program);
-	//DrawQuad(proj, view);
-	//DrawTriangle(proj, view);
 	DrawMesh(proj, view, model);
-}
-
-// This function must be called each frame for drawing the triangle
-void ModuleRenderExercise::DrawTriangle(const float4x4& proj, const float4x4& view)
-{
-	float4x4 model = float4x4::identity;
-
-	glBindBuffer(GL_ARRAY_BUFFER, _vboTriangle);
-	glEnableVertexAttribArray(0);
-
-	// size = 3 float per vertex
-	// stride = 0 is equivalent to stride = sizeof(float)*3
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glUniformMatrix4fv(glGetUniformLocation(_program, "model"), 1, GL_TRUE, &model[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(_program, "view"), 1, GL_TRUE, (const float*)&view);
-	glUniformMatrix4fv(glGetUniformLocation(_program, "proj"), 1, GL_TRUE, (const float*)&proj);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 3 * 3));
-
-	glActiveTexture(GL_TEXTURE0);
-
-	// 1 triangle to draw = 3 vertices
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-}
-
-void ModuleRenderExercise::DrawQuad(const float4x4& proj, const float4x4& view)
-{
-	float4x4 model = float4x4::identity;
-
-	glBindBuffer(GL_ARRAY_BUFFER, _vboQuad);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-	glUniformMatrix4fv(glGetUniformLocation(_program, "model"), 1, GL_TRUE, &model[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(_program, "view"), 1, GL_TRUE, (const float*) &view);
-	glUniformMatrix4fv(glGetUniformLocation(_program, "proj"), 1, GL_TRUE, (const float*) &proj);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(sizeof(float) * 6 * 3));
-	
-	glActiveTexture(GL_TEXTURE0);
-
-	//glBindTexture(GL_TEXTURE_2D, App->texture->GetTexture());
-	//glUniform1i(glGetUniformLocation(_program, "mytexture"), 0);
-
-	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void ModuleRenderExercise::DrawMesh(const float4x4& proj, const float4x4& view, const float4x4& model)
@@ -314,36 +219,6 @@ void ModuleRenderExercise::SetGlEnable(const bool enable, const GLenum type)
 		glEnable(type);
 	else
 		glDisable(type);
-}
-
-void ModuleRenderExercise::DropFile()
-{
-	SDL_Event sdlEvent;
-	while (SDL_PollEvent(&sdlEvent) != 0)
-	{
-		switch (sdlEvent.type) {
-		case (SDL_DROPFILE):      // In case if dropped file
-			char* dropped_filedir = sdlEvent.drop.file;
-			string s(dropped_filedir);
-			ReplaceSlashS(s);
-			if (s.find(".fbx") < s.length() || s.find(".FBX") < s.length())
-			{
-				LOG(("Loading model " + s).c_str());
-				App->model->Load(s.c_str());
-			}
-			else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length() || s.find(".tga") < s.length())
-			{
-				LOG(("Loading texture " + s).c_str());
-				App->model->SetTexture(App->texture->Load(s.c_str()), s.c_str());
-			}
-			else
-			{
-				LOG((s + " its not a file .fbx, .png, .jpg, .dds or .tga").c_str());
-			}
-			SDL_free(dropped_filedir);    // Free dropped_filedir memory
-			break;
-		}
-	}
 }
 
 void ModuleRenderExercise::RenderToTexture() {

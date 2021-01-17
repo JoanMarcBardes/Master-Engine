@@ -112,18 +112,6 @@ Component* GameObject::GetComponent(Component::Type type)
 	return nullptr;
 }
 
-/*template<typename AuxComponent>
-AuxComponent* GameObject::GetComponent()
-{
-	Component::Type type = AuxComponent::GetType();
-	for each (Component * component in components)
-	{
-		if (component->GetType() == type)
-			return (AuxComponent*)component;
-	}
-	return nullptr;
-}*/
-
 bool GameObject::ContainsType(Component::Type type)
 {
 	for each (Component* component in components)
@@ -143,6 +131,13 @@ std::vector<GameObject*>& GameObject::GetChilds()
 	}
 	return vector;*/
 	return childs;
+}
+
+void GameObject::GetChilds(std::vector<const GameObject*>& vector) const
+{
+	vector.push_back(this);
+	for (unsigned i = 0; i < childs.size(); i++)
+		childs[i]->GetChilds(vector);
 }
 
 GameObject* GameObject::GetChild(const char* name) const

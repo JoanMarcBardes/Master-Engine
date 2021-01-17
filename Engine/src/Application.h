@@ -16,6 +16,7 @@ class ModuleDebugDraw;
 class ModuleTexture;
 class ModuleModel;
 class ModuleScene;
+class ModuleFilesystem;
 
 class Application
 {
@@ -49,6 +50,7 @@ public:
 	ModuleTexture* texture = nullptr;
 	ModuleModel* model = nullptr;
 	ModuleScene* scene = nullptr;
+	ModuleFilesystem* filesystem = nullptr;
 
 private:
 	std::vector<Module*> modules;
