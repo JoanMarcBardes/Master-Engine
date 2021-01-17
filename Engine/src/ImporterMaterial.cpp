@@ -32,11 +32,16 @@ ImporterMaterial::ImporterMaterial()
 
 ImporterMaterial::~ImporterMaterial()
 {
+    Clear();
+    textureTypesList.clear();
+}
+
+void ImporterMaterial::Clear()
+{
     for (unsigned i = 0; i < texturesList.size(); ++i) {
         App->texture->DeleteTexture(texturesList[i]);
     }
 
-    textureTypesList.clear();
     texturesList.clear();
     pathList.clear();
     typeIdList.clear();

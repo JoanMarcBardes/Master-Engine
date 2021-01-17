@@ -792,6 +792,11 @@ void ModuleEditor::WindowInspector(bool* p_open)
 			bool activeC = camera->IsActive();
 			if (ImGui::Checkbox("Current Camera", &activeC))
 				App->editorCamera->SetActiveCamera(camera, activeC);
+			
+			ImGui::SameLine();
+			bool isculling = camera->cullingCam;
+			if (ImGui::Checkbox("IsCulling", &isculling))
+				camera->cullingCam = isculling;
 
 			float3 front = camera->frustum.Front();
 			if (ImGui::DragFloat3("Front", front.ptr()))

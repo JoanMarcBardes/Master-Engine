@@ -43,6 +43,11 @@ bool ModuleModel::CleanUp()
     return true;
 }
 
+void ModuleModel::Clean()
+{
+    importMat->Clear();
+}
+
 void ModuleModel::Import(const char* dir)
 {
     const aiScene* scene = aiImportFile(dir, aiProcessPreset_TargetRealtime_MaxQuality);

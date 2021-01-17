@@ -20,6 +20,7 @@ public:
 	ModuleModel();
 	~ModuleModel();
 	bool CleanUp();
+	void Clean();
 
 	void Import(const char* dir);
 	void ImportNode(aiNode* node, const aiScene* scene, std::string name, GameObject* parent = nullptr);

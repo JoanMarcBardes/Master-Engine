@@ -92,6 +92,7 @@ std::string ModuleFilesystem::Save(const char* file, const char* buffer, unsigne
 
 unsigned int ModuleFilesystem::Load(const char* path, const char* file, char** buffer) const
 {
+    unsigned ret = 0;
     //std::ifstream infile((basePath + "Library\\" + file + ".meta").c_str(), std::ios::binary);
     std::string s = basePath + std::string(path) + file;
     std::ifstream infile(s.c_str(), std::ios::binary);
@@ -105,6 +106,7 @@ unsigned int ModuleFilesystem::Load(const char* path, const char* file, char** b
     //read file
     if (length > 0) {
         infile.read(*buffer, length);
+        ret = length;
     }
     else
     {
@@ -113,5 +115,5 @@ unsigned int ModuleFilesystem::Load(const char* path, const char* file, char** b
 
     infile.close();
 
-    return 0;
+    return ret;
 }

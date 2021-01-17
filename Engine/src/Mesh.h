@@ -46,7 +46,6 @@ private:
     float3 max;
 
     void setupMesh();
-    void CalculateMinMax();
 
 };
 

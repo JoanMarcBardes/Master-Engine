@@ -6,6 +6,7 @@
 #include "ImporterScene.h"
 #include "ModuleFilesystem.h"
 #include "ModuleEditor.h"
+#include "ModuleModel.h"
 #include "GL/glew.h"
 #include <vector>
 
@@ -40,7 +41,18 @@ update_status ModuleScene::Update()
 	else if (App->input->GetKey(SDL_SCANCODE_L))
 	{
 		LOG("Pres L, Load MainScene");
-		Load();
+		//Load();
+		char* buffer = nullptr;
+		App->filesystem->basePath;
+		App->filesystem->Load("", "Library\\MainScene.meta", &buffer);
+		delete(root);
+		App->editorCamera->RemoveAllCameras();
+		App->editor->SetSelectedGameObject(nullptr);
+		ImporterScene::Load(buffer, root);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_K))
+	{
+		LOG("Pres K, Save MainScene");
 	}
 
 	root->Update();
@@ -58,11 +70,15 @@ void ModuleScene::Load()
 {
 	char* buffer = nullptr;
 	App->filesystem->basePath;
-	App->filesystem->Load("", "Library\\MainScene.meta", &buffer);
+	unsigned size = App->filesystem->Load("", "Library\\MainScene.meta", &buffer);
 	delete(root);
+	gameObjects.clear();
 	App->editorCamera->RemoveAllCameras();
 	App->editor->SetSelectedGameObject(nullptr);
+	App->model->Clean();
 	ImporterScene::Load(buffer, root);
+	gameObjects.push_back(root);
+	BuildQuadtree();
 }
 
 
