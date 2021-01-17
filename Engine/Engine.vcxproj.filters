@@ -229,6 +229,18 @@
     <ClCompile Include="src\QuadTree.cpp">
       <Filter>src\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\Libraries\ImGui\ImGuizmo.cpp">
+      <Filter>Libraries\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Libraries\ImGui\ImCurveEdit.cpp">
+      <Filter>Libraries\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Libraries\ImGui\ImGradient.cpp">
+      <Filter>Libraries\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Libraries\ImGui\ImSequencer.cpp">
+      <Filter>Libraries\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -833,6 +845,21 @@
     </ClInclude>
     <ClInclude Include="src\QuadTree.h">
       <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Libraries\ImGui\ImGuizmo.h">
+      <Filter>Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Libraries\ImGui\ImCurveEdit.h">
+      <Filter>Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Libraries\ImGui\ImGradient.h">
+      <Filter>Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Libraries\ImGui\ImSequencer.h">
+      <Filter>Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Libraries\ImGui\ImZoomSlider.h">
+      <Filter>Libraries\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

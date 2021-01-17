@@ -158,6 +158,11 @@ update_status ModuleEditor::Update()
 				{
 					App->input->SetImGuiOn(false);
 				}
+				if (selected) {
+					Camera* camera = (Camera*)App->scene->GetMainCamera();
+					EditorViewport* viewport = (EditorViewport*)(*it);
+					viewport->DrawGuizmo(camera, selected);
+				}
 			}
 			break;
 		case 6:
@@ -823,6 +828,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 		ImGui::Text("Select a GameObject");
 	}
 
+
 	ImGui::SetWindowSize(size);
 	ImGui::End();
 }
@@ -855,3 +861,5 @@ void ModuleEditor::WindowPlayStopStep(bool* p_open)
 
 	ImGui::End();
 }
+
+

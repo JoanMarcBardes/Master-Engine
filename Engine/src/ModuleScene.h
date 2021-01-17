@@ -15,6 +15,7 @@ public:
 	GameObject* CreateGameObject(const char* name, GameObject* parent = nullptr);
 
 	GameObject* GetRoot() { return root; }
+	GameObject* GetMainCamera() { return mainCamera; }
 
 	void BuildQuadtree();
 	void CalculateQuadtreeSize(float3& min_point, float3& max_point);

@@ -33,6 +33,7 @@ public:
 
 	void Draw(unsigned program);
 
+
 private:
 	void UpdateTransform();
 	void UpdatePosRotSca();
