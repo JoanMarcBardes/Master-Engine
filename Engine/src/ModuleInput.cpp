@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 #include "ModuleModel.h"
 #include "ModuleTexture.h"
+#include "ModuleEditor.h"
 #include "Libraries/SDL/include/SDL.h"
 #include "Libraries/ImGui/imgui_impl_sdl.h"
 #include "DebugLeaks.h"
@@ -153,10 +154,10 @@ update_status ModuleInput::PreUpdate()
 					//App->model->Load(s.c_str());
 					App->model->Import(s.c_str());
 				}
-				else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length() || s.find(".tga") < s.length())
+				else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length() || s.find(".tga") < s.length() || s.find(".tif") < s.length())
 				{
 					LOG(("Loading texture " + s).c_str());
-					App->model->SetTexture( App->texture->Load(s.c_str()), s.c_str());
+					App->model->SetTexture( App->texture->Load(s.c_str()), s.c_str(), (unsigned)App->editor->GetIsAddSpecular());
 				}
 				else
 				{

@@ -723,10 +723,20 @@ void ModuleEditor::WindowInspector(bool* p_open)
 		Material* material = selected->GetComponent<Material>();
 		if (material && ImGui::CollapsingHeader("Material"))
 		{
-			ImGui::Text("Texture");
-			//std::vector<std::string> paths = material->GetPaths();
-			//std::vector<unsigned int> typesId = material->GetTypesId();
-			//std::vector<unsigned int> textures = material->GetTextures();
+			//ImGui::Text("Texture");
+
+			ImGui::Checkbox("Drag and add", &isAddSpecular);
+			if (isAddSpecular)
+			{
+				ImGui::SameLine();
+				ImGui::Text("specular texture");
+			}
+			else
+			{
+				ImGui::SameLine();
+				ImGui::Text("diffuse texture");
+			}
+
 
 			char* nameType;
 			float my_tex_w = 150;
@@ -750,7 +760,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 				strcpy_s(path, 150, paths.c_str());
 				if(ImGui::InputText(nameType, path, IM_ARRAYSIZE(path), ImGuiInputTextFlags_EnterReturnsTrue))
 				{
-					paths = basePath + path;
+					//paths = basePath + path;
 					unsigned int newTextureId = App->texture->Load(paths.c_str());
 					if(newTextureId != -1)
 						App->model->SetTexture(newTextureId, path, i);
@@ -760,7 +770,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 						LOG(l.c_str());
 					}
 				}
-				ImGui::SameLine(); HelpMarker(basePath.c_str());
+				ImGui::SameLine(); HelpMarker("Write the path of the new texture and press Intro to change the texture");
 
 
 				if (exist)

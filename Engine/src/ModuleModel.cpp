@@ -272,6 +272,7 @@ void ModuleModel::SetTexture(unsigned int textureId, std::string path, unsigned 
     GameObject* go = App->editor->GetSelectedGameObject();
     if (go != nullptr)
     {
+        Material* material2 = go->GetComponent< Material>();
         LOG(go->name.c_str());
         unsigned toRemove = go->SetTexture(textureId, path, newtypeId);
         App->texture->DeleteTexture(toRemove);

@@ -21,6 +21,10 @@ public:
 private:
 	std::vector<aiTextureType> textureTypesList;
 
+	std::vector<unsigned int> texturesList;
+	std::vector<std::string> pathList;
+	std::vector<unsigned int> typeIdList;
+
 	std::string directory;
 	std::string directoryTexture = "Textures/";
 };

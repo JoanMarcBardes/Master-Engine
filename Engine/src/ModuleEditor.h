@@ -28,6 +28,9 @@ public:
 	GameObject* GetSelectedGameObject() { return selected; }
 	void SetSelectedGameObject(GameObject* newSelected) { selected = newSelected; }
 
+	bool GetIsAddSpecular() { return isAddSpecular; }
+
+
 private:
 	ImVector<char*> Items;
 	/*std::vector<int> fpsLog;
@@ -58,6 +61,7 @@ private:
 	void TreeChilds(GameObject* parent);
 
 	GameObject* selected = nullptr;
+	bool isAddSpecular = true;
 	void WindowInspector(bool* p_open);
 
 	void WindowPlayStopStep(bool* p_open);

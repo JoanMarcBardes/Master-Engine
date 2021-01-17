@@ -47,7 +47,18 @@ void ImporterMaterial::Import(const aiMaterial* material, Material* ourMaterial)
 
             path = file.data;
 
-            {   // if texture hasn't been loaded already, load it
+            bool skip = false;
+            for (unsigned int j = 0; j < pathList.size(); j++)
+            {
+                if (pathList[j] == path || pathList[j] == (directory + file.data).c_str() || pathList[j] == (directoryTexture + file.data).c_str())
+                {
+                    ourMaterial->AddTexturePath(texturesList[j], pathList[j], typeIdList[j]);
+                    skip = true;
+                    break;
+                }
+            }
+            if (!skip)
+            {    // if texture hasn't been loaded already, load it
                 unsigned int texture = App->texture->Load(file.data);
                 if (texture == -1)
                 {
