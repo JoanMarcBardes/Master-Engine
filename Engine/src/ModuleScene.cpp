@@ -57,6 +57,11 @@ void ModuleScene::Load()
 	App->model->Clean();
 	ImporterScene::Load(buffer, root);
 	gameObjects.push_back(root);
+
+	if (gameObjects[0]->GetChilds().size() > 0) {
+		AddGameObjects(root);
+	}
+
 	BuildQuadtree();
 	LOG("Scene Loaded");
 }
@@ -68,6 +73,17 @@ GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent)
 	newGameObject->UpdateBoundingBox();
 	gameObjects.push_back(newGameObject);
 	return newGameObject;
+}
+
+void ModuleScene::AddGameObjects(GameObject* go) {
+	std::vector<GameObject*> childs = go->GetChilds();
+
+	for (int i = 0; i < childs.size(); ++i) {
+		gameObjects.push_back(childs[i]);
+		if (childs[i]->GetChilds().size() > 0) {
+			AddGameObjects(childs[i]);
+		}
+	}
 }
 
 void ModuleScene::BuildQuadtree()
@@ -88,8 +104,10 @@ void ModuleScene::BuildQuadtree()
 	quadtree->Create(root_quad_node);
 
 	//Insert all the GameObjects to the quadtree
-	for (int i = 0; i < gameObjects.size(); ++i)
+	for (int i = 0; i < gameObjects.size(); ++i) {
+		gameObjects[i]->UpdateBoundingBox();
 		quadtree->Insert(gameObjects[i]);
+	}
 
 }
 

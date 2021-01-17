@@ -32,8 +32,9 @@ void Camera::CameraCulling()
 	std::vector<GameObject*> st_obj = App->scene->GetGameObjects();
 
 	//All static objects not culling
-	for (int i = 0; i < st_obj.size(); ++i)
+	for (int i = 0; i < st_obj.size(); ++i) {
 		st_obj[i]->SetActive(false);
+	}
 
 	App->scene->quadtree->Intersects(obj_to_cull, frustum);
 

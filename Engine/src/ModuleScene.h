@@ -20,6 +20,7 @@ public:
 	GameObject* GetRoot() { return root; }
 	GameObject* GetMainCamera() { return mainCamera; }
 
+	void AddGameObjects(GameObject* go);
 	void BuildQuadtree();
 	void CalculateQuadtreeSize(float3& min_point, float3& max_point);
 	void Draw(unsigned program);

@@ -5,8 +5,8 @@
 #include "Libraries/MathGeoLib/Geometry/AABB.h"
 #include "GameObject.h"
 
-#define QUADTREE_MIN_SIZE -30
-#define QUADTREE_MAX_SIZE 30
+#define QUADTREE_MIN_SIZE -60
+#define QUADTREE_MAX_SIZE 60
 #define MAX_ITEMS 2
 
 class QuadtreeNode
