@@ -35,6 +35,7 @@ update_status ModuleEditorCamera::Update()
 	Pitch();
 	Yaw();
 	RotateMouse();
+	MoveMouse();
 	WheelMouse();
 	Focus();
 	Orbit();
@@ -132,13 +133,57 @@ void ModuleEditorCamera::MoveUp()
 
 void ModuleEditorCamera::RotateMouse()
 {
-	float speedRotateMouse = speed;
+	float speedRotateMouse = speed / 4;
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT))
 		speedRotateMouse *= 3;
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) && !App->input->GetKey(SDL_SCANCODE_LALT)) {
-		iPoint mouse = App->input->GetMouseMotion();
-		currentCamera->RotateMouse(speedRotateMouse, mouse);
+		iPoint mouse = App->input->GetMousePosition();
+		
+		if (mouse.x > preMousePosX) {
+			currentCamera->Yaw(-speedRotateMouse);
+			preMousePosX = mouse.x;
+		}else if (mouse.x < preMousePosX){
+			currentCamera->Yaw(speedRotateMouse);
+			preMousePosX = mouse.x;
+		}
+		if (mouse.y > preMousePosY) {
+			currentCamera->Pitch(-speedRotateMouse);
+			preMousePosY = mouse.y;
+		}else if (mouse.y < preMousePosY) {
+			currentCamera->Pitch(speedRotateMouse);
+			preMousePosY = mouse.y;
+		}
+		//currentCamera->RotateMouse(speedRotateMouse, mouse);
+	}
+}
+
+void ModuleEditorCamera::MoveMouse()
+{
+	float speedMoveMouse = speed;
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT))
+		speedMoveMouse *= 3;
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) && !App->input->GetKey(SDL_SCANCODE_LALT)) {
+		iPoint mouse = App->input->GetMousePosition();
+
+		if (mouse.x > preMousePosX) {
+			currentCamera->MoveLateral(-speedMoveMouse);
+			preMousePosX = mouse.x;
+		}
+		else if (mouse.x < preMousePosX) {
+			currentCamera->MoveLateral(speedMoveMouse);
+			preMousePosX = mouse.x;
+		}
+		if (mouse.y > preMousePosY) {
+			currentCamera->MoveUp(speedMoveMouse / 2);
+			preMousePosY = mouse.y;
+		}
+		else if (mouse.y < preMousePosY) {
+			currentCamera->MoveUp(-speedMoveMouse / 2);
+			preMousePosY = mouse.y;
+		}
+		//currentCamera->RotateMouse(speedRotateMouse, mouse);
 	}
 }
 
@@ -161,13 +206,22 @@ void ModuleEditorCamera::Focus()
 
 void ModuleEditorCamera::Orbit()
 {
-	float speedOrbit = speed;
+	float speedOrbit = 2.0f;
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT))
 		speedOrbit *= 3;
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) && App->input->GetKey(SDL_SCANCODE_LALT)) {
-		iPoint mouse = App->input->GetMouseMotion();
-		currentCamera->Orbit(speedOrbit, mouse);
+		iPoint mouse = App->input->GetMousePosition();
+
+		if (mouse.x > preMousePosX) {
+			currentCamera->Orbit(speedOrbit, mouse);
+			preMousePosX = mouse.x;
+		}
+		else if(mouse.x < preMousePosX) {
+			currentCamera->Orbit(-speedOrbit, mouse);
+			preMousePosX = mouse.x;
+		}
+
 	}
 }
 

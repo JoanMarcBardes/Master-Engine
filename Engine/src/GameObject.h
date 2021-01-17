@@ -39,6 +39,7 @@ public:
 	GameObject* GetChild(const char* name) const;
 	unsigned GetNumChilds() const { return childs.size(); }
 	GameObject* FindGameObjectId(unsigned int id);
+	GameObject* GetParent() { return parent; };
 
 	void SetParent(GameObject* gameObject);
 	void RemoveChild(GameObject* gameObject);

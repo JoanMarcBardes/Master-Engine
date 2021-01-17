@@ -345,6 +345,7 @@ void ModuleRenderExercise::DropFile()
 		}
 	}
 }
+
 void ModuleRenderExercise::RenderToTexture() {
 
 	int w = 0;
@@ -385,7 +386,6 @@ void ModuleRenderExercise::RenderToTexture() {
 	glClearColor(background.x, background.y, background.z, background.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	DropFile();
 	Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

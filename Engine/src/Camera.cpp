@@ -126,14 +126,19 @@ void Camera::Focus()
 }
 
 void Camera::Orbit(float speedOrbit, iPoint mouse)
-{
+{/*
 	frustum.Translate(frustum.WorldRight() * -mouse.x * speedOrbit * deltaTime);
 	frustum.SetPos(frustum.Pos());
 
 	frustum.Translate(frustum.Front() * mouse.y * speedOrbit * deltaTime);
 	frustum.SetPos(frustum.Pos());
 		
-	frustum.SetPos(float3(frustum.Pos().x, frustum.Pos().y + mouse.y * speedOrbit * deltaTime, frustum.Pos().z));
+	frustum.SetPos(float3(frustum.Pos().x, frustum.Pos().y + mouse.y * speedOrbit * deltaTime, frustum.Pos().z));*/
+
+	double rotatedX = (math::Cos(speedOrbit * DEGTORAD) * frustum.Pos().x) - (math::Sin(speedOrbit * DEGTORAD) * frustum.Pos().z);
+	double rotatedZ = (math::Sin(speedOrbit * DEGTORAD) * frustum.Pos().x) + (math::Cos(speedOrbit * DEGTORAD) * frustum.Pos().z);
+
+	frustum.SetPos({ (float)rotatedX, frustum.Pos().y , (float)rotatedZ });
 
 	LookAt(float3::zero);
 }

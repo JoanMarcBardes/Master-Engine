@@ -74,12 +74,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./src/Libraries/Brofiler/Brofiler; ./src/Libraries/Assimp/include/assimp; ./src/Libraries/DevIL-SDK/include/IL; ./imgui-docking; ./src/Libraries/glew-2.1.0/include; ./src/Libraries/SDL/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src/Libraries/Brofiler/Brofiler;./src/Libraries/Assimp/include/assimp;./src/Libraries/DevIL-SDK/include/IL;./imgui-docking;./src/Libraries/glew-2.1.0/include;./src/Libraries/SDL/include;./src/Libraries/ImGui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>./src/Libraries/Brofiler/Brofiler; ./src/Libraries/Assimp/lib; ./src/Libraries/DevIL-SDK/lib/x86/Release; ./src/Libraries/glew-2.1.0/lib/Release/Win32; ./src/Libraries/SDL/lib/x86;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./src/Libraries/ImGui;./src/Libraries/Brofiler/Brofiler;./src/Libraries/Assimp/lib;./src/Libraries/DevIL-SDK/lib/x86/Release;./src/Libraries/glew-2.1.0/lib/Release/Win32;./src/Libraries/SDL/lib/x86;./src/Libraries/ImGuizmo-master</AdditionalLibraryDirectories>
       <AdditionalDependencies>ProfilerCore32.lib; assimp-vc141-mt.lib;ILUT.lib;ILU.lib;DevIL.lib;glew32.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -237,13 +237,18 @@
     <ClInclude Include="src\Libraries\DevIL-SDK\include\IL\ilu_region.h" />
     <ClInclude Include="src\Libraries\DevIL-SDK\include\IL\il_wrap.h" />
     <ClInclude Include="src\Libraries\ImGui\imconfig.h" />
+    <ClInclude Include="src\Libraries\ImGui\ImCurveEdit.h" />
+    <ClInclude Include="src\Libraries\ImGui\ImGradient.h" />
     <ClInclude Include="src\Libraries\ImGui\imgui.h" />
+    <ClInclude Include="src\Libraries\ImGui\ImGuizmo.h" />
     <ClInclude Include="src\Libraries\ImGui\imgui_impl_opengl3.h" />
     <ClInclude Include="src\Libraries\ImGui\imgui_impl_sdl.h" />
     <ClInclude Include="src\Libraries\ImGui\imgui_internal.h" />
+    <ClInclude Include="src\Libraries\ImGui\ImSequencer.h" />
     <ClInclude Include="src\Libraries\ImGui\imstb_rectpack.h" />
     <ClInclude Include="src\Libraries\ImGui\imstb_textedit.h" />
     <ClInclude Include="src\Libraries\ImGui\imstb_truetype.h" />
+    <ClInclude Include="src\Libraries\ImGui\ImZoomSlider.h" />
     <ClInclude Include="src\Libraries\MathGeoLib\Algorithm\GJK.h" />
     <ClInclude Include="src\Libraries\MathGeoLib\Algorithm\GJK2D.h" />
     <ClInclude Include="src\Libraries\MathGeoLib\Algorithm\Random\LCG.h" />
@@ -350,12 +355,16 @@
     <ClCompile Include="src\EditorPlay.cpp" />
     <ClCompile Include="src\EditorViewport.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\Libraries\ImGui\ImCurveEdit.cpp" />
+    <ClCompile Include="src\Libraries\ImGui\ImGradient.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui.cpp" />
+    <ClCompile Include="src\Libraries\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui_demo.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui_draw.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui_impl_sdl.cpp" />
     <ClCompile Include="src\Libraries\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Libraries\ImGui\ImSequencer.cpp" />
     <ClCompile Include="src\Libraries\MathGeoLib\Algorithm\GJK.cpp" />
     <ClCompile Include="src\Libraries\MathGeoLib\Algorithm\GJK2D.cpp" />
     <ClCompile Include="src\Libraries\MathGeoLib\Algorithm\Random\LCG.cpp" />

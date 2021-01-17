@@ -2,6 +2,8 @@
 #include "Globals.h"
 #include "GameObject.h"
 #include "GL/glew.h"
+#include "Libraries/ImGui/imgui.h"
+#include "Libraries/ImGuizmo-master/ImGuizmo.h"
 
 void MinScale(float3& scale)
 {
