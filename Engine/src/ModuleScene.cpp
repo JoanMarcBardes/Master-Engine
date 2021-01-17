@@ -33,28 +33,6 @@ bool ModuleScene::Init()
 
 update_status ModuleScene::Update()
 {
-	if (App->input->GetKey(SDL_SCANCODE_M))
-	{
-		LOG("Pres M, Save MainScene");
-		Save();
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_L))
-	{
-		LOG("Pres L, Load MainScene");
-		//Load();
-		char* buffer = nullptr;
-		App->filesystem->basePath;
-		App->filesystem->Load("", "Library\\MainScene.meta", &buffer);
-		delete(root);
-		App->editorCamera->RemoveAllCameras();
-		App->editor->SetSelectedGameObject(nullptr);
-		ImporterScene::Load(buffer, root);
-	}
-	if (App->input->GetKey(SDL_SCANCODE_K))
-	{
-		LOG("Pres K, Save MainScene");
-	}
-
 	root->Update();
 	return UPDATE_CONTINUE;
 }

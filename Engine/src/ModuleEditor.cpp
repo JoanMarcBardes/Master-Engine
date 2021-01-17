@@ -754,24 +754,9 @@ void ModuleEditor::WindowInspector(bool* p_open)
 				std::string paths;
 				bool exist = material->GetTexture(i, texture, paths);
 
-				//ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", nameType);
-				//ImGui::SameLine();
-				char path[150];
-				strcpy_s(path, 150, paths.c_str());
-				if(ImGui::InputText(nameType, path, IM_ARRAYSIZE(path), ImGuiInputTextFlags_EnterReturnsTrue))
-				{
-					//paths = basePath + path;
-					unsigned int newTextureId = App->texture->Load(paths.c_str());
-					if(newTextureId != -1)
-						App->model->SetTexture(newTextureId, path, i);
-					else
-					{
-						std::string l = "[error] Don't find texture: " + std::string(path);
-						LOG(l.c_str());
-					}
-				}
-				ImGui::SameLine(); HelpMarker("Write the path of the new texture and press Intro to change the texture");
-
+				ImGui::Text("%s: ", nameType);
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", paths.c_str());
 
 				if (exist)
 				{
