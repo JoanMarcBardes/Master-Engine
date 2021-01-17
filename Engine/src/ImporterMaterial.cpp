@@ -32,6 +32,18 @@ ImporterMaterial::ImporterMaterial()
     textureTypesList.push_back(aiTextureType_SPECULAR);
 }
 
+ImporterMaterial::~ImporterMaterial()
+{
+    for (unsigned i = 0; i < texturesList.size(); ++i) {
+        App->texture->DeleteTexture(texturesList[i]);
+    }
+
+    textureTypesList.clear();
+    texturesList.clear();
+    pathList.clear();
+    typeIdList.clear();
+}
+
 void ImporterMaterial::Import(const aiMaterial* material, Material* ourMaterial)
 {
     aiString file;
@@ -79,6 +91,10 @@ void ImporterMaterial::Import(const aiMaterial* material, Material* ourMaterial)
                     else LOG("Texture loaded with the same folder you loaded the FBX");
                 }
                 else LOG("Texture loaded with the path described in the FBX");
+
+                texturesList.push_back(texture);
+                pathList.push_back(path);
+                typeIdList.push_back(GetTypeId(type));
 
                 ourMaterial->AddTexturePath(texture, path, GetTypeId(type));
             }

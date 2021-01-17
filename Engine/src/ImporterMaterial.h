@@ -6,6 +6,7 @@ class ImporterMaterial
 {
 public:
 	ImporterMaterial();
+	~ImporterMaterial();
 
 	void Import(const aiMaterial* material, Material* ourMaterial);
 	unsigned int Save(const Material* ourMaterial, char** fileBuffer);
