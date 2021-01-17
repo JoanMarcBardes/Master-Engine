@@ -24,14 +24,19 @@ public:
 
 	void SetActive(bool isActive) { active = isActive; }
 	bool IsActive() const { return active; };
-	virtual Type GetType() { return type; };
+	virtual Type GetType() const { return type; };
 
+	void SetCustomPath(std::string path) { customPath = path; }
+	std::string GetCustomPath() const { return customPath; }
+	
 public:
 	GameObject* gameObject = nullptr;
 
 protected:
 	bool active = true;
 	Type type = None;
+
+	std::string customPath;
 
 };
 

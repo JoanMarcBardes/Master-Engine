@@ -54,8 +54,8 @@ unsigned int ImporterMesh::Save(const Mesh* ourMesh, char** fileBuffer)
     // numVertices, numIndices, vertices, indices, name
     unsigned int size = sizeof(unsigned int) + sizeof(unsigned int) +
         sizeof(Mesh::Vertex) * ourMesh->GetNumVertices() + 
-        sizeof(unsigned int) * ourMesh->GetNumIndices() + 
-        sizeof(char*);
+        sizeof(unsigned int) * ourMesh->GetNumIndices();
+      
 
     *fileBuffer = new char[size];
     char* cursor = *fileBuffer;
@@ -69,6 +69,9 @@ unsigned int ImporterMesh::Save(const Mesh* ourMesh, char** fileBuffer)
     bytes = sizeof(unsigned int);
     memcpy(cursor, &numIndices, bytes);
     cursor += bytes;
+
+    unsigned a = sizeof(Mesh::Vertex);
+    unsigned b = a * numVertices;
 
     for (unsigned int i = 0; i < numVertices; ++i)
     {
@@ -86,15 +89,52 @@ unsigned int ImporterMesh::Save(const Mesh* ourMesh, char** fileBuffer)
         cursor += bytes;
     }
 
-    const char* name = ourMesh->GetName();
+    /*const char* name = ourMesh->GetName();
     bytes = sizeof(char*);
     memcpy(cursor, &name, bytes);
-    cursor += bytes;
+    cursor += bytes;*/
 
     return size;
 }
 
-void ImporterMesh::Load(const char* fileBuffer, Mesh* ourMesh)
+void ImporterMesh::Load(const char* fileBuffer, Mesh* &ourMesh)
 {
+    const char* cursor = fileBuffer;
 
+    unsigned int numVertices = 0;
+    unsigned int bytes = sizeof(unsigned int);
+    memcpy(&numVertices, cursor, bytes);
+    cursor += bytes;
+
+    unsigned int numIndices = 0;
+    bytes = sizeof(unsigned int);
+    memcpy(&numIndices, cursor, bytes);
+    cursor += bytes;
+
+    std::vector<Mesh::Vertex> vertices;
+    for (unsigned int i = 0; i < numVertices; ++i)
+    {
+        Mesh::Vertex vertex;
+        bytes = sizeof(Mesh::Vertex);
+        memcpy(&vertex, cursor, bytes);
+        cursor += bytes;
+        vertices.push_back(vertex);
+    }
+
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < numIndices; ++i)
+    {
+        unsigned int indice;
+        bytes = sizeof(unsigned int);
+        memcpy(&indice, cursor, bytes);
+        cursor += bytes;
+        indices.push_back(indice);
+    }
+
+    ourMesh = new Mesh(vertices, indices, "mesh");
+
+    /*const char* name = 0;
+    unsigned int bytes = sizeof(char*);
+    memcpy(&name, cursor, bytes);
+    cursor += bytes;*/
 }

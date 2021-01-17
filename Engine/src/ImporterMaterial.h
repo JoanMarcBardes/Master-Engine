@@ -11,7 +11,17 @@ public:
 	unsigned int Save(const Material* ourMaterial, char** fileBuffer);
 	void Load(const char* fileBuffer, Material* ourMaterial);
 
+	void InitTexture();
+	bool ImportTexture(const char* buffer, unsigned size);
+	unsigned SaveTexture(char** buffer);
+	void LoadTexture(const char* buffer, unsigned size, unsigned id);
+
+	void SetDirectory(std::string dir) { directory = dir; }
+
 private:
 	std::vector<aiTextureType> textureTypesList;
+
+	std::string directory;
+	std::string directoryTexture = "Textures/";
 };
 

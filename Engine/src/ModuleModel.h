@@ -6,12 +6,17 @@
 #include "Libraries/Assimp/include/assimp/mesh.h"
 #include "Mesh.h"
 #include "Material.h"
+#include "ImporterMaterial.h"
+#include "ImporterMesh.h"
 #include <vector>
 #include <string>
 
 class ModuleModel : public Module
 {
 public:
+	ImporterMesh* importMesh;
+	ImporterMaterial* importMat;
+
 	ModuleModel();
 	~ModuleModel();
 	bool CleanUp();
@@ -19,9 +24,11 @@ public:
 	void Load(const char* file_name);	
 	void DrawMeshes(const unsigned program);
 
-	void Import(const char* dir, const char* name);
-	void ImportNode(aiNode* node, const aiScene* scene, std::string name);
+	void Import(const char* dir);
+	void ImportNode(aiNode* node, const aiScene* scene, std::string name, GameObject* parent = nullptr);
 	void Load(const char* dir, const char* name, unsigned int type);
+	Mesh* LoadMesh(const char* path);
+	Material* LoadMaterial(const char* path);
 
 
 	const std::vector<Mesh*> GetMeshes() { return meshesList; }
@@ -43,7 +50,7 @@ private:
 	float width = 0;
 	float height = 0;
 	float lenght = 0;
-	float volume = 0;
+	float volume = 0;	
 
 	void LoadMeshes(const aiScene* scene);
 	void processNode(aiNode* node, const aiScene* scene, GameObject* parent = nullptr);

@@ -655,8 +655,8 @@ void ModuleEditor::WindowInspector(bool* p_open)
 			selected->SetActive(active);
 
 		ImGui::SameLine();
-		char goName[50];
-		strcpy_s(goName, 50, selected->name.c_str());
+		char goName[250];
+		strcpy_s(goName, 250, selected->name.c_str());
 		ImGuiInputTextFlags textFlags = ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue;
 		if (ImGui::InputText("###", goName, 50, textFlags))
 			selected->name = goName;
@@ -731,7 +731,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 			char* nameType;
 			float my_tex_w = 150;
 			float my_tex_h = 150;
-			std::string basePath = App->input->GetBasePath() + "Textures\\";
+			std::string basePath = App->input->GetBasePath();
 
 			for (int i = 0; i < 2; ++i)
 			{
@@ -753,7 +753,7 @@ void ModuleEditor::WindowInspector(bool* p_open)
 					paths = basePath + path;
 					unsigned int newTextureId = App->texture->Load(paths.c_str());
 					if(newTextureId != -1)
-						App->model->SetTexture(newTextureId, path);
+						App->model->SetTexture(newTextureId, path, i);
 					else
 					{
 						std::string l = "[error] Don't find texture: " + std::string(path);

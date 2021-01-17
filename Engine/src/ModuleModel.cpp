@@ -11,8 +11,6 @@
 #include "DebugLeaks.h"
 
 #include "ModuleFilesystem.h"
-#include "ImporterMaterial.h"
-#include "ImporterMesh.h"
 
 #include <vector>
 #include <string>
@@ -25,6 +23,9 @@ ModuleModel::ModuleModel()
 {    
     textureTypesList.push_back(aiTextureType_DIFFUSE);
     textureTypesList.push_back(aiTextureType_SPECULAR);
+
+    importMesh = new ImporterMesh();
+    importMat = new ImporterMaterial();
 }
 
 ModuleModel::~ModuleModel() 
@@ -274,6 +275,12 @@ void ModuleModel::SetTexture(unsigned int textureId, std::string path, unsigned 
         LOG(go->name.c_str());
         unsigned toRemove = go->SetTexture(textureId, path, newtypeId);
         App->texture->DeleteTexture(toRemove);
+
+        char* buffer;
+        Material* material = go->GetComponent< Material>();
+        unsigned size = importMat->Save(material, &buffer);
+        std::string customPath = App->filesystem->Save(("Materials\\" + go->name).c_str(), buffer, size);
+        material->SetCustomPath(customPath);
     }    
     else
     {
@@ -338,15 +345,18 @@ unsigned int ModuleModel::GetTypeId(aiTextureType textureType)
 
 //
 
-void ModuleModel::Import(const char* dir, const char* name)
+void ModuleModel::Import(const char* dir)
 {
     const aiScene* scene = aiImportFile(dir, aiProcessPreset_TargetRealtime_MaxQuality);
     if (scene)
     {
         string path = string(dir);
-        directory = path.substr(0, path.find_last_of('\\'));
-        directory += "\\";
-        ImportNode(scene->mRootNode, scene, name);
+        directory = path.substr(0, path.find_last_of('/'));
+        directory += "/";
+        string name = path.substr(directory.size());
+
+        GameObject* parent = App->scene->CreateGameObject(name.c_str());
+        ImportNode(scene->mRootNode, scene, name, parent);
     }
     else
     {
@@ -354,8 +364,11 @@ void ModuleModel::Import(const char* dir, const char* name)
     }
 }
 
-void ModuleModel::ImportNode(aiNode* node, const aiScene* scene, string name)
+void ModuleModel::ImportNode(aiNode* node, const aiScene* scene, string name, GameObject* parent)
 {
+    if (node->mNumMeshes > 1)
+        parent = App->scene->CreateGameObject(node->mName.C_Str(), parent);
+
     GameObject* child = nullptr;
     // process each mesh located at the current node
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -363,32 +376,31 @@ void ModuleModel::ImportNode(aiNode* node, const aiScene* scene, string name)
         // the node object only contains indices to index the actual objects in the scene. 
         // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        //GameObject* child = App->scene->CreateGameObject(mesh->mName.C_Str(), parent);
-
-        /*Mesh* newMesh = CreateMesh(mesh, scene);
-        child->AddComponent(newMesh);
-        meshesList.push_back(newMesh);*/
-        ImporterMesh* importMesh = new ImporterMesh();
+        GameObject* child = App->scene->CreateGameObject(mesh->mName.C_Str(), parent);
+                
         Mesh* newMesh = importMesh->Import(mesh);
+        child->AddComponent(newMesh);
 
         char* buffer;
         unsigned int size = importMesh->Save(newMesh, &buffer);
-        App->filesystem->Save((name + std::to_string(i)).c_str(), buffer, size);
+        std::string customPath = App->filesystem->Save(("Meshes\\" + name + std::to_string(i)).c_str(), buffer, size);
+        newMesh->SetCustomPath(customPath);
 
 
-        //Material* material = LoadMaterials(scene->mMaterials[mesh->mMaterialIndex]);
-
-        Material* material = new Material();
-        ImporterMaterial* importMat = new ImporterMaterial();
+        Material* material = new Material();        
+        importMat->SetDirectory(directory);
         importMat->Import(scene->mMaterials[mesh->mMaterialIndex], material);
+        child->AddComponent(material);
 
         size = importMat->Save(material, &buffer);
-        App->filesystem->Save((name + std::to_string(i)).c_str(), buffer, size);
+        customPath = App->filesystem->Save(("Materials\\" + name + std::to_string(i)).c_str(), buffer, size);
+        material->SetCustomPath(customPath);
+
     }
     // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
-        ImportNode(node->mChildren[i], scene, name + "_child" + std::to_string(i));
+        ImportNode(node->mChildren[i], scene, name + "_child" + std::to_string(i), parent);
     }
 
 }
@@ -396,7 +408,7 @@ void ModuleModel::ImportNode(aiNode* node, const aiScene* scene, string name)
 void ModuleModel::Load(const char* dir, const char* name, unsigned int type)
 {
     char* buffer;
-    App->filesystem->Load(dir, name, &buffer);
+    App->filesystem->Load(dir, ""/*name*/, &buffer);
     LOG((string("LOAD ") + name).c_str());
 
     if (type == 0)
@@ -404,13 +416,40 @@ void ModuleModel::Load(const char* dir, const char* name, unsigned int type)
         Mesh* mesh = new Mesh();
         ImporterMesh* importMesh = new ImporterMesh();
         importMesh->Load(buffer, mesh);
+        LOG("LOAD mesh");
     }
     else
     {
         Material * material = new Material();
         ImporterMaterial* importMat = new ImporterMaterial();
-        importMat->Load(buffer, material);    
-    }
+        importMat->Load(buffer, material);
 
+        LOG("LOAD material");
+    }    
+}
+
+Mesh* ModuleModel::LoadMesh(const char* path)
+{
+    char* buffer;
+    App->filesystem->Load(path, "", &buffer);
     
+    Mesh* mesh = new Mesh();
+    ImporterMesh* importMesh = new ImporterMesh();
+    importMesh->Load(buffer, mesh);
+    LOG("LOAD mesh");
+    
+    return mesh;
+}
+
+Material* ModuleModel::LoadMaterial(const char* path)
+{
+    char* buffer;
+    App->filesystem->Load(path, "", &buffer);
+    
+    Material* material = new Material();
+    ImporterMaterial* importMat = new ImporterMaterial();
+    importMat->Load(buffer, material);
+    LOG("LOAD material");
+
+    return material;
 }

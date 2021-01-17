@@ -2,6 +2,10 @@
 #include "Application.h"
 #include "ModuleProgram.h"
 #include "ModuleEditorCamera.h"
+#include "ModuleInput.h"
+#include "ImporterScene.h"
+#include "ModuleFilesystem.h"
+#include "ModuleEditor.h"
 #include "GL/glew.h"
 #include <vector>
 
@@ -25,6 +29,24 @@ bool ModuleScene::Init()
 
 update_status ModuleScene::Update()
 {
+	if (App->input->GetKey(SDL_SCANCODE_M))
+	{
+		LOG("Pres M, Save MainScene");
+		char* buffer = nullptr;
+		unsigned size = ImporterScene::Save(root, &buffer);
+		App->filesystem->Save("MainScene", buffer, size);
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_L))
+	{
+		LOG("Pres L, Load MainScene");
+		char* buffer = nullptr;
+		App->filesystem->basePath;
+		App->filesystem->Load(App->filesystem->basePath.c_str(), "Library\\MainScene.meta", &buffer);
+		delete(root);
+		App->editor->SetSelectedGameObject(nullptr);
+		ImporterScene::Load(buffer, root);
+	}
+
 	root->Update();
 	return UPDATE_CONTINUE;
 }

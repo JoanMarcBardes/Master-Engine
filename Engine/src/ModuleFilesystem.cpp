@@ -18,25 +18,33 @@ ModuleFilesystem::ModuleFilesystem()
 
 bool ModuleFilesystem::Init()
 {
-    std::vector<std::string> fileList;
+    //Save();
+    //Load();
+
+    /*std::vector<std::string> fileList;
     std::vector<std::string> dirList;
     GetAllFilesWithExtension((basePath + "Assets\\").c_str(), ".fbx", fileList, dirList);
     for (unsigned i = 0; i < dirList.size(); ++i)
     {
         std::string name = fileList[i].substr(0, fileList[i].find_last_of('.'));
-        App->model->Import(dirList[i].c_str(), name.c_str());
+        App->model->Import(dirList[i].c_str());
     }
 
     fileList.clear();
     dirList.clear();
-    GetAllFilesWithExtension((basePath + "Library\\").c_str(), ".meta", fileList, dirList);
+    GetAllFilesWithExtension((basePath + "Library\\Meshes").c_str(), ".meta", fileList, dirList);
     for (unsigned i = 0; i < dirList.size(); ++i)
     {
-        App->model->Load(dirList[i].c_str(), fileList[i].c_str(), i);
+        App->model->Load(dirList[i].c_str(), fileList[i].c_str(), 0);
     }
 
-    //Save();
-    //Load();
+    fileList.clear();
+    dirList.clear();
+    GetAllFilesWithExtension((basePath + "Library\\Materials").c_str(), ".meta", fileList, dirList);
+    for (unsigned i = 0; i < dirList.size(); ++i)
+    {
+        App->model->Load(dirList[i].c_str(), fileList[i].c_str(), 1);
+    }   */
 
     return true;
 }
@@ -139,10 +147,11 @@ unsigned int ModuleFilesystem::Load() const
     return 0;
 }
 
-unsigned int ModuleFilesystem::Save(const char* file, const char* buffer, unsigned int size, bool append) const
+std::string ModuleFilesystem::Save(const char* file, const char* buffer, unsigned int size, bool append) const
 {
     std::ofstream fout;
-    fout.open((basePath + "Library\\" + file + ".meta").c_str(), std::ios::binary | std::ios::out);
+    std::string path = basePath + "Library\\" + file + ".meta";
+    fout.open(path.c_str(), std::ios::binary | std::ios::out);
 
     fout.write(buffer, size);
 
@@ -150,14 +159,15 @@ unsigned int ModuleFilesystem::Save(const char* file, const char* buffer, unsign
 
     LOG("SAVE: %u", size);
 
-    return 0;
+    return path;
 }
 
 
 unsigned int ModuleFilesystem::Load(const char* path, const char* file, char** buffer) const
 {
     //std::ifstream infile((basePath + "Library\\" + file + ".meta").c_str(), std::ios::binary);
-    std::ifstream infile(path, std::ios::binary);
+    std::string s = std::string(path) + file;
+    std::ifstream infile(s.c_str(), std::ios::binary);
 
     //get length of file
     infile.seekg(0, infile.end);

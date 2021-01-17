@@ -25,5 +25,6 @@ private:
 	std::vector<unsigned int> textures;
 	std::vector<std::string> paths;
 	std::vector<unsigned int> typeId; // 0 = Diffuse, 1 = Specular
+
 };
 

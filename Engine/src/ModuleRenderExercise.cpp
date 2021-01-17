@@ -201,7 +201,8 @@ void ModuleRenderExercise::CreateQuadVBO()
 
 void ModuleRenderExercise::LoadMeshes()
 {
-	App->model->Load("Models/BakerHouse/BakerHouse.fbx");
+	//App->model->Load("Models/BakerHouse/BakerHouse.fbx");
+	App->model->Import("Models/BakerHouse/BakerHouse.fbx");
 }
 
 
@@ -316,35 +317,6 @@ void ModuleRenderExercise::SetGlEnable(const bool enable, const GLenum type)
 		glDisable(type);
 }
 
-void ModuleRenderExercise::DropFile()
-{
-	SDL_Event sdlEvent;
-	while (SDL_PollEvent(&sdlEvent) != 0)
-	{
-		switch (sdlEvent.type) {
-		case (SDL_DROPFILE):      // In case if dropped file
-			char* dropped_filedir = sdlEvent.drop.file;
-			string s(dropped_filedir);
-			ReplaceSlashS(s);
-			if (s.find(".fbx") < s.length() || s.find(".FBX") < s.length())
-			{
-				LOG(("Loading model " + s).c_str());
-				App->model->Load(s.c_str());
-			}
-			else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length() || s.find(".tga") < s.length())
-			{
-				LOG(("Loading texture " + s).c_str());
-				App->model->SetTexture(App->texture->Load(s.c_str()), s.c_str());
-			}
-			else
-			{
-				LOG((s + " its not a file .fbx, .png, .jpg, .dds or .tga").c_str());
-			}
-			SDL_free(dropped_filedir);    // Free dropped_filedir memory
-			break;
-		}
-	}
-}
 void ModuleRenderExercise::RenderToTexture() {
 
 	int w = 0;
@@ -385,7 +357,6 @@ void ModuleRenderExercise::RenderToTexture() {
 	glClearColor(background.x, background.y, background.z, background.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	DropFile();
 	Draw();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

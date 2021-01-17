@@ -3,6 +3,8 @@
 #include "Libraries/Assimp/include/assimp/cimport.h"
 #include "Application.h"
 #include "ModuleTexture.h"
+#include "Libraries/DevIL-SDK/include/IL/ilu.h"
+#include "Libraries/DevIL-SDK/include/IL/ilut.h"
 
 #include <vector>
 #include <string>
@@ -50,6 +52,20 @@ void ImporterMaterial::Import(const aiMaterial* material, Material* ourMaterial)
                 if (texture == -1)
                 {
                     LOG("Texture is NOT on the path described in the FBX");
+                    path = (directory + file.data).c_str();
+                    texture = App->texture->Load(path.c_str());
+                    if (texture == -1)
+                    {
+                        LOG("Texture is NOT on the same folder you loaded the FBX");
+                        path = (directoryTexture + file.data).c_str();
+                        texture = App->texture->Load(path.c_str());
+                        if (texture == -1)
+                        {
+                            LOG("Texture is NOT on our own Textures/ folder");
+                        }
+                        else LOG("Texture loaded with our own Textures/ folder");
+                    }
+                    else LOG("Texture loaded with the same folder you loaded the FBX");
                 }
                 else LOG("Texture loaded with the path described in the FBX");
 
@@ -67,13 +83,13 @@ void ImporterMaterial::Import(const aiMaterial* material, Material* ourMaterial)
 
 unsigned int ImporterMaterial::Save(const Material* ourMaterial, char** fileBuffer)
 {
-    const unsigned int numTextures = ourMaterial->GetNunTextures();
+    unsigned int numTextures = ourMaterial->GetNunTextures();
 
     unsigned int sizeBody = 0;
     for (unsigned int i = 0; i < numTextures; ++i)
     {
         sizeBody += sizeof(unsigned int);
-        sizeBody += ourMaterial->GetPaths()[i].length() * sizeof(char);
+        sizeBody += 1 + ourMaterial->GetPaths()[i].length() * sizeof(char);
         sizeBody += sizeof(unsigned int);
     }
     // Head + body
@@ -95,13 +111,13 @@ unsigned int ImporterMaterial::Save(const Material* ourMaterial, char** fileBuff
         memcpy(cursor, &sizePath, bytes);
         cursor += bytes;
 
-        string s = ourMaterial->GetPaths()[i];
-        const char* path = s.c_str();
-        bytes = sizeof(const char) * sizePath;
-        memcpy(cursor, &ourMaterial->GetPaths()[i], bytes);
+        //string s = ourMaterial->GetPaths()[i];
+        //const char* path = s.c_str();
+        bytes = sizeof(const char) * (sizePath +1);
+        memcpy(cursor, ourMaterial->GetPaths()[i].c_str(), bytes);
         cursor += bytes;
 
-        unsigned int typeId = 12;// ourMaterial->GetTypeId()[i];
+        unsigned int typeId = ourMaterial->GetTypesId()[i];
         bytes = sizeof(unsigned int);
         memcpy(cursor, &typeId, bytes);
         cursor += bytes;
@@ -112,7 +128,7 @@ unsigned int ImporterMaterial::Save(const Material* ourMaterial, char** fileBuff
 
 void ImporterMaterial::Load(const char* fileBuffer, Material* ourMaterial)
 {
-    /*const char* cursor = fileBuffer;
+    const char* cursor = fileBuffer;
 
     unsigned int numTextures = 0;
     unsigned int bytes = sizeof(unsigned int);
@@ -126,9 +142,9 @@ void ImporterMaterial::Load(const char* fileBuffer, Material* ourMaterial)
         memcpy(&sizePath, cursor, bytes);
         cursor += bytes;
 
-        char* path;
-        bytes = sizeof(char) * sizePath;
-        memcpy(&path, cursor, bytes);
+        char* path = new char[sizePath];
+        bytes = sizeof(char) * (sizePath +1);
+        memcpy(path, cursor, bytes);
         cursor += bytes;
 
         unsigned int typeId;
@@ -139,8 +155,59 @@ void ImporterMaterial::Load(const char* fileBuffer, Material* ourMaterial)
         string s = "Load sizePath: " + std::to_string(sizePath) + " path: " + path + " typeID: " + std::to_string(typeId);
         LOG(s.c_str());
 
-        unsigned int texture = 0;// App->texture->Load(path);
+        unsigned int texture = App->texture->Load(path);
 
         ourMaterial->AddTexturePath(texture, path, typeId);
-    }*/
+    }
+}
+
+
+void ImporterMaterial::InitTexture()
+{
+    ilInit();
+    iluInit();
+    ilutInit();
+    ilutRenderer(ILUT_OPENGL);
+}
+
+bool ImporterMaterial::ImportTexture(const char* buffer, unsigned size)
+{
+    if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+    {
+        return true;
+    }
+    return false;
+}
+
+unsigned ImporterMaterial::SaveTexture(char** buffer)
+{
+    ilEnable(IL_FILE_OVERWRITE);
+
+    ILuint size;
+    ILubyte* saveBuffer;
+
+    ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+    size = ilSaveL(IL_DDS, nullptr, 0);
+
+    if (size > 0)
+    {
+        saveBuffer = new ILubyte[size];
+        if (ilSaveL(IL_DDS, saveBuffer, size) > 0)
+        {
+            *buffer = (char*)saveBuffer;
+        }
+    }
+    return size;
+}
+
+void ImporterMaterial::LoadTexture(const char* buffer, unsigned size, unsigned id)
+{
+    ILuint ImageName;
+    ilGenImages(1, &ImageName);
+    ilBindImage(ImageName);
+
+    ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
+    id = ilutGLBindTexImage();
+
+    ilDeleteImages(1, &ImageName);
 }

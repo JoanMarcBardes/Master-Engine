@@ -216,7 +216,7 @@
     </ClCompile>
     <ClCompile Include="src\ImporterMesh.cpp">
       <Filter>src\Importers</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="src\EditorAbout.cpp">
       <Filter>src\EditorUI</Filter>
     </ClCompile>
@@ -234,6 +234,15 @@
     </ClCompile>
     <ClCompile Include="src\EditorViewport.cpp">
       <Filter>src\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImporterScene.cpp">
+      <Filter>src\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Config.cpp">
+      <Filter>src\Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Libraries\parson\parson.c">
+      <Filter>Libraries\parson</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -821,7 +830,7 @@
     </ClInclude>
     <ClInclude Include="src\ImporterMesh.h">
       <Filter>src\Importers</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="src\Editor.h">
       <Filter>src\EditorUI</Filter>
     </ClInclude>
@@ -845,6 +854,15 @@
     </ClInclude>
     <ClInclude Include="src\EditorViewport.h">
       <Filter>src\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImporterScene.h">
+      <Filter>src\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Config.h">
+      <Filter>src\Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Libraries\parson\parson.h">
+      <Filter>Libraries\parson</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -916,9 +934,12 @@
     </Filter>
     <Filter Include="src\Importers">
       <UniqueIdentifier>{9095edd0-5dd4-4634-a6ed-3926f4005561}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="src\EditorUI">
       <UniqueIdentifier>{84e0500a-fe1a-4d6a-adc0-2dd708740e7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\parson">
+      <UniqueIdentifier>{81392f20-4591-4ff7-9757-5e6f54d2cf45}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

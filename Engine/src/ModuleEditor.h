@@ -26,6 +26,7 @@ public:
 	void AddLog(const char* fmt, ...);	
 
 	GameObject* GetSelectedGameObject() { return selected; }
+	void SetSelectedGameObject(GameObject* newSelected) { selected = newSelected; }
 
 private:
 	ImVector<char*> Items;
