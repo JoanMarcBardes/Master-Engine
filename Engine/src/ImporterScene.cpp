@@ -1,6 +1,7 @@
 #include "ImporterScene.h"
 #include "Application.h"
 #include "ModuleModel.h"
+#include "ModuleEditorCamera.h"
 #include "Camera.h"
 #include <map>
 
@@ -111,7 +112,7 @@ void ImporterScene::Load(const char* buffer, GameObject* &root)
 			else if (type == Component::Type::Camera)
 			{
 				gameObject->AddComponent(new Camera(nullptr));
-
+				App->editorCamera->AddCamera(gameObject->GetComponent<Camera>(), true);
 			}
 			//LoadComponent(comp, component);
 		}

@@ -32,24 +32,36 @@ update_status ModuleScene::Update()
 	if (App->input->GetKey(SDL_SCANCODE_M))
 	{
 		LOG("Pres M, Save MainScene");
-		char* buffer = nullptr;
-		unsigned size = ImporterScene::Save(root, &buffer);
-		App->filesystem->Save("MainScene", buffer, size);
+		Save();
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_L))
 	{
 		LOG("Pres L, Load MainScene");
-		char* buffer = nullptr;
-		App->filesystem->basePath;
-		App->filesystem->Load("", "Library\\MainScene.meta", &buffer);
-		delete(root);
-		App->editor->SetSelectedGameObject(nullptr);
-		ImporterScene::Load(buffer, root);
+		Load();
 	}
 
 	root->Update();
 	return UPDATE_CONTINUE;
 }
+
+void ModuleScene::Save()
+{
+	char* buffer = nullptr;
+	unsigned size = ImporterScene::Save(root, &buffer);
+	App->filesystem->Save("MainScene", buffer, size);
+}
+
+void ModuleScene::Load()
+{
+	char* buffer = nullptr;
+	App->filesystem->basePath;
+	App->filesystem->Load("", "Library\\MainScene.meta", &buffer);
+	delete(root);
+	App->editorCamera->RemoveAllCameras();
+	App->editor->SetSelectedGameObject(nullptr);
+	ImporterScene::Load(buffer, root);
+}
+
 
 GameObject* ModuleScene::CreateGameObject(const char* name, GameObject* parent)
 {

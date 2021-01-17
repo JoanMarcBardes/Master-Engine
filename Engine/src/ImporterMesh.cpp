@@ -51,7 +51,7 @@ Mesh* ImporterMesh::Import(const aiMesh* mesh)
 
 unsigned int ImporterMesh::Save(const Mesh* ourMesh, char** fileBuffer)
 {
-    // numVertices, numIndices, vertices, indices, name
+    // numVertices, numIndices, vertices, indices
     unsigned int size = sizeof(unsigned int) + sizeof(unsigned int) +
         sizeof(Mesh::Vertex) * ourMesh->GetNumVertices() + 
         sizeof(unsigned int) * ourMesh->GetNumIndices();
@@ -88,11 +88,6 @@ unsigned int ImporterMesh::Save(const Mesh* ourMesh, char** fileBuffer)
         memcpy(cursor, &indices, bytes);
         cursor += bytes;
     }
-
-    /*const char* name = ourMesh->GetName();
-    bytes = sizeof(char*);
-    memcpy(cursor, &name, bytes);
-    cursor += bytes;*/
 
     return size;
 }
@@ -132,9 +127,4 @@ void ImporterMesh::Load(const char* fileBuffer, Mesh* &ourMesh)
     }
 
     ourMesh = new Mesh(vertices, indices, "mesh");
-
-    /*const char* name = 0;
-    unsigned int bytes = sizeof(char*);
-    memcpy(&name, cursor, bytes);
-    cursor += bytes;*/
 }

@@ -3,8 +3,6 @@
 #include "Libraries/Assimp/include/assimp/cimport.h"
 #include "Application.h"
 #include "ModuleTexture.h"
-#include "Libraries/DevIL-SDK/include/IL/ilu.h"
-#include "Libraries/DevIL-SDK/include/IL/ilut.h"
 
 #include <vector>
 #include <string>
@@ -179,62 +177,8 @@ void ImporterMaterial::Load(const char* fileBuffer, Material* ourMaterial)
         memcpy(&typeId, cursor, bytes);
         cursor += bytes;
 
-        string s = "Load sizePath: " + std::to_string(sizePath) + " path: " + path + " typeID: " + std::to_string(typeId);
-        LOG(s.c_str());
-
         unsigned int texture = App->texture->Load(path);
 
         ourMaterial->AddTexturePath(texture, path, typeId);
     }
-}
-
-
-void ImporterMaterial::InitTexture()
-{
-    ilInit();
-    iluInit();
-    ilutInit();
-    ilutRenderer(ILUT_OPENGL);
-}
-
-bool ImporterMaterial::ImportTexture(const char* buffer, unsigned size)
-{
-    if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-    {
-        return true;
-    }
-    return false;
-}
-
-unsigned ImporterMaterial::SaveTexture(char** buffer)
-{
-    ilEnable(IL_FILE_OVERWRITE);
-
-    ILuint size;
-    ILubyte* saveBuffer;
-
-    ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
-    size = ilSaveL(IL_DDS, nullptr, 0);
-
-    if (size > 0)
-    {
-        saveBuffer = new ILubyte[size];
-        if (ilSaveL(IL_DDS, saveBuffer, size) > 0)
-        {
-            *buffer = (char*)saveBuffer;
-        }
-    }
-    return size;
-}
-
-void ImporterMaterial::LoadTexture(const char* buffer, unsigned size, unsigned id)
-{
-    ILuint ImageName;
-    ilGenImages(1, &ImageName);
-    ilBindImage(ImageName);
-
-    ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
-    id = ilutGLBindTexImage();
-
-    ilDeleteImages(1, &ImageName);
 }

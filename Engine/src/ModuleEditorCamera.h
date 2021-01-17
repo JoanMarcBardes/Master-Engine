@@ -29,7 +29,9 @@ public:
 	const float3   GetPosition()   { return currentCamera->GetPosition(); }
 
 	void SetSpeed(float _speed) { speed = _speed; }
+
 	void SetCurrentCamera(Camera* camera);
+	void RemoveAllCameras();
 	void AddCamera(Camera* camera, bool setAsCurrentCamera = false);
 	void SetActiveCamera(Camera* camera, bool active);
 	std::vector<Camera*> GetAllCameras() { return allCameras; }

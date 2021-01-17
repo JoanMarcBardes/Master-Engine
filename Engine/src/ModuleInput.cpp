@@ -151,7 +151,6 @@ update_status ModuleInput::PreUpdate()
 				if (s.find(".fbx") < s.length() || s.find(".FBX") < s.length() || s.find(".obj") < s.length())
 				{
 					LOG( ("Loading model " + s).c_str());
-					//App->model->Load(s.c_str());
 					App->model->Import(s.c_str());
 				}
 				else if (s.find(".png") < s.length() || s.find(".jpg") < s.length() || s.find(".dds") < s.length() || s.find(".tga") < s.length() || s.find(".tif") < s.length())

@@ -183,6 +183,12 @@ void ModuleEditorCamera::SetCurrentCamera(Camera* camera)
 	currentCamera = camera;
 }
 
+void ModuleEditorCamera::RemoveAllCameras()
+{
+	allCameras.clear();
+	currentCamera = nullptr;
+}
+
 void ModuleEditorCamera::AddCamera(Camera* camera, bool setAsCurrentCamera)
 {
 	allCameras.push_back(camera);
