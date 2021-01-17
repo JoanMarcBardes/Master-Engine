@@ -124,12 +124,6 @@ bool GameObject::ContainsType(Component::Type type)
 
 std::vector<GameObject*>& GameObject::GetChilds()
 {
-	/*std::vector<GameObject*> vector;
-	for each (GameObject* child in childs)
-	{
-		vector.push_back(child);
-	}
-	return vector;*/
 	return childs;
 }
 

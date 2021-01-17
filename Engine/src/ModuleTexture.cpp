@@ -43,7 +43,7 @@ GLuint ModuleTexture::Load(const char* path)
 	}
 	else
 	{
-		LOG("[error] ilLoadImage");
+		LOG("ERROR ilLoadImage");
 	}
 	ilDeleteImages(1, &imageId); //Because we have already copied image data into texture data we can release memory used by image.
 
