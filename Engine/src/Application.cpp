@@ -97,7 +97,8 @@ void Application::CalculateFPS()
 	float frame = frameTimer.GetTimer();
 	if (frame > 0 && frame < msMax)
 	{
-		//SDL_Delay(msMax - frame);
+		if(vsync)
+			SDL_Delay(msMax - frame);
 	}
 
 	fpsCount++;

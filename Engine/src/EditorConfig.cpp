@@ -54,6 +54,8 @@ void EditorConfig::Draw(int w, int h)
 		if (ImGui::InputText("Organization Name", organization, IM_ARRAYSIZE(organization), ImGuiInputTextFlags_EnterReturnsTrue))
 			App->SetOrganizatio(organization);
 
+		ImGui::Checkbox("vsync", &App->vsync);
+
 		int fpsMax = App->GetFpsMax();
 		if (ImGui::SliderInt("fps Max", &fpsMax, 1, 120))
 			App->SetFpsMax(fpsMax);

@@ -52,6 +52,8 @@ public:
 	ModuleScene* scene = nullptr;
 	ModuleFilesystem* filesystem = nullptr;
 
+	bool vsync = true;
+
 private:
 	std::vector<Module*> modules;
 

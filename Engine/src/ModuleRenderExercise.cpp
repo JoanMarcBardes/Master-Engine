@@ -157,7 +157,8 @@ void ModuleRenderExercise::WindowResized(unsigned width, unsigned height)
 
 void ModuleRenderExercise::LoadMeshes()
 {
-	App->model->Import("Models/BakerHouse/BakerHouse.fbx");
+	//App->model->Import("Models/BakerHouse/BakerHouse.fbx");
+	App->scene->Load();
 }
 
 
