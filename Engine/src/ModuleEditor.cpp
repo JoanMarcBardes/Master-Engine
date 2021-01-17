@@ -159,7 +159,8 @@ update_status ModuleEditor::Update()
 					App->input->SetImGuiOn(false);
 				}
 				if (selected) {
-					Camera* camera = (Camera*)App->scene->GetMainCamera();
+					GameObject* mainCam = App->scene->GetMainCamera();
+					Camera* camera = (Camera*)App->scene->GetMainCamera()->GetComponent(Component::Type::Camera);
 					EditorViewport* viewport = (EditorViewport*)(*it);
 					viewport->DrawGuizmo(camera, selected);
 				}

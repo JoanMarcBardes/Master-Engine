@@ -7,8 +7,8 @@
 
 void EditorViewport::Draw(int w, int h)
 {
-	float fW = (float)w;
-	float fH = (float)h;
+	fW = (float)w;
+	fH = (float)h;
 
 	fW = fW / 5;
 	fH = fH - (fH / 4);
@@ -35,8 +35,6 @@ void EditorViewport::Draw(int w, int h)
 
 void EditorViewport::DrawGuizmo(Camera* camera, GameObject* go)
 {
-	ImGuizmo::BeginFrame();
-	ImGuizmo::Enable(true);
 
 	static bool draw_guizmo = false;
 	static ImGuizmo::OPERATION current_operation(ImGuizmo::TRANSLATE);
@@ -72,13 +70,32 @@ void EditorViewport::DrawGuizmo(Camera* camera, GameObject* go)
 		float4x4 view = camera->GetViewMatrix();
 		float4x4 proj = camera->GetProjection();
 
+		ImGui::SetNextWindowSize(ImVec2(800, 400));
+		ImGui::SetNextWindowPos(ImVec2(400, 20));
+		ImGui::Begin("Gizmo", 0, ImGuiWindowFlags_NoMove);
+		ImGuizmo::SetDrawlist();
+		/*
+
+		ImGuizmo::BeginFrame();
+		ImGuizmo::Enable(true);*/
+
 		Transform* transf = (Transform*)go->GetComponent(Component::Type::Transform);
 		float4x4 model = transf->GetTransformGlobal();
-		model.Transpose();
+		model.Transpose();/*
 
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		ImGuizmo::Manipulate((float*)view.v, (float*)proj.v, current_operation, ImGuizmo::MODE::WORLD, (float*)&model);
+		ImGuizmo::Manipulate((float*)view.v, (float*)proj.v, current_operation, ImGuizmo::MODE::WORLD, (float*)&model); */
+		
+		float4x4 delta;
+
+		//ImGuiIO& io = ImGui::GetIO();
+		//ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+		//ImGuizmo::SetRect(float(ImGui::GetCursorScreenPos().x), float(ImGui::GetCursorScreenPos().y), float(fW), float(fH));
+		//ImGuizmo::Manipulate((const float*)&view, (const float*)&proj, current_operation, current_mode, (float*)&model, (float*)&delta);
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, float(fW), float(fH));
+		//ImGuizmo::SetDrawlist();
+		ImGuizmo::Manipulate((const float*)&view, (const float*)&proj, current_operation, current_mode, (float*)&model);
 
 		if (ImGuizmo::IsUsing()) {
 			//Put the values of the matrix in each corresponding vector/quaternion
@@ -106,6 +123,7 @@ void EditorViewport::DrawGuizmo(Camera* camera, GameObject* go)
 				model.Decompose(disposable_pos, disposable_rot, transf->GetScale());
 			}
 		}
+      ImGui::End();
 	}
 
 }

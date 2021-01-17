@@ -12,4 +12,7 @@ public:
 
     void Draw(int w, int h);
     void DrawGuizmo(Camera* camera, GameObject* go);
+private:
+    float fW = 0.0f;
+    float fH = 0.0f;
 }; 

@@ -40,10 +40,13 @@ public:
 private:
 	Camera* currentCamera = nullptr;
 	std::vector<Camera*> allCameras;
+	
 
 	float deltaTime = 0.0f;	// Time between current frame and last frame
 	float lastFrame = 0.0f; // Time of last frame
 	float speed = 0.05;
+	float preMousePosX = 0;
+	float preMousePosY = 0;
 
 	void UpadateCamera();
 	void Yaw();
@@ -52,6 +55,7 @@ private:
 	void MoveLateral();
 	void MoveUp();
 	void RotateMouse();
+	void MoveMouse();
 	void WheelMouse();
 	void Focus();
 	void Orbit();
