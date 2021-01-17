@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleRenderExercise.h"
+#include "ModuleScene.h"
+#include "ModuleEditor.h"
 #include "Libraries/ImGui/imgui.h"
 #include "Libraries/ImGuizmo-master/ImGuizmo.h"
 
@@ -28,6 +30,11 @@ void EditorViewport::Draw(int w, int h)
 	if (ImGui::IsWindowFocused()) viewportFocused = true;
 	else viewportFocused = false;
 
+	GameObject* selected = App->editor->GetSelectedGameObject();
+	if (selected) {
+		DrawGuizmo((Camera*)App->scene->GetMainCamera()->GetComponent(Component::Type::Camera), selected);
+	}
+
 	ImGui::SetWindowSize(sizeView);
 	ImGui::End();
 
@@ -35,8 +42,9 @@ void EditorViewport::Draw(int w, int h)
 
 void EditorViewport::DrawGuizmo(Camera* camera, GameObject* go)
 {
+	ImGuizmo::Enable(true);
 
-	static bool draw_guizmo = false;
+	static bool draw_guizmo = true;
 	static ImGuizmo::OPERATION current_operation(ImGuizmo::TRANSLATE);
 	static ImGuizmo::MODE current_mode(ImGuizmo::WORLD);
 
@@ -70,39 +78,17 @@ void EditorViewport::DrawGuizmo(Camera* camera, GameObject* go)
 		float4x4 view = camera->GetViewMatrix();
 		float4x4 proj = camera->GetProjection();
 
-		ImGui::SetNextWindowSize(ImVec2(800, 400));
-		ImGui::SetNextWindowPos(ImVec2(400, 20));
-		ImGui::Begin("Gizmo", 0, ImGuiWindowFlags_NoMove);
-		ImGuizmo::SetDrawlist();
-		/*
-
-		ImGuizmo::BeginFrame();
-		ImGuizmo::Enable(true);*/
-
 		Transform* transf = (Transform*)go->GetComponent(Component::Type::Transform);
 		float4x4 model = transf->GetTransformGlobal();
-		model.Transpose();/*
+		model.Transpose();
 
-		ImGuiIO& io = ImGui::GetIO();
-		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		ImGuizmo::Manipulate((float*)view.v, (float*)proj.v, current_operation, ImGuizmo::MODE::WORLD, (float*)&model); */
-		
-		float4x4 delta;
-
-		//ImGuiIO& io = ImGui::GetIO();
-		//ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		//ImGuizmo::SetRect(float(ImGui::GetCursorScreenPos().x), float(ImGui::GetCursorScreenPos().y), float(fW), float(fH));
-		//ImGuizmo::Manipulate((const float*)&view, (const float*)&proj, current_operation, current_mode, (float*)&model, (float*)&delta);
 		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, float(fW), float(fH));
-		//ImGuizmo::SetDrawlist();
 		ImGuizmo::Manipulate((const float*)&view, (const float*)&proj, current_operation, current_mode, (float*)&model);
 
 		if (ImGuizmo::IsUsing()) {
-			//Put the values of the matrix in each corresponding vector/quaternion
 			model.Transpose();
 			GameObject* parent = go->GetParent();
 
-			//If the GameObject does have a parent, we have to recalculate the local matrix (root_node->parent is always null!!)
 			if (parent->GetParent() != nullptr) {
 				Transform* transfParent = (Transform*)parent->GetComponent(Component::Type::Transform);
 				model = transfParent->GetTransformGlobal().Inverted() * model;
@@ -114,16 +100,13 @@ void EditorViewport::DrawGuizmo(Camera* camera, GameObject* go)
 				if (current_operation == ImGuizmo::ROTATE) {
 
 				}
-					//SetRotationFromQuat();
 			}
 			else {
-				//current_mode = ImGuizmo::MODE::LOCAL;
 				float3 disposable_pos;
 				Quat disposable_rot;
 				model.Decompose(disposable_pos, disposable_rot, transf->GetScale());
 			}
 		}
-      ImGui::End();
 	}
 
 }
