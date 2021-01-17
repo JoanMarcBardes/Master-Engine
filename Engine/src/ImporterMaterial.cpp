@@ -183,6 +183,11 @@ void ImporterMaterial::Load(const char* fileBuffer, Material* ourMaterial)
         cursor += bytes;
 
         unsigned int texture = App->texture->Load(path);
+        if (texture == -1)
+        {
+            std::string s = "[error] Load textureId - 1" + std::string(path);
+            LOG(s.c_str());
+        }
 
         ourMaterial->AddTexturePath(texture, path, typeId);
     }

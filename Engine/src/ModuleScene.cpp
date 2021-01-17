@@ -64,6 +64,7 @@ void ModuleScene::Save()
 	char* buffer = nullptr;
 	unsigned size = ImporterScene::Save(root, &buffer);
 	App->filesystem->Save("MainScene", buffer, size);
+	LOG("Scene Saved");
 }
 
 void ModuleScene::Load()
@@ -79,6 +80,7 @@ void ModuleScene::Load()
 	ImporterScene::Load(buffer, root);
 	gameObjects.push_back(root);
 	BuildQuadtree();
+	LOG("Scene Loaded");
 }
 
 

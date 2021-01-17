@@ -45,7 +45,9 @@ bool ModuleModel::CleanUp()
 
 void ModuleModel::Clean()
 {
-    importMat->Clear();
+    //importMat->Clear();
+    delete(importMat);
+    importMat = new ImporterMaterial();
 }
 
 void ModuleModel::Import(const char* dir)
@@ -117,20 +119,24 @@ Mesh* ModuleModel::LoadMesh(const char* path)
     Mesh* mesh = new Mesh();
     ImporterMesh* importMesh = new ImporterMesh();
     importMesh->Load(buffer, mesh);
-    LOG("LOAD mesh");
-    
+    RELEASE(buffer);
+
     return mesh;
 }
 
 Material* ModuleModel::LoadMaterial(const char* path)
 {
     char* buffer;
-    App->filesystem->Load(path, "", &buffer);
-    
+    unsigned size = App->filesystem->Load(path, "", &buffer);
+    if (size == 0)
+    {
+        LOG("[error] LoadMaterial size 0");
+    }
+
     Material* material = new Material();
     ImporterMaterial* importMat = new ImporterMaterial();
     importMat->Load(buffer, material);
-    LOG("LOAD material");
+    RELEASE(buffer);
 
     return material;
 }

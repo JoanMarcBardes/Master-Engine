@@ -98,7 +98,7 @@ void ImporterScene::Load(const char* buffer, GameObject* &root)
 		{
 			Config comp = components.GetNode(i);
 			Component::Type type = (Component::Type)((int)comp.GetNumber("ComponentType"));
-						
+			
 			if (type == Component::Type::Mesh)
 			{
 				gameObject->AddComponent(App->model->LoadMesh(comp.GetString("CustomPath").c_str()));
