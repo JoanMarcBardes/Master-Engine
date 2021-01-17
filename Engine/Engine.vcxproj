@@ -74,7 +74,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./src/Libraries/Brofiler/Brofiler;./src/Libraries/Assimp/include/assimp;./src/Libraries/DevIL-SDK/include/IL;./imgui-docking;./src/Libraries/glew-2.1.0/include;./src/Libraries/SDL/include;./src/Libraries/ImGui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src/Libraries/ImGuizmo-master;./src/Libraries/ImGui;./src/Libraries/Brofiler/Brofiler;./src/Libraries/Assimp/include/assimp;./src/Libraries/DevIL-SDK/include/IL;./imgui-docking;./src/Libraries/glew-2.1.0/include;./src/Libraries/SDL/include;./src/Libraries/ImGui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -106,7 +106,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./src/Libraries/Brofiler/Brofiler; ./src/Libraries/Assimp/include/assimp; ./src/Libraries/DevIL-SDK/include/IL; ./imgui-docking; ./src/Libraries/glew-2.1.0/include; ./src/Libraries/SDL/include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./src/Libraries/ImGuizmo-master;./src/Libraries/ImGui;./src/Libraries/Brofiler/Brofiler;./src/Libraries/Assimp/include/assimp;./src/Libraries/DevIL-SDK/include/IL;./imgui-docking;./src/Libraries/glew-2.1.0/include;./src/Libraries/SDL/include;lude;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -20,6 +20,9 @@ public:
     ~Mesh();
     void Draw();
 
+    float3* GetPoints();
+
+    std::vector<Vertex>  GetVertices() {Vertices;};
     const unsigned int GetNumVertices() { return numVertices; };
     const unsigned int GetNumIndices() { return numIndices; };
     const char* GetName() { return name; }

@@ -233,7 +233,7 @@ void GameObject::DrawBoundingBox()
 {
 	if (active) {
 		glBegin(GL_LINES);
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 
 		for (int i = 0; i < bounding_box.NumEdges(); i++)
 		{
@@ -273,14 +273,15 @@ void GameObject::UpdateBoundingBox() {
 	Mesh* mesh = (Mesh*)GetComponent(Component::Type::Mesh);
 
 	if (mesh) {
-		bounding_box.Enclose(mesh->GetMin(), mesh->GetMax());
+		bounding_box.Enclose(mesh->GetPoints(), mesh->GetNumVertices());
 	}
 	else {
 		for (int i = 0; i < childs.size(); ++i) {
 
 			mesh = (Mesh*)childs[i]->GetComponent(Component::Type::Mesh);
 			if (mesh) {
-				bounding_box.Enclose(mesh->GetMin(), mesh->GetMax());
+				//bounding_box.Enclose(mesh->GetMin(), mesh->GetMax());
+				bounding_box.Enclose(mesh->GetPoints(), mesh->GetNumVertices());
 				break;
 			}
 		}

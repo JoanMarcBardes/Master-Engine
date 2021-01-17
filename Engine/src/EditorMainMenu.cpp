@@ -26,6 +26,7 @@ void EditorMainMenu::Draw(int w, int h)
 		}
 		ImGui::EndMenu();
 	}
+
 	menuSize = ImGui::GetWindowSize().y;
 	ImGui::EndMainMenuBar();
 }
